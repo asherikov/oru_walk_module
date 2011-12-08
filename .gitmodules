@@ -1,0 +1,6 @@
+[submodule "nao_igm"]
+	path = nao_igm
+	url = git://github.com/asherikov/nao_igm.git
+[submodule "smpc_solver"]
+	path = smpc_solver
+	url = git://github.com/asherikov/smpc_solver.git

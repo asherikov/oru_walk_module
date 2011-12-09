@@ -81,7 +81,7 @@ public:
 
 
 // These methods will be advertised to other modules.
-    void stop();
+    void stopWalking();
     void initPosition();
     void setStiffness(const float &);
     void walk();

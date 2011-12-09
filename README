@@ -1,1 +1,19 @@
-Doesn't work yet.
+!!! Doesn't work yet.
+
+Downloading:
+a) using git:
+    git clone git://github.com/asherikov/oru_walk_module.git
+    git submodule update --init
+b) without git:
+    1) download all modules separately:
+        http://github.com/asherikov/oru_walk_module/downloads
+        http://github.com/asherikov/smpc_solver/downloads
+        http://github.com/asherikov/nao_igm/downloads
+    2) put smpc_solver and nao_igm in the corresponding directories 
+       in oru_walk_module.
+
+Compilation:
+    make cmake TOOLCHAIN=<path to the toolchain>
+
+Running:
+    PYTHONPATH  <path to the sdk>/lib

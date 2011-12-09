@@ -62,9 +62,13 @@ void mpc_walk::walk()
 }
 
 
-void mpc_walk::stop()
+void mpc_walk::stopWalking()
 {
-    fDCMPostProcessConnection.disconnect();
+    try
+    {
+        fDCMPostProcessConnection.disconnect();
+    }
+    // Don't care about failures
 }
 
 
@@ -95,20 +99,20 @@ void mpc_walk::callbackEveryCycle_walk()
     // If the "current support leg" is the Right leg
     if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)
     {
-        stop();
+        stopWalking();
         throw ALERROR(getName(), __FUNCTION__, "IK does not converge.");
     }
 
     if (nao.checkJointBounds() >= 0)
     {
-        stop();
+        stopWalking();
         throw ALERROR(getName(), __FUNCTION__, "Joint bounds are violated.");
     }
 
 
     for (int i = 0; i < JOINTS_NUM; i++)
     {
-        walkCommands[5][i] = nao.q[i];
+        walkCommands[5][i][0] = nao.q[i];
     }
 
 
@@ -248,7 +252,7 @@ void mpc_walk::initInvPendulumModel ()
     B[0] = control_sampling_time * control_sampling_time * control_sampling_time / 6 
         - wmg->hCoM * control_sampling_time;
     B[1] = control_sampling_time * control_sampling_time/2;
-    B[3] = control_sampling_time;
+    B[2] = control_sampling_time;
 
     for (int i = 0; i < 6; i++)
     {
@@ -291,7 +295,7 @@ void mpc_walk::solveMPCProblem ()
 
         if (wmg_retval == WMG_HALT)
         {
-            stop();
+            stopWalking();
             return;
         }
 

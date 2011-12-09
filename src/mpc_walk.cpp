@@ -31,8 +31,8 @@ mpc_walk::mpc_walk(ALPtr<ALBroker> broker, const string& name) :
     functionName( "walk", getName() , "walk");
     BIND_METHOD( mpc_walk::walk );
 
-    functionName( "stop", getName() , "stop");
-    BIND_METHOD( mpc_walk::stop );
+    functionName( "stopWalking", getName() , "stopWalking");
+    BIND_METHOD( mpc_walk::stopWalking );
 
 
     wmg = NULL;
@@ -123,7 +123,7 @@ void mpc_walk::initFastRead()
     fSensorKeys.clear();
 
     //  Here as an example /*inertial*/ + joints + /*FSR*/ are read
-    fSensorKeys.resize(/*7 +*/ 25 /*+ 6*/);
+    fSensorKeys.resize(/*7 +*/ JOINTS_NUM /*+ 6*/);
 
     // Joints Sensor list
     fSensorKeys[HEAD_PITCH]       = std::string("Device/SubDeviceList/HeadPitch/Position/Sensor/Value");
@@ -168,7 +168,7 @@ void mpc_walk::initFastWrite()
     ALValue jointAliases;
 
     jointAliases.arraySetSize(2);
-    jointAliases[1].arraySetSize(25);
+    jointAliases[1].arraySetSize(JOINTS_NUM);
 
     // Joints actuator list
     jointAliases[1][HEAD_PITCH]       = std::string("Device/SubDeviceList/HeadPitch/Position/Actuator/Value");
@@ -200,7 +200,7 @@ void mpc_walk::initFastWrite()
 
 
     // positions of actuators.
-    jointAliases[0] = std::string("jointActuator"); // Alias for all 25 joint actuators
+    jointAliases[0] = std::string("jointActuator"); // Alias for all joint actuators
     // Create alias
     try
     {
@@ -213,7 +213,7 @@ void mpc_walk::initFastWrite()
 
 
     //  stiffness of actuators.
-    jointAliases[0] = std::string("jointStiffness"); // Alias for all 25 actuators
+    jointAliases[0] = std::string("jointStiffness"); // Alias for all actuators
     // Create alias
     try
     {

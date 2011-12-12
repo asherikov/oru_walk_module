@@ -13,8 +13,7 @@ void mpc_walk::walk()
     /// @attention Hardcoded parameters.
     control_sampling_time_ms = 10;
     preview_sampling_time_ms = 100;
-    next_preview_len_ms = preview_sampling_time_ms;
-    step_height = 0.0135; // step hight (for interpolation of feet movements)
+    next_preview_len_ms = 0;
     preview_window_size = 15;
 
 
@@ -41,7 +40,8 @@ void mpc_walk::walk()
     initNaoModel ();
     wmg->init_param (     
             (double) preview_sampling_time_ms / 1000, // sampling time in seconds
-            nao.CoM_position[2]);                     // height of the center of mass
+            nao.CoM_position[2],                      // height of the center of mass
+            0.0135);                // step hight (for interpolation of feet movements)
 
     initInvPendulumModel ();
             
@@ -64,11 +64,7 @@ void mpc_walk::walk()
 
 void mpc_walk::stopWalking()
 {
-    try
-    {
-        fDCMPostProcessConnection.disconnect();
-    }
-    // Don't care about failures
+    fDCMPostProcessConnection.disconnect();
 }
 
 
@@ -85,7 +81,18 @@ void mpc_walk::callbackEveryCycle_walk()
     // support foot and swing foot position/orientation
     double LegPos_des[POSITION_VECTOR_SIZE];
     double LegRot_des[ORIENTATION_MATRIX_SIZE];
-    determineFootPosition (LegPos_des, LegRot_des);
+    double angle;
+    wmg->getSwingFootPosition (
+            WMG_SWING_PARABOLA, 
+            preview_sampling_time_ms / control_sampling_time_ms,
+            (preview_sampling_time_ms - next_preview_len_ms) / control_sampling_time_ms,
+            LegPos_des,
+            &angle);
+    // form the rotation matrix corresponding to a set of roll-pitch-yaw angles
+    nao.rpy2R(  0.0, // roll angle 
+                0.0, // pitch angle
+                angle, // yaw angle
+                LegRot_des); // Rotation matrix corresponding to the roll-pitch-yaw angles
     nao.initPosture (nao.swing_foot_posture, LegPos_des, LegRot_des);
 
 
@@ -299,7 +306,7 @@ void mpc_walk::solveMPCProblem ()
             return;
         }
 
-        if (wmg_retval == WMG_SWITCH_SUPPORT)
+        if (wmg_retval == WMG_SWITCH_REFERENCE_FOOT)
         {
             nao.switchSupportFoot();
         }
@@ -315,55 +322,4 @@ void mpc_walk::solveMPCProblem ()
     solver->get_next_state (next_state);
     solver->get_first_controls (cur_control);
     //------------------------------------------------------
-}
-
-
-/**
- * @brief Fits a parabola in X,Z plane.
- *
- * @param[] LegPos_des
- * @param[] LegRot_des
- *
- * @return 
- */
-void mpc_walk::determineFootPosition (double* LegPos_des, double* LegRot_des)
-{
-    int loops_per_preview_iter = preview_sampling_time_ms / control_sampling_time_ms;
-    int num_iter_in_ss; 
-    int num_iter_in_ss_passed; 
-    double prev_swing_pos[3];
-    double next_swing_pos[3];
-
-    wmg->get_swing_foot_pos (
-            prev_swing_pos, 
-            next_swing_pos, 
-            &num_iter_in_ss,
-            &num_iter_in_ss_passed);
-
-    double theta = 
-        (loops_per_preview_iter * num_iter_in_ss_passed + 
-         (preview_sampling_time_ms - next_preview_len_ms) / control_sampling_time_ms) /
-        (loops_per_preview_iter * num_iter_in_ss);
-
-    double x[3] = {
-        prev_swing_pos[0], 
-        (prev_swing_pos[0] + next_swing_pos[0])/2, 
-        next_swing_pos[0]};
-
-    double b_coef = - (x[2]*x[2] - x[0]*x[0])/(x[2] - x[0]);
-    double a = step_height / (x[1]*x[1] - x[0]*x[0] + b_coef*(x[1] - x[0]));
-    double b = a * b_coef;
-    double c = - a*x[0]*x[0] - b*x[0];
-
-    LegPos_des[0] = (1-theta)*x[2] + theta*x[0]; // linear equation
-    LegPos_des[1] = next_swing_pos[1];
-    LegPos_des[2] = a * LegPos_des[0] * LegPos_des[0] + b * LegPos_des[0] + c;
-
-
-    // PAY ATTENTION: IT WORKS WITH NO ROTATION FS!
-    // form the rotation matrix corresponding to a set of roll-pitch-yaw angles
-    nao.rpy2R(  0.0, // roll angle 
-                0.0, // pitch angle
-                next_swing_pos[2], // yaw angle
-                LegRot_des); // Rotation matrix corresponding to the roll-pitch-yaw angles
 }

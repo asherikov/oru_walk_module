@@ -56,7 +56,7 @@ while True:
 		elif nao_action == 3:
 			walk_proxy.initPosition()
 		elif nao_action == 4:
-			walk_proxy.stop()
+			walk_proxy.stopWalking()
 		elif nao_action == 5:
 			walk_proxy.walk()
 	except Exception,e:

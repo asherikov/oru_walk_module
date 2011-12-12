@@ -53,12 +53,6 @@
 // DEFINITIONS
 //----------------------------------------
 
-#ifndef __FUNCTION__
-// =)))
-#define __FUNCTION__ "<name of the function is unknown>"
-#endif
-
-
 
 using namespace AL;
 using namespace std;
@@ -100,7 +94,6 @@ private:
     void initNaoModel ();
     void initInvPendulumModel ();
     void solveMPCProblem ();
-    void determineFootPosition (double *, double *);
     // Callback called by the DCM every 10ms
     void callbackEveryCycle_walk();
 
@@ -138,7 +131,6 @@ private:
 
 
 
-    double step_height;
     double preview_window_size;
     int next_preview_len_ms;
     int control_sampling_time_ms;

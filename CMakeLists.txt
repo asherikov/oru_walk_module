@@ -7,7 +7,6 @@ use(NAOQI-PLUGINS-TOOLS)
 ####################################
 # Settings
 ####################################
-set (CMAKE_BUILD_TYPE "Release") # release by default
 set (CMAKE_SKIP_ASSEMBLY_SOURCE_RULES ON)
 set (CMAKE_SKIP_PREPROCESSED_SOURCE_RULES ON)
 set (CMAKE_VERBOSE_MAKEFILE ON) # print full commands during compilation

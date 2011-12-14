@@ -12,7 +12,7 @@ from optparse import OptionParser
 
 parser = OptionParser()
 parser.add_option("-a", "--action", action="store", type="int", dest="nao_action", default=0)
-parser.add_option("-b", "--broker-ip", action="store", type="string", dest="IP", default="10.0.0.22")
+parser.add_option("-b", "--broker-ip", action="store", type="string", dest="IP", default="127.0.0.1")
 parser.add_option("-p", "--broker-port", action="store", type="int", dest="PORT", default=9559)
 (options, args) = parser.parse_args();
 

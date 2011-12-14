@@ -256,8 +256,8 @@ void mpc_walk::initInvPendulumModel ()
     A[3] = A[7] = control_sampling_time;
     A[6] = control_sampling_time * control_sampling_time/2 /*- delta_hCoM = 0*/;
 
-    B[0] = control_sampling_time * control_sampling_time * control_sampling_time / 6 
-        - wmg->hCoM * control_sampling_time;
+    B[0] = control_sampling_time * control_sampling_time * control_sampling_time / 6
+        - wmg->hCoM/wmg->gravity * control_sampling_time;
     B[1] = control_sampling_time * control_sampling_time/2;
     B[2] = control_sampling_time;
 
@@ -276,23 +276,28 @@ void mpc_walk::initInvPendulumModel ()
 void mpc_walk::solveMPCProblem ()
 {
     // update state
-    wmg->X_tilde[0] = wmg->X_tilde[0] * A[0] 
+    wmg->X_tilde[0] = wmg->X_tilde[0] * A[0]
                      + wmg->X_tilde[1] * A[3]
                      + wmg->X_tilde[2] * A[6]
                      + cur_control[0] * B[0];
-    wmg->X_tilde[1] = wmg->X_tilde[1] * A[3]
-                     + wmg->X_tilde[2] * A[6]
+
+    wmg->X_tilde[1] = wmg->X_tilde[1] * A[4]
+                     + wmg->X_tilde[2] * A[7]
                      + cur_control[0] * B[1];
-    wmg->X_tilde[2] = wmg->X_tilde[2] * A[6]
+
+    wmg->X_tilde[2] = wmg->X_tilde[2] * A[8]
                      + cur_control[0] * B[2];
-    wmg->X_tilde[3] = wmg->X_tilde[3] * A[0] 
+
+    wmg->X_tilde[3] = wmg->X_tilde[3] * A[0]
                      + wmg->X_tilde[4] * A[3]
                      + wmg->X_tilde[5] * A[6]
                      + cur_control[1] * B[0];
-    wmg->X_tilde[4] = wmg->X_tilde[4] * A[3]
-                     + wmg->X_tilde[5] * A[6]
+
+    wmg->X_tilde[4] = wmg->X_tilde[4] * A[4]
+                     + wmg->X_tilde[5] * A[7]
                      + cur_control[1] * B[1];
-    wmg->X_tilde[5] = wmg->X_tilde[5] * A[6]
+
+    wmg->X_tilde[5] = wmg->X_tilde[5] * A[8]
                      + cur_control[1] * B[2];
 
 

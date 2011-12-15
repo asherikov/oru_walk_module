@@ -246,6 +246,7 @@ void mpc_walk::initWMG ()
 
 /**
  * @brief 
+ * @attention nao model must be already initialized!
  */
 void mpc_walk::initInvPendulumModel ()
 {
@@ -265,6 +266,9 @@ void mpc_walk::initInvPendulumModel ()
     {
         wmg->X_tilde[i] = 0;
     }
+    wmg->X_tilde[0] = nao.CoM_position[0];
+    wmg->X_tilde[3] = nao.CoM_position[1];
+    solver->convert_to_tilde (wmg->hCoM/wmg->gravity, wmg->X_tilde);
     cur_control[0] = cur_control[1] = 0;
 }
 
@@ -275,6 +279,33 @@ void mpc_walk::initInvPendulumModel ()
  */
 void mpc_walk::solveMPCProblem ()
 {
+    if (next_preview_len_ms == 0)
+    {
+        WMGret wmg_retval = wmg->FormPreviewWindow();
+
+        if (wmg_retval == WMG_HALT)
+        {
+            stopWalking();
+            return;
+        }
+
+        if (wmg_retval == WMG_SWITCH_REFERENCE_FOOT)
+        {
+            nao.switchSupportFoot();
+        }
+
+        next_preview_len_ms = preview_sampling_time_ms;
+    }
+
+    wmg->T[0] = (double) next_preview_len_ms / 1000; // get seconds
+    //------------------------------------------------------
+    solver->set_parameters (wmg->T, wmg->h, wmg->angle, wmg->zref_x, wmg->zref_y, wmg->lb, wmg->ub);
+    solver->form_init_fp (wmg->fp_x, wmg->fp_y, wmg->X_tilde, wmg->X);
+    solver->solve();
+    solver->get_next_state (next_state);
+    solver->get_first_controls (cur_control);
+    //------------------------------------------------------
+
     // update state
     wmg->X_tilde[0] = wmg->X_tilde[0] * A[0]
                      + wmg->X_tilde[1] * A[3]
@@ -299,32 +330,4 @@ void mpc_walk::solveMPCProblem ()
 
     wmg->X_tilde[5] = wmg->X_tilde[5] * A[8]
                      + cur_control[1] * B[2];
-
-
-    if (next_preview_len_ms == 0)
-    {
-        WMGret wmg_retval = wmg->FormPreviewWindow();
-
-        if (wmg_retval == WMG_HALT)
-        {
-            stopWalking();
-            return;
-        }
-
-        if (wmg_retval == WMG_SWITCH_REFERENCE_FOOT)
-        {
-            nao.switchSupportFoot();
-        }
-
-        next_preview_len_ms = preview_sampling_time_ms;
-    }
-
-    wmg->T[0] = (double) next_preview_len_ms / 1000; // get seconds
-    //------------------------------------------------------
-    solver->set_parameters (wmg->T, wmg->h, wmg->angle, wmg->zref_x, wmg->zref_y, wmg->lb, wmg->ub);
-    solver->form_init_fp (wmg->zref_x, wmg->zref_y, wmg->X_tilde, wmg->X);
-    solver->solve();
-    solver->get_next_state (next_state);
-    solver->get_first_controls (cur_control);
-    //------------------------------------------------------
 }

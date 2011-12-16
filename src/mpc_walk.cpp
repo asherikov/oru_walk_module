@@ -46,7 +46,7 @@ mpc_walk::mpc_walk(ALPtr<ALBroker> broker, const string& name) :
  */
 mpc_walk::~mpc_walk()
 {
-    //setStiffness(0.0f);
+    setStiffness(0.0f);
     // Remove the postProcess call back connection
     fDCMPostProcessConnection.disconnect();
 
@@ -170,6 +170,8 @@ void mpc_walk::initFastWrite()
     jointAliases.arraySetSize(2);
     jointAliases[1].arraySetSize(JOINTS_NUM);
 
+    // positions of actuators.
+    jointAliases[0] = std::string("jointActuator"); // Alias for all joint actuators
     // Joints actuator list
     jointAliases[1][HEAD_PITCH]       = std::string("Device/SubDeviceList/HeadPitch/Position/Actuator/Value");
     jointAliases[1][HEAD_YAW]         = std::string("Device/SubDeviceList/HeadYaw/Position/Actuator/Value");
@@ -198,9 +200,6 @@ void mpc_walk::initFastWrite()
     jointAliases[1][R_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/RShoulderRoll/Position/Actuator/Value");
     jointAliases[1][R_WRIST_YAW]      = std::string("Device/SubDeviceList/RWristYaw/Position/Actuator/Value");
 
-
-    // positions of actuators.
-    jointAliases[0] = std::string("jointActuator"); // Alias for all joint actuators
     // Create alias
     try
     {
@@ -208,12 +207,40 @@ void mpc_walk::initFastWrite()
     }
     catch (const ALError &e)
     {
-        throw ALERROR(getName(), "createPositionActuatorAlias()", "Error when creating Alias : " + e.toString());
+        throw ALERROR(getName(), __FUNCTION__, "Error when creating Alias : " + e.toString());
     }
+
 
 
     //  stiffness of actuators.
     jointAliases[0] = std::string("jointStiffness"); // Alias for all actuators
+    jointAliases[1][HEAD_PITCH]       = std::string("Device/SubDeviceList/HeadPitch/Hardness/Actuator/Value");
+    jointAliases[1][HEAD_YAW]         = std::string("Device/SubDeviceList/HeadYaw/Hardness/Actuator/Value");
+    jointAliases[1][L_ANKLE_PITCH]    = std::string("Device/SubDeviceList/LAnklePitch/Hardness/Actuator/Value");
+    jointAliases[1][L_ANKLE_ROLL]     = std::string("Device/SubDeviceList/LAnkleRoll/Hardness/Actuator/Value");
+    jointAliases[1][L_ELBOW_ROLL]     = std::string("Device/SubDeviceList/LElbowRoll/Hardness/Actuator/Value");
+    jointAliases[1][L_ELBOW_YAW]      = std::string("Device/SubDeviceList/LElbowYaw/Hardness/Actuator/Value");
+    jointAliases[1][L_HIP_PITCH]      = std::string("Device/SubDeviceList/LHipPitch/Hardness/Actuator/Value");
+    jointAliases[1][L_HIP_ROLL]       = std::string("Device/SubDeviceList/LHipRoll/Hardness/Actuator/Value");
+    jointAliases[1][L_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/LHipYawPitch/Hardness/Actuator/Value");
+    jointAliases[1][L_KNEE_PITCH]     = std::string("Device/SubDeviceList/LKneePitch/Hardness/Actuator/Value");
+    jointAliases[1][L_SHOULDER_PITCH] = std::string("Device/SubDeviceList/LShoulderPitch/Hardness/Actuator/Value");
+    jointAliases[1][L_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/LShoulderRoll/Hardness/Actuator/Value");
+    jointAliases[1][L_WRIST_YAW]      = std::string("Device/SubDeviceList/LWristYaw/Hardness/Actuator/Value");
+
+    jointAliases[1][R_ANKLE_PITCH]    = std::string("Device/SubDeviceList/RAnklePitch/Hardness/Actuator/Value");
+    jointAliases[1][R_ANKLE_ROLL]     = std::string("Device/SubDeviceList/RAnkleRoll/Hardness/Actuator/Value");
+    jointAliases[1][R_ELBOW_ROLL]     = std::string("Device/SubDeviceList/RElbowRoll/Hardness/Actuator/Value");
+    jointAliases[1][R_ELBOW_YAW]      = std::string("Device/SubDeviceList/RElbowYaw/Hardness/Actuator/Value");
+    jointAliases[1][R_HIP_PITCH]      = std::string("Device/SubDeviceList/RHipPitch/Hardness/Actuator/Value");
+    jointAliases[1][R_HIP_ROLL]       = std::string("Device/SubDeviceList/RHipRoll/Hardness/Actuator/Value");
+    /// @todo note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
+    jointAliases[1][R_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/RHipYawPitch/Hardness/Sensor/Value");
+    jointAliases[1][R_KNEE_PITCH]     = std::string("Device/SubDeviceList/RKneePitch/Hardness/Actuator/Value");
+    jointAliases[1][R_SHOULDER_PITCH] = std::string("Device/SubDeviceList/RShoulderPitch/Hardness/Actuator/Value");
+    jointAliases[1][R_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/RShoulderRoll/Hardness/Actuator/Value");
+    jointAliases[1][R_WRIST_YAW]      = std::string("Device/SubDeviceList/RWristYaw/Hardness/Actuator/Value");
+
     // Create alias
     try
     {
@@ -221,7 +248,7 @@ void mpc_walk::initFastWrite()
     }
     catch (const ALError &e)
     {
-        throw ALERROR(getName(), "createStiffnessActuatorAlias()", "Error when creating Alias : " + e.toString());
+        throw ALERROR(getName(), __FUNCTION__, "Error when creating Alias : " + e.toString());
     }
 }
 

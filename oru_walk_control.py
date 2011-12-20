@@ -35,7 +35,7 @@ while True:
 		print "Please enter '0' to exit script"
 		print "Please enter '1' to set stiffness to 1"
 		print "Please enter '2' to set stiffness to 0"
-		print "Please enter '3' to to initial position"
+		print "Please enter '3' to set initial position"
 		print "Please enter '4' to stop"
 		print "Please enter '5' to walk"
 		try:

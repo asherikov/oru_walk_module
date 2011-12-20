@@ -84,36 +84,36 @@ void mpc_walk::initPosition()
     // init pose with Torso z values equal to 0.3
     // --------------------------------------------------------------
     // CoM to be at 0.252
-    initPositionCommands[5][L_HIP_YAW_PITCH][0]  =  0.0;        //0
+    initPositionCommands[5][L_HIP_YAW_PITCH][0]  =  0.0;
     /// @todo note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
-    initPositionCommands[5][R_HIP_YAW_PITCH][0]  =  0.0;        //0
+    initPositionCommands[5][R_HIP_YAW_PITCH][0]  =  0.0;
 
-    initPositionCommands[5][L_HIP_ROLL][0]       = -0.000384;   //1
-    initPositionCommands[5][L_HIP_PITCH][0]      = -0.598291;   //2
-    initPositionCommands[5][L_KNEE_PITCH][0]     =  1.009413;   //3
-    initPositionCommands[5][L_ANKLE_PITCH][0]    = -0.492352;   //4
-    initPositionCommands[5][L_ANKLE_ROLL][0]     =  0.000469;   //5
+    initPositionCommands[5][L_HIP_ROLL][0]       = -0.000384;
+    initPositionCommands[5][L_HIP_PITCH][0]      = -0.598291;
+    initPositionCommands[5][L_KNEE_PITCH][0]     =  1.009413;
+    initPositionCommands[5][L_ANKLE_PITCH][0]    = -0.492352;
+    initPositionCommands[5][L_ANKLE_ROLL][0]     =  0.000469;
 
-    initPositionCommands[5][R_HIP_ROLL][0]       = -0.000384;   //6
-    initPositionCommands[5][R_HIP_PITCH][0]      = -0.598219;   //7
-    initPositionCommands[5][R_KNEE_PITCH][0]     =  1.009237;   //8
-    initPositionCommands[5][R_ANKLE_PITCH][0]    = -0.492248;   //9
-    initPositionCommands[5][R_ANKLE_ROLL][0]     =  0.000469;   //10
+    initPositionCommands[5][R_HIP_ROLL][0]       = -0.000384;
+    initPositionCommands[5][R_HIP_PITCH][0]      = -0.598219;
+    initPositionCommands[5][R_KNEE_PITCH][0]     =  1.009237;
+    initPositionCommands[5][R_ANKLE_PITCH][0]    = -0.492248;
+    initPositionCommands[5][R_ANKLE_ROLL][0]     =  0.000469;
 
-    initPositionCommands[5][L_SHOULDER_PITCH][0] =  1.418908;   //11
-    initPositionCommands[5][L_SHOULDER_ROLL][0]  =  0.332836;   //12
-    initPositionCommands[5][L_ELBOW_YAW][0]      = -1.379108;   //13
-    initPositionCommands[5][L_ELBOW_ROLL][0]     = -1.021602;   //14
-    initPositionCommands[5][L_WRIST_YAW][0]      = -0.013848;   //15
+    initPositionCommands[5][L_SHOULDER_PITCH][0] =  1.418908;
+    initPositionCommands[5][L_SHOULDER_ROLL][0]  =  0.332836;
+    initPositionCommands[5][L_ELBOW_YAW][0]      = -1.379108;
+    initPositionCommands[5][L_ELBOW_ROLL][0]     = -1.021602;
+    initPositionCommands[5][L_WRIST_YAW][0]      = -0.013848;
 
-    initPositionCommands[5][R_SHOULDER_PITCH][0] =  1.425128;   //17
-    initPositionCommands[5][R_SHOULDER_ROLL][0]  = -0.331386;   //18
-    initPositionCommands[5][R_ELBOW_YAW][0]      =  1.383626;   //19
-    initPositionCommands[5][R_ELBOW_ROLL][0]     =  1.029356;   //20
-    initPositionCommands[5][R_WRIST_YAW][0]      = -0.01078;    //21
+    initPositionCommands[5][R_SHOULDER_PITCH][0] =  1.425128;
+    initPositionCommands[5][R_SHOULDER_ROLL][0]  = -0.331386;
+    initPositionCommands[5][R_ELBOW_YAW][0]      =  1.383626;
+    initPositionCommands[5][R_ELBOW_ROLL][0]     =  1.029356;
+    initPositionCommands[5][R_WRIST_YAW][0]      = -0.01078; 
 
-    initPositionCommands[5][HEAD_PITCH][0]       =  0.0;        //23
-    initPositionCommands[5][HEAD_YAW][0]         =  0.0;        //24
+    initPositionCommands[5][HEAD_PITCH][0]       =  0.0;     
+    initPositionCommands[5][HEAD_YAW][0]         =  0.0;     
     // --------------------------------------------------------------
 
 

@@ -118,11 +118,10 @@ void mpc_walk::initPosition()
 
 
     // set time
-    /// @attention Hardcoded parameter!
-    int init_pos_time = 1200;
     try
     {
-        initPositionCommands[4][0] = dcmProxy->getTime(init_pos_time);
+        /// @attention Hardcoded parameter!
+        initPositionCommands[4][0] = dcmProxy->getTime(1200);
     }
     catch (const ALError &e)
     {

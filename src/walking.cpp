@@ -103,7 +103,6 @@ void mpc_walk::callbackEveryCycle_walk()
     nao.CoM_position[2] = wmg->hCoM;     // z
 
 
-    // If the "current support leg" is the Right leg
     if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)
     {
         stopWalking();
@@ -165,8 +164,8 @@ void mpc_walk::initNaoModel ()
 
     // support foot position and orientation
     /// @attention Hardcoded parameters.
-    double foot_position[3] = {0.0, -0.05, 0.0};
-    double foot_orientation[9] = {
+    double foot_position[POSITION_VECTOR_SIZE] = {0.0, -0.05, 0.0};
+    double foot_orientation[ORIENTATION_MATRIX_SIZE] = {
         1.0, 0.0, 0.0,
         0.0, 1.0, 0.0,
         0.0, 0.0, 1.0};

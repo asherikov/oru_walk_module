@@ -1,14 +1,4 @@
-IGM_DIR=nao_igm
-SOLVER_DIR=smpc_solver
-
-
-ifdef DEBUG
-DEBUGFLAGS=DEBUG=1
-CMAKEFLAGS=-DCMAKE_BUILD_TYPE=DEBUG
-else
-DEBUGFLAGS=
-CMAKEFLAGS=-DCMAKE_BUILD_TYPE=Release
-endif
+include ./common.mk
 
 
 cmake: solver igm
@@ -21,6 +11,10 @@ endif
 	cd build; ${MAKE}
 
 
+test: solver igm
+	cd test; ${MAKE}
+
+
 solver:
 	cd ${SOLVER_DIR}; ${MAKE} cmake ${DEBUGFLAGS} TOOLCHAIN=${TOOLCHAIN};
 
@@ -29,6 +23,7 @@ igm:
 
 
 clean: igm-clean solver-clean
+	cd test; ${MAKE} clean
 	rm -f src/*.o
 	rm -rf build
 

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 
+include("${CMAKE_CURRENT_SOURCE_DIR}/bootstrap.cmake")
 use(NAOQI-PLUGINS-TOOLS)
+
 
 
 ####################################
@@ -35,4 +37,4 @@ include_directories(oru_module "${PROJECT_SOURCE_DIR}/smpc_solver/include")
 include_directories(oru_module "${PROJECT_SOURCE_DIR}/nao_igm/include")
 
 
-use_lib(oru_module ALCOMMON ALMEMORY_FAST_ACCESS)
+use_lib(oru_module ALCOMMON ALMEMORYFASTACCESS)

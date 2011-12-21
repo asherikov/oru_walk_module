@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/bootstrap.cmake")
-use(NAOQI-PLUGINS-TOOLS)
 
 
 
@@ -18,18 +17,17 @@ set (CMAKE_RULE_MESSAGES OFF CACHE BOOL "")
 # Other parameters
 ####################################
 
-# set path to directories containing libraries
-link_directories( ${PROJECT_SOURCE_DIR}/smpc_solver/lib/ )
-link_directories( ${PROJECT_SOURCE_DIR}/nao_igm/lib/ )
 
-
-create_module( oru_module )
+project ( oru_module )
 file (GLOB ORU_MODULE_SRC "${PROJECT_SOURCE_DIR}/src/*.cpp")
-configure_src_module(oru_module ${ORU_MODULE_SRC})
+qi_create_lib(oru_module ${ORU_MODULE_SRC})
 
 
-# link to libraries and specify path to .h files
-target_link_libraries( oru_module wmg smpc_solver naoigm)
+# link to libraries
+target_link_libraries(oru_module 
+    "${PROJECT_SOURCE_DIR}/smpc_solver/lib/libwmg.a" 
+    "${PROJECT_SOURCE_DIR}/smpc_solver/lib/libsmpc_solver.a" 
+    "${PROJECT_SOURCE_DIR}/nao_igm/lib/libnaoigm.a")
 
 
 # set path to directories containing headers
@@ -37,4 +35,4 @@ include_directories(oru_module "${PROJECT_SOURCE_DIR}/smpc_solver/include")
 include_directories(oru_module "${PROJECT_SOURCE_DIR}/nao_igm/include")
 
 
-use_lib(oru_module ALCOMMON ALMEMORYFASTACCESS)
+qi_use_lib(oru_module ALCOMMON ALMEMORYFASTACCESS)

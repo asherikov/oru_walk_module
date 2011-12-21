@@ -15,5 +15,13 @@ b) without git:
 Compilation:
     make cmake TOOLCHAIN=<path to the toolchain>
 
+    to build a debug version add 'DEBUG=1' to the command line above
+
 Running:
+    1) Set the following environment variables:
+    LD_LIBRARY_PATH <path to the sdk>/lib
     PYTHONPATH  <path to the sdk>/lib
+
+    2) Add the name of the module to 'autoload.ini' file used by naoqi.
+    Note, that if you use naoqi on a PC, you need to make sure, that
+    'devicecommunicationmodule' is also loaded.

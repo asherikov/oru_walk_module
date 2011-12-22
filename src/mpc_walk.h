@@ -92,7 +92,6 @@ private:
     void readSensorsToNaoModel ();
     void initWMG ();
     void initNaoModel ();
-    void initInvPendulumModel ();
     void solveMPCProblem ();
     // Callback called by the DCM every 10ms
     void callbackEveryCycle_walk();
@@ -120,15 +119,9 @@ private:
     nao_igm nao;
 
 
-    // state and control matrices for inverted pendulum
-    /// @todo get rid of numbers
-    double A[9];
-    double B[3];
-
 
     double next_state[SMPC_NUM_STATE_VAR];
     double cur_control[SMPC_NUM_CONTROL_VAR];
-
 
 
     double preview_window_size;

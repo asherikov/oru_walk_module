@@ -43,7 +43,7 @@ void init_04 (WMG *wmg)
     d[1] = 0.075;
     d[2] = 0.03;
     d[3] = 0.075;
-    wmg->AddFootstep(0.0, -step_y/2, 0.0, 2, 2, d, FS_TYPE_DS);
+    wmg->AddFootstep(0.0, -step_y/2, 0.0, 1, 1, d, FS_TYPE_DS);
     // ZMP, CoM are at [0;0]
 
 
@@ -55,7 +55,7 @@ void init_04 (WMG *wmg)
     // 2 reference ZMP positions in single support 
     // 1 in double support
     // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 2,  3, d);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 4,  6, d);
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);
@@ -154,7 +154,7 @@ int main(int argc, char **argv)
             nao.CoM_position[2],                      // height of the center of mass
             0.0135);
 
-    std::string fs_out_filename("test_07_fs.m");
+    std::string fs_out_filename("test_01_fs.m");
     wmg.FS2file(fs_out_filename); // output results for later use in Matlab/Octave
 
 
@@ -171,29 +171,9 @@ int main(int argc, char **argv)
 
     //-----------------------------------------------------------
     // initialize control & state matrices
-    double control_sampling_time = (double) control_sampling_time_ms / 1000;
-    double A[9];
-    double B[3];
+    wmg.initABMatrices ((double) control_sampling_time_ms / 1000);
+    wmg.initState (nao.CoM_position[0], nao.CoM_position[1], wmg.X_tilde);
     double cur_control[2];
-    
-    A[0] = A[4] = A[8] = 1;
-    A[1] = A[2] = A[5] = 0;
-    A[3] = A[7] = control_sampling_time;
-    A[6] = control_sampling_time * control_sampling_time/2 /*- delta_hCoM = 0*/;
-
-    B[0] = control_sampling_time * control_sampling_time * control_sampling_time / 6
-        - wmg.hCoM/wmg.gravity * control_sampling_time;
-    B[1] = control_sampling_time * control_sampling_time/2;
-    B[2] = control_sampling_time;
-
-    for (int i = 0; i < 6; i++)
-    {
-        wmg.X_tilde[i] = 0;
-    }
-    // initial CoM position
-    wmg.X_tilde[0] = nao.CoM_position[0];
-    wmg.X_tilde[3] = nao.CoM_position[1];
-    solver.convert_to_tilde (wmg.hCoM/wmg.gravity, wmg.X_tilde);
     cur_control[0] = cur_control[1] = 0;
     //-----------------------------------------------------------
 
@@ -253,29 +233,7 @@ int main(int argc, char **argv)
 
         //-----------------------------------------------------------
         // update state
-        wmg.X_tilde[0] = wmg.X_tilde[0] * A[0] 
-                         + wmg.X_tilde[1] * A[3]
-                         + wmg.X_tilde[2] * A[6]
-                         + cur_control[0] * B[0];
-
-        wmg.X_tilde[1] = wmg.X_tilde[1] * A[4]
-                         + wmg.X_tilde[2] * A[7]
-                         + cur_control[0] * B[1];
-
-        wmg.X_tilde[2] = wmg.X_tilde[2] * A[8]
-                         + cur_control[0] * B[2];
-
-        wmg.X_tilde[3] = wmg.X_tilde[3] * A[0] 
-                         + wmg.X_tilde[4] * A[3]
-                         + wmg.X_tilde[5] * A[6]
-                         + cur_control[1] * B[0];
-
-        wmg.X_tilde[4] = wmg.X_tilde[4] * A[4]
-                         + wmg.X_tilde[5] * A[7]
-                         + cur_control[1] * B[1];
-
-        wmg.X_tilde[5] = wmg.X_tilde[5] * A[8]
-                         + cur_control[1] * B[2];
+        wmg.calculateNextState(cur_control, wmg.X_tilde);
         //-----------------------------------------------------------
 
 
@@ -293,7 +251,6 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
         double LegPos[POSITION_VECTOR_SIZE];
-        double LegRot[ORIENTATION_MATRIX_SIZE];
         double angle;
         wmg.getSwingFootPosition (
                 WMG_SWING_PARABOLA,
@@ -302,19 +259,15 @@ int main(int argc, char **argv)
                 LegPos,
                 &angle);
 
-        // form the rotation matrix corresponding to a set of roll-pitch-yaw angles
-        nao.rpy2R(  0.0, // roll angle 
-                    0.0, // pitch angle
-                    angle, // yaw angle
-                    LegRot); // Rotation matrix corresponding to the roll-pitch-yaw angles
-        nao.initPosture (nao.swing_foot_posture, LegPos, LegRot);
-
+        nao.initPosture (
+                nao.swing_foot_posture, 
+                LegPos,
+                0.0,    // roll angle 
+                0.0,    // pitch angle
+                angle); // yaw angle
 
         // position of CoM
-        nao.CoM_position[0] = X[0];         // x
-        nao.CoM_position[1] = X[3];         // y
-        /// @attention hCoM is constant!
-        nao.CoM_position[2] = wmg.hCoM;     // z
+        nao.setCoM(X[0], X[3], wmg.hCoM); 
 
 
         if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)

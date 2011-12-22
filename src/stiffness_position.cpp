@@ -85,7 +85,7 @@ void mpc_walk::initPosition()
     // --------------------------------------------------------------
     // CoM to be at 0.252
     initPositionCommands[5][L_HIP_YAW_PITCH][0]  =  0.0;
-    /// @todo note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
+    // note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
     initPositionCommands[5][R_HIP_YAW_PITCH][0]  =  0.0;
 
     initPositionCommands[5][L_HIP_ROLL][0]       = -0.000384;

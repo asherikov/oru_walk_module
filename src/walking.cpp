@@ -43,8 +43,10 @@ void mpc_walk::walk()
             nao.CoM_position[2],                      // height of the center of mass
             0.0135);                // step hight (for interpolation of feet movements)
 
-    initInvPendulumModel ();
-            
+    wmg->initABMatrices ((double) control_sampling_time_ms / 1000);
+    wmg->initState (nao.CoM_position[0], nao.CoM_position[1], wmg->X_tilde);
+    cur_control[0] = cur_control[1] = 0;
+
 
 // Connect callback to the DCM post proccess
     try
@@ -79,28 +81,25 @@ void mpc_walk::callbackEveryCycle_walk()
 
 
     // support foot and swing foot position/orientation
-    double LegPos_des[POSITION_VECTOR_SIZE];
-    double LegRot_des[ORIENTATION_MATRIX_SIZE];
+    double swing_foot_pos[POSITION_VECTOR_SIZE];
     double angle;
     wmg->getSwingFootPosition (
             WMG_SWING_PARABOLA, 
             preview_sampling_time_ms / control_sampling_time_ms,
             (preview_sampling_time_ms - next_preview_len_ms) / control_sampling_time_ms,
-            LegPos_des,
+            swing_foot_pos,
             &angle);
-    // form the rotation matrix corresponding to a set of roll-pitch-yaw angles
-    nao.rpy2R(  0.0, // roll angle 
-                0.0, // pitch angle
-                angle, // yaw angle
-                LegRot_des); // Rotation matrix corresponding to the roll-pitch-yaw angles
-    nao.initPosture (nao.swing_foot_posture, LegPos_des, LegRot_des);
+    nao.initPosture (
+            nao.swing_foot_posture, 
+            swing_foot_pos, 
+            0.0,    // roll angle 
+            0.0,    // pitch angle
+            angle); // yaw angle
 
 
     // position of CoM
-    nao.CoM_position[0] = next_state[0]; // x
-    nao.CoM_position[1] = next_state[3]; // y
     /// @attention hCoM is constant!
-    nao.CoM_position[2] = wmg->hCoM;     // z
+    nao.setCoM(next_state[0], next_state[3], wmg->hCoM);
 
 
     if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)
@@ -207,7 +206,7 @@ void mpc_walk::initWMG ()
     d[1] = 0.075;
     d[2] = 0.03;
     d[3] = 0.025;
-    wmg->AddFootstep(0.0, -step_y/2, 0.0, 2, 2, d, FS_TYPE_DS);
+    wmg->AddFootstep(0.0, -step_y/2, 0.0, 1, 1, d, FS_TYPE_DS);
     // ZMP, CoM are at [0;0]
 
 
@@ -219,7 +218,7 @@ void mpc_walk::initWMG ()
     // 2 reference ZMP positions in single support 
     // 1 in double support
     // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 2,  3, d);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 4,  6, d);
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);
@@ -239,36 +238,6 @@ void mpc_walk::initWMG ()
     d[2] = 0.03;
     d[3] = 0.025;
     wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 0,  0, d, FS_TYPE_SS_R);
-}
-
-
-
-/**
- * @brief 
- * @attention nao model must be already initialized!
- */
-void mpc_walk::initInvPendulumModel ()
-{
-    double control_sampling_time = (double) control_sampling_time_ms / 1000;
-
-    A[0] = A[4] = A[8] = 1;
-    A[1] = A[2] = A[5] = 0;
-    A[3] = A[7] = control_sampling_time;
-    A[6] = control_sampling_time * control_sampling_time/2 /*- delta_hCoM = 0*/;
-
-    B[0] = control_sampling_time * control_sampling_time * control_sampling_time / 6
-        - wmg->hCoM/wmg->gravity * control_sampling_time;
-    B[1] = control_sampling_time * control_sampling_time/2;
-    B[2] = control_sampling_time;
-
-    for (int i = 0; i < 6; i++)
-    {
-        wmg->X_tilde[i] = 0;
-    }
-    wmg->X_tilde[0] = nao.CoM_position[0];
-    wmg->X_tilde[3] = nao.CoM_position[1];
-    solver->convert_to_tilde (wmg->hCoM/wmg->gravity, wmg->X_tilde);
-    cur_control[0] = cur_control[1] = 0;
 }
 
 
@@ -306,27 +275,5 @@ void mpc_walk::solveMPCProblem ()
     //------------------------------------------------------
 
     // update state
-    wmg->X_tilde[0] = wmg->X_tilde[0] * A[0]
-                     + wmg->X_tilde[1] * A[3]
-                     + wmg->X_tilde[2] * A[6]
-                     + cur_control[0] * B[0];
-
-    wmg->X_tilde[1] = wmg->X_tilde[1] * A[4]
-                     + wmg->X_tilde[2] * A[7]
-                     + cur_control[0] * B[1];
-
-    wmg->X_tilde[2] = wmg->X_tilde[2] * A[8]
-                     + cur_control[0] * B[2];
-
-    wmg->X_tilde[3] = wmg->X_tilde[3] * A[0]
-                     + wmg->X_tilde[4] * A[3]
-                     + wmg->X_tilde[5] * A[6]
-                     + cur_control[1] * B[0];
-
-    wmg->X_tilde[4] = wmg->X_tilde[4] * A[4]
-                     + wmg->X_tilde[5] * A[7]
-                     + cur_control[1] * B[1];
-
-    wmg->X_tilde[5] = wmg->X_tilde[5] * A[8]
-                     + cur_control[1] * B[2];
+    wmg->calculateNextState(cur_control, wmg->X_tilde);
 }

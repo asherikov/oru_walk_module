@@ -8,6 +8,18 @@
 #include "mpc_walk.h"
 
 
+/**
+ * Measure execution time of the callback function.
+ * By default naoqi prints logs to stdout, when executed on a PC,
+ * the location of the log file on the robot is /var/log/naoqi.log
+ */
+#define ORU_MEASURE_EXEC_TIME
+#ifdef ORU_MEASURE_EXEC_TIME
+#include <qi/os.hpp>
+#include <qi/log.hpp>
+#endif
+
+
 void mpc_walk::walk()
 {
     /// @attention Hardcoded parameters.
@@ -77,6 +89,11 @@ void mpc_walk::stopWalking()
  */
 void mpc_walk::callbackEveryCycle_walk()
 {
+#ifdef ORU_MEASURE_EXEC_TIME
+    qi::os::timeval start_time;
+    qi::os::gettimeofday (&start_time);
+#endif
+
     solveMPCProblem ();
 
 
@@ -144,6 +161,15 @@ void mpc_walk::callbackEveryCycle_walk()
 
 
     next_preview_len_ms -= control_sampling_time_ms;
+
+#ifdef ORU_MEASURE_EXEC_TIME
+    qi::os::timeval end_time;
+    qi::os::gettimeofday (&end_time);
+//    qiLogInfo ("module.oru_walk", "Exec time: %d x %d -- %d x %d\n", 
+//        end_time.tv_sec, start_time.tv_sec, end_time.tv_usec, start_time.tv_usec);
+    qiLogInfo ("module.oru_walk", "Exec time (sec): %f\n", 
+        (double) end_time.tv_sec - start_time.tv_sec + 0.000001* (end_time.tv_usec - start_time.tv_usec));
+#endif
 }
 
 

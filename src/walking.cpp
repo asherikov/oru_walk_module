@@ -54,7 +54,7 @@ void mpc_walk::walk()
             (double) preview_sampling_time_ms / 1000, // sampling time in seconds
             nao.CoM_position[2],                      // height of the center of mass
             0.0135);                // step hight (for interpolation of feet movements)
-    // XXX 0.015 in the paper
+    /// @ref AldNaoPaper "0.015 in the paper"
 
     wmg->initABMatrices ((double) control_sampling_time_ms / 1000);
     wmg->initState (nao.CoM_position[0], nao.CoM_position[1], wmg->X_tilde);

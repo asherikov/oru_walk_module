@@ -26,6 +26,7 @@ clean: igm-clean solver-clean
 	cd test; ${MAKE} clean
 	rm -f src/*.o
 	rm -rf build
+	rm -rf docs
 
 igm-clean:
 	cd ${IGM_DIR}; ${MAKE} clean;

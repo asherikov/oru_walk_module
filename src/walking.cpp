@@ -54,6 +54,7 @@ void mpc_walk::walk()
             (double) preview_sampling_time_ms / 1000, // sampling time in seconds
             nao.CoM_position[2],                      // height of the center of mass
             0.0135);                // step hight (for interpolation of feet movements)
+    // XXX 0.015 in the paper
 
     wmg->initABMatrices ((double) control_sampling_time_ms / 1000);
     wmg->initState (nao.CoM_position[0], nao.CoM_position[1], wmg->X_tilde);
@@ -102,8 +103,8 @@ void mpc_walk::callbackEveryCycle_walk()
     double angle;
     wmg->getSwingFootPosition (
             WMG_SWING_PARABOLA, 
-            preview_sampling_time_ms / control_sampling_time_ms,
-            (preview_sampling_time_ms - next_preview_len_ms) / control_sampling_time_ms,
+            1,
+            1,
             swing_foot_pos,
             &angle);
     nao.initPosture (

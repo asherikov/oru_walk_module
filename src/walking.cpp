@@ -53,7 +53,8 @@ void mpc_walk::walk()
     wmg->init_param (     
             (double) preview_sampling_time_ms / 1000, // sampling time in seconds
             nao.CoM_position[2],                      // height of the center of mass
-            0.0135);                // step hight (for interpolation of feet movements)
+            0.015);                // step hight (for interpolation of feet movements)
+    /// 0.0135 in our version
     /// @ref AldNaoPaper "0.015 in the paper"
 
     wmg->initABMatrices ((double) control_sampling_time_ms / 1000);
@@ -245,7 +246,7 @@ void mpc_walk::initWMG ()
     // 2 reference ZMP positions in single support 
     // 1 in double support
     // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 4,  6, d);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 6,  8, d);
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);

@@ -253,7 +253,7 @@ int main(int argc, char **argv)
         double LegPos[POSITION_VECTOR_SIZE];
         double angle;
         wmg.getSwingFootPosition (
-                WMG_SWING_PARABOLA,
+                WMG_SWING_2D_PARABOLA,
                 preview_sampling_time_ms / control_sampling_time_ms,
                 (preview_sampling_time_ms - next_preview_len_ms) / control_sampling_time_ms,
                 LegPos,

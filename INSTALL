@@ -8,8 +8,9 @@ Requirements:
 Downloading:
 
 a) using git:
-    git clone git://github.com/asherikov/oru_walk_module.git
-    git submodule update --init
+    1) git clone git://github.com/asherikov/oru_walk_module.git
+    2) go to created oru_walk_module directory
+    3) git submodule update --init
 
 b) without git:
     1) download all modules separately:

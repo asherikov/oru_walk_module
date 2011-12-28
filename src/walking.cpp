@@ -103,7 +103,7 @@ void mpc_walk::callbackEveryCycle_walk()
     double swing_foot_pos[POSITION_VECTOR_SIZE];
     double angle;
     wmg->getSwingFootPosition (
-            WMG_SWING_PARABOLA, 
+            WMG_SWING_2D_PARABOLA, 
             1,
             1,
             swing_foot_pos,

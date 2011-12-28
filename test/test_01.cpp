@@ -254,8 +254,8 @@ int main(int argc, char **argv)
         double angle;
         wmg.getSwingFootPosition (
                 WMG_SWING_2D_PARABOLA,
-                preview_sampling_time_ms / control_sampling_time_ms,
-                (preview_sampling_time_ms - next_preview_len_ms) / control_sampling_time_ms,
+                1,
+                1,
                 LegPos,
                 &angle);
 
@@ -317,17 +317,17 @@ int main(int argc, char **argv)
     fprintf(file_op,"ZMP = [\n");
     for (unsigned int i=0; i < ZMP_x.size(); i++)
     {
-        fprintf(file_op, "%f %f %f;\n", ZMP_x[i], ZMP_y[i], 0.0);
+        fprintf(file_op, "%f %f;\n", ZMP_x[i], ZMP_y[i]);
     }
-    fprintf(file_op, "];\n\n plot3(ZMP(:,1), ZMP(:,2), ZMP(:,3), 'k')\n");
+    fprintf(file_op, "];\n\n plot3(ZMP(:,1), ZMP(:,2), 'k')\n");
 
 
     fprintf(file_op,"CoM = [\n");
     for (unsigned int i=0; i < CoM_x.size(); i++)
     {
-        fprintf(file_op, "%f %f %f;\n", CoM_x[i], CoM_y[i], 0.0);
+        fprintf(file_op, "%f %f;\n", CoM_x[i], CoM_y[i]);
     }
-    fprintf(file_op, "];\n\n plot3(CoM(:,1), CoM(:,2), CoM(:,3), 'b')\n");
+    fprintf(file_op, "];\n\n plot3(CoM(:,1), CoM(:,2), 'b')\n");
 
 
     fprintf(file_op,"hold off\n");

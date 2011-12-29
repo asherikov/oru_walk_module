@@ -4,8 +4,6 @@
  */
 
 
-#include <unistd.h>
-
 // Linux
 #ifdef LINUX
 #include <GL/gl.h>

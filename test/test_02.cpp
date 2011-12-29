@@ -1,27 +1,31 @@
-/** 
+/**
  * @file
  * @author Alexander Sherikov
  */
 
 #include <iostream>
+
 #include <fstream>
 #include <cstdio>
 #include <limits>
 #include <cmath> // abs, M_PI
 #include <cstring> //strcmp
 
-
 #include "WMG.h"
-#include "smpc_solver.h" 
-#include "nao_igm.h" 
+
+#include "smpc_solver.h"
+
+#include "nao_igm.h"
+#include "maple_functions.h"
+#include "leg2joints.h"
 #include "joints_sensors_id.h"
 
 
 using namespace std;
 
 
+#include "draw_SDL.cpp"
 #include "init_steps_nao.cpp"
-
 
 
 int main(int argc, char **argv)
@@ -33,35 +37,30 @@ int main(int argc, char **argv)
     int next_preview_len_ms = 0;
     //-----------------------------------------------------------
 
-
-
     //-----------------------------------------------------------
     // initialize classes
     WMG wmg;
     init_04 (&wmg);
-
+    vector<double> x_coord;
+    vector<double> y_coord;
+    vector<double> angle_rot;
+    wmg.getFootsteps(x_coord, y_coord, angle_rot);
 
     nao_igm nao;
     initNaoModel (&nao);
     wmg.init_param(
-            (double) preview_sampling_time_ms / 1000, // sampling time in seconds
-            nao.CoM_position[2],                      // height of the center of mass
-            0.0135);
-
-    std::string fs_out_filename("test_01_fs.m");
-    wmg.FS2file(fs_out_filename); // output results for later use in Matlab/Octave
-
+        (double) preview_sampling_time_ms / 1000, // sampling time in seconds
+        nao.CoM_position[2],                      // height of the center of mass
+        0.0135);
 
     smpc_solver solver(
-            wmg.N, // size of the preview window
-            300.0,  // Alpha
-            800.0,  // Beta
-            1.0,    // Gamma
-            0.01,   // regularization
-            1e-7);  // tolerance
+        wmg.N, // size of the preview window
+        300.0,  // Alpha
+        800.0,  // Beta
+        1.0,    // Gamma
+        0.01,   // regularization
+        1e-7);  // tolerance
     //-----------------------------------------------------------
-
-
 
     //-----------------------------------------------------------
     // initialize control & state matrices
@@ -71,29 +70,11 @@ int main(int argc, char **argv)
     cur_control[0] = cur_control[1] = 0;
     //-----------------------------------------------------------
 
-
-
-    //-----------------------------------------------------------
-    // output
-    FILE *file_op = fopen(fs_out_filename.c_str(), "a");
-    fprintf(file_op,"hold on\n");
-
-    vector<double> ZMP_x;
-    vector<double> ZMP_y;
-    vector<double> CoM_x;
-    vector<double> CoM_y;
-
-    vector<double> swing_foot_x;
-    vector<double> swing_foot_y;
-    vector<double> swing_foot_z;
-    //-----------------------------------------------------------
-
-
-
-
     double X[SMPC_NUM_STATE_VAR];
 
-    for(int i=0 ;; i++)
+    initSDL();
+    isRunning=1;
+    while (isRunning)
     {
         if (next_preview_len_ms == 0)
         {
@@ -111,10 +92,8 @@ int main(int argc, char **argv)
             }
 
             next_preview_len_ms = preview_sampling_time_ms;
-        }   
+        }
 
-       
-        
         //------------------------------------------------------
         wmg.T[0] = (double) next_preview_len_ms / 1000; // get seconds
         solver.set_parameters (wmg.T, wmg.h, wmg.angle, wmg.zref_x, wmg.zref_y, wmg.lb, wmg.ub);
@@ -130,38 +109,26 @@ int main(int argc, char **argv)
         wmg.calculateNextState(cur_control, wmg.X_tilde);
         //-----------------------------------------------------------
 
-
-
-        //-----------------------------------------------------------
-        // output
-        ZMP_x.push_back(wmg.X_tilde[0]);
-        ZMP_y.push_back(wmg.X_tilde[3]);
-        CoM_x.push_back(X[0]);
-        CoM_y.push_back(X[3]);
-        //-----------------------------------------------------------
-    
-
-
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
         double LegPos[POSITION_VECTOR_SIZE];
         double angle;
         wmg.getSwingFootPosition (
-                WMG_SWING_2D_PARABOLA,
-                1,
-                1,
-                LegPos,
-                &angle);
+            WMG_SWING_2D_PARABOLA,
+            1,
+            1,
+            LegPos,
+            &angle);
 
         nao.initPosture (
-                nao.swing_foot_posture, 
-                LegPos,
-                0.0,    // roll angle 
-                0.0,    // pitch angle
-                angle); // yaw angle
+            nao.swing_foot_posture,
+            LegPos,
+            0.0,    // roll angle
+            0.0,    // pitch angle
+            angle); // yaw angle
 
         // position of CoM
-        nao.setCoM(X[0], X[3], wmg.hCoM); 
+        nao.setCoM(X[0], X[3], wmg.hCoM);
 
 
         if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)
@@ -176,58 +143,17 @@ int main(int argc, char **argv)
         }
         //-----------------------------------------------------------
 
-
-
-        //-----------------------------------------------------------
-        // output
-        swing_foot_x.push_back(LegPos[0]);
-        swing_foot_y.push_back(LegPos[1]);
-        swing_foot_z.push_back(LegPos[2]);
-        /*
-        fprintf(file_op, "plot3([%f %f], [%f %f], [%f %f])\n",
-                LegPos[0], LegPos[0] + cos(angle)*0.005,
-                LegPos[1], LegPos[1] + sin(angle)*0.005,
-                LegPos[2], LegPos[2]);
-        */
-        //-----------------------------------------------------------
-        
-
-
         next_preview_len_ms -= control_sampling_time_ms;
+
+
+        drawSDL(50, x_coord, y_coord, angle_rot, nao.support_foot, nao.q);
     }
 
-
-
-    //-----------------------------------------------------------
-    // output
-    fprintf(file_op,"SFP = [\n");
-    for (unsigned int i=0; i < swing_foot_x.size(); i++)
+    // keep the visualization active (until ESC is pressed)
+    while (isRunning)
     {
-        fprintf(file_op, "%f %f %f;\n", swing_foot_x[i], swing_foot_y[i], swing_foot_z[i]);
+        drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.q);
     }
-    fprintf(file_op, "];\n\n plot3(SFP(:,1), SFP(:,2), SFP(:,3), 'r')\n");
-
-
-    fprintf(file_op,"ZMP = [\n");
-    for (unsigned int i=0; i < ZMP_x.size(); i++)
-    {
-        fprintf(file_op, "%f %f;\n", ZMP_x[i], ZMP_y[i]);
-    }
-    fprintf(file_op, "];\n\n plot3(ZMP(:,1), ZMP(:,2), 'k')\n");
-
-
-    fprintf(file_op,"CoM = [\n");
-    for (unsigned int i=0; i < CoM_x.size(); i++)
-    {
-        fprintf(file_op, "%f %f;\n", CoM_x[i], CoM_y[i]);
-    }
-    fprintf(file_op, "];\n\n plot3(CoM(:,1), CoM(:,2), 'b')\n");
-
-
-    fprintf(file_op,"hold off\n");
-    fclose(file_op);
-    //-----------------------------------------------------------
 
     return 0;
 }
-

@@ -8,29 +8,17 @@
 #include "mpc_walk.h"
 
 
-/**
- * Measure execution time of the callback function.
- * By default naoqi prints logs to stdout, when executed on a PC,
- * the location of the log file on the robot is /var/log/naoqi.log
- */
-#define ORU_MEASURE_EXEC_TIME
-#ifdef ORU_MEASURE_EXEC_TIME
-#include <qi/os.hpp>
-#include <qi/log.hpp>
-#endif
-
-
 void mpc_walk::walk()
 {
     /// @attention Hardcoded parameters.
     control_sampling_time_ms = 10;
     preview_sampling_time_ms = 100;
     next_preview_len_ms = 0;
-    preview_window_size = 15;
+    int preview_window_size = 15;
 
 
 // WMG
-    initWMG ();
+    initWMG (preview_window_size);
 
 
 // solver    
@@ -61,6 +49,10 @@ void mpc_walk::walk()
     wmg->initState (nao.CoM_position[0], nao.CoM_position[1], wmg->X_tilde);
     cur_control[0] = cur_control[1] = 0;
 
+#ifdef ORU_LOG_JOINTS
+    FJointsLog = fopen ("./oru_joints.log", "w");
+#endif
+
 
 // Connect callback to the DCM post proccess
     try
@@ -81,6 +73,9 @@ void mpc_walk::walk()
 void mpc_walk::stopWalking()
 {
     fDCMPostProcessConnection.disconnect();
+#ifdef ORU_LOG_JOINTS
+    fclose (FJointsLog);
+#endif
 }
 
 
@@ -94,6 +89,10 @@ void mpc_walk::callbackEveryCycle_walk()
 #ifdef ORU_MEASURE_EXEC_TIME
     qi::os::timeval start_time;
     qi::os::gettimeofday (&start_time);
+#endif
+
+#ifdef ORU_LOG_JOINTS
+    logJointValues ();
 #endif
 
     solveMPCProblem ();
@@ -144,35 +143,83 @@ void mpc_walk::callbackEveryCycle_walk()
     try
     {
         walkCommands[4][0] = dcmProxy->getTime(next_preview_len_ms);
-    }
-    catch (const AL::ALError &e)
-    {
-        throw ALERROR(getName(), __FUNCTION__, "Error on DCM getTime : " + e.toString());
-    }
-
-
-    // Set commands
-    try
-    {
         dcmProxy->setAlias(walkCommands);
     }
     catch (const AL::ALError &e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error with DCM setAlias : " + e.toString());
+        throw ALERROR(getName(), __FUNCTION__, "Cannot set joint angles: " + e.toString());
     }
-
 
     next_preview_len_ms -= control_sampling_time_ms;
 
 #ifdef ORU_MEASURE_EXEC_TIME
     qi::os::timeval end_time;
     qi::os::gettimeofday (&end_time);
-//    qiLogInfo ("module.oru_walk", "Exec time: %d x %d -- %d x %d\n", 
-//        end_time.tv_sec, start_time.tv_sec, end_time.tv_usec, start_time.tv_usec);
     qiLogInfo ("module.oru_walk", "Exec time (sec): %f\n", 
         (double) end_time.tv_sec - start_time.tv_sec + 0.000001* (end_time.tv_usec - start_time.tv_usec));
 #endif
 }
+
+
+void mpc_walk::logJointValues()
+{
+    accessSensorValues->GetValues (sensorValues);
+    fprintf (FJointsLog, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f    ",
+                        sensorValues[HEAD_PITCH],
+                        sensorValues[HEAD_YAW],
+                        //
+                        sensorValues[L_ANKLE_PITCH],
+                        sensorValues[L_ANKLE_ROLL],
+                        sensorValues[L_ELBOW_ROLL],
+                        sensorValues[L_ELBOW_YAW],
+                        sensorValues[L_HIP_PITCH],
+                        sensorValues[L_HIP_ROLL],
+                        sensorValues[L_HIP_YAW_PITCH],
+                        sensorValues[L_KNEE_PITCH],
+                        sensorValues[L_SHOULDER_PITCH],
+                        sensorValues[L_SHOULDER_ROLL],
+                        sensorValues[L_WRIST_YAW],
+                        //
+                        sensorValues[R_ANKLE_PITCH],
+                        sensorValues[R_ANKLE_ROLL],
+                        sensorValues[R_ELBOW_ROLL],
+                        sensorValues[R_ELBOW_YAW],
+                        sensorValues[R_HIP_PITCH],
+                        sensorValues[R_HIP_ROLL],
+                        sensorValues[R_KNEE_PITCH],
+                        sensorValues[R_SHOULDER_PITCH],
+                        sensorValues[R_SHOULDER_ROLL],
+                        sensorValues[R_WRIST_YAW]);
+    
+    accessActuatorValues->GetValues (sensorValues);
+    fprintf (FJointsLog, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
+                        sensorValues[HEAD_PITCH],
+                        sensorValues[HEAD_YAW],
+                        //
+                        sensorValues[L_ANKLE_PITCH],
+                        sensorValues[L_ANKLE_ROLL],
+                        sensorValues[L_ELBOW_ROLL],
+                        sensorValues[L_ELBOW_YAW],
+                        sensorValues[L_HIP_PITCH],
+                        sensorValues[L_HIP_ROLL],
+                        sensorValues[L_HIP_YAW_PITCH],
+                        sensorValues[L_KNEE_PITCH],
+                        sensorValues[L_SHOULDER_PITCH],
+                        sensorValues[L_SHOULDER_ROLL],
+                        sensorValues[L_WRIST_YAW],
+                        //
+                        sensorValues[R_ANKLE_PITCH],
+                        sensorValues[R_ANKLE_ROLL],
+                        sensorValues[R_ELBOW_ROLL],
+                        sensorValues[R_ELBOW_YAW],
+                        sensorValues[R_HIP_PITCH],
+                        sensorValues[R_HIP_ROLL],
+                        sensorValues[R_KNEE_PITCH],
+                        sensorValues[R_SHOULDER_PITCH],
+                        sensorValues[R_SHOULDER_ROLL],
+                        sensorValues[R_WRIST_YAW]);
+}
+
 
 
 
@@ -182,7 +229,7 @@ void mpc_walk::callbackEveryCycle_walk()
 void mpc_walk::initNaoModel ()
 {
     // read joint anglesand initialize model
-    fMemoryFastAccess->GetValues(sensorValues);
+    accessSensorValues->GetValues (sensorValues);
     for (int i = 0; i < JOINTS_NUM; i++)
     {
         nao.q[i] = sensorValues[i];
@@ -207,7 +254,7 @@ void mpc_walk::initNaoModel ()
 /**
  * @brief 
  */
-void mpc_walk::initWMG ()
+void mpc_walk::initWMG (const int preview_window_size)
 {
     if (wmg != NULL)
     {

@@ -10,6 +10,20 @@
 #define ORU_MODULE_MPC_WALK_H
 
 
+/**
+ * Measure execution time of the callback function.
+ * By default naoqi prints logs to stdout, when executed on a PC,
+ * the location of the log file on the robot is /var/log/naoqi.log
+ */
+#define ORU_MEASURE_EXEC_TIME
+
+/**
+ * @brief Read and log values of joint sensors and actuators.
+ */
+#define ORU_LOG_JOINTS
+
+
+
 //----------------------------------------
 // INCLUDES
 //----------------------------------------
@@ -47,6 +61,17 @@
 #include "smpc_solver.h" // solver
 #include "joints_sensors_id.h"
 #include "nao_igm.h"
+
+
+#ifdef ORU_MEASURE_EXEC_TIME
+#include <qi/os.hpp>
+#include <qi/log.hpp>
+#endif
+
+#ifdef ORU_LOG_JOINTS
+#include <cstdio>
+#endif
+
 
 
 //----------------------------------------
@@ -90,9 +115,11 @@ private:
 
     // walking
     void readSensorsToNaoModel ();
-    void initWMG ();
+    void initWMG (const int);
     void initNaoModel ();
     void solveMPCProblem ();
+    void logJointValues();
+
     // Callback called by the DCM every 10ms
     void callbackEveryCycle_walk();
 
@@ -103,7 +130,8 @@ private:
     ProcessSignalConnection fDCMPostProcessConnection;
 
     // Used for fast memory access
-    ALPtr<ALMemoryFastAccess> fMemoryFastAccess;
+    ALPtr<ALMemoryFastAccess> accessSensorValues;
+    ALPtr<ALMemoryFastAccess> accessActuatorValues;
 
     // Store sensor values.
     vector<float> sensorValues;
@@ -124,10 +152,13 @@ private:
     double cur_control[SMPC_NUM_CONTROL_VAR];
 
 
-    double preview_window_size;
     int next_preview_len_ms;
     int control_sampling_time_ms;
     int preview_sampling_time_ms;
+
+#ifdef ORU_LOG_JOINTS
+    FILE *FJointsLog;
+#endif
 };
 
 #endif  // ORU_MODULE_MPC_WALK_H

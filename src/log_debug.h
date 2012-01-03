@@ -49,6 +49,7 @@ class oruw_timer
 #include <alcore/alptr.h>
 #include <almemoryfastaccess/almemoryfastaccess.h>
 
+#include "nao_igm.h"
 #include "joints_sensors_id.h"
 
 using namespace AL;
@@ -60,9 +61,13 @@ class oruw_log
         oruw_log ();
         ~oruw_log ();
 
-        void logJointValues(
+        void logJointValues (
                 ALPtr<ALMemoryFastAccess> accessSensorValues,
                 ALPtr<ALMemoryFastAccess> accessActuatorValues);
+
+        void logCoM (
+                nao_igm nao,
+                ALPtr<ALMemoryFastAccess> accessSensorValues);
 
     private:
         FILE *FJointsLog;
@@ -75,12 +80,14 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_OPEN oruw_log_instance = new oruw_log
 #define ORUW_LOG_CLOSE delete oruw_log_instance
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
+#define ORUW_LOG_COM(nao,sensors) oruw_log_instance->logCoM(nao,sensors)
 
 #else // ORUW_LOG_ENABLE
 
 #define ORUW_LOG_OPEN 
 #define ORUW_LOG_CLOSE 
-#define ORUW_LOG_JOINTS(a,b)
+#define ORUW_LOG_JOINTS(sensors,actuators)
+#define ORUW_LOG_COM(nao,sensors)
 
 #endif // ORUW_LOG_ENABLE
 

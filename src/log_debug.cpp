@@ -24,17 +24,22 @@ oruw_timer::~oruw_timer()
 
 
 #ifdef ORUW_LOG_ENABLE
+oruw_log *oruw_log_instance;
+
 
 oruw_log::oruw_log ()
 {
     FJointsLog = fopen ("./oru_joints.log", "w");
     FCoMLog = fopen ("./oru_com.log", "w");
 }
+
 oruw_log::~oruw_log ()
 {
     fclose (FJointsLog);
     fclose (FCoMLog);
 }
+
+
 
 void oruw_log::logJointValues(
         ALPtr<ALMemoryFastAccess> accessSensorValues,
@@ -97,5 +102,25 @@ void oruw_log::logJointValues(
                         sensorValues[R_WRIST_YAW]);
 }
 
-oruw_log *oruw_log_instance;
+
+
+void oruw_log::logCoM(
+        nao_igm nao,
+        ALPtr<ALMemoryFastAccess> accessSensorValues)
+{
+    double *CoM;
+
+
+    CoM = nao.getUpdatedCoM();
+    fprintf (FCoMLog, "%f %f %f    ", CoM[0], CoM[1], CoM[2]);
+
+
+    accessSensorValues->GetValues (sensorValues);
+    for (int i = 0; i < JOINTS_NUM; i++)
+    {
+        nao.q[i] = sensorValues[i];
+    }
+    CoM = nao.getUpdatedCoM();
+    fprintf (FCoMLog, "%f %f %f\n", CoM[0], CoM[1], CoM[2]);
+}
 #endif // ORUW_LOG_ENABLE

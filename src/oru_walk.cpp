@@ -5,15 +5,15 @@
  * @author Alexander Sherikov
  */
 
-#include "mpc_walk.h"
+#include "oru_walk.h"
 
 
 /**
- * Constructor for mpc_walk object
+ * Constructor for oru_walk object
  * @param broker The parent broker
  * @param name The name of the module
  */
-mpc_walk::mpc_walk(ALPtr<ALBroker> broker, const string& name) : 
+oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) : 
     ALModule(broker, name),
     accessSensorValues (ALPtr<ALMemoryFastAccess>(new ALMemoryFastAccess())),
     accessActuatorValues (ALPtr<ALMemoryFastAccess>(new ALMemoryFastAccess()))
@@ -24,16 +24,16 @@ mpc_walk::mpc_walk(ALPtr<ALBroker> broker, const string& name) :
     // advertise functions
     functionName( "setStiffness" , getName(), "change stiffness of all joint");
     addParam( "value", "new stiffness value from 0.0 to 1.0");
-    BIND_METHOD( mpc_walk::setStiffness );
+    BIND_METHOD( oru_walk::setStiffness );
 
     functionName( "initPosition", getName() , "initialize robot position");
-    BIND_METHOD( mpc_walk::initPosition );
+    BIND_METHOD( oru_walk::initPosition );
 
     functionName( "walk", getName() , "walk");
-    BIND_METHOD( mpc_walk::walk );
+    BIND_METHOD( oru_walk::walk );
 
     functionName( "stopWalking", getName() , "stopWalking");
-    BIND_METHOD( mpc_walk::stopWalking );
+    BIND_METHOD( oru_walk::stopWalking );
 
 
     wmg = NULL;
@@ -43,9 +43,9 @@ mpc_walk::mpc_walk(ALPtr<ALBroker> broker, const string& name) :
 
 
 /**
- * Destructor for mpc_walk object
+ * Destructor for oru_walk object
  */
-mpc_walk::~mpc_walk()
+oru_walk::~oru_walk()
 {
     setStiffness(0.0f);
     // Remove the postProcess call back connection
@@ -73,7 +73,7 @@ mpc_walk::~mpc_walk()
 /**
  * @brief 
  */
-void mpc_walk::init()
+void oru_walk::init()
 {
     bool isDCMRunning;
 
@@ -115,7 +115,7 @@ void mpc_walk::init()
 /**
  * @brief Initializes variables, that are necessary for fast reading of data from memory.
  */
-void mpc_walk::initFastRead()
+void oru_walk::initFastRead()
 {
     // Sensors names
     vector<string> fSensorKeys;
@@ -196,7 +196,7 @@ void mpc_walk::initFastRead()
 /**
  * @brief Initializes variables, that are necessary for fast sending of parameters to DCM.
  */
-void mpc_walk::initFastWrite()
+void oru_walk::initFastWrite()
 {
     ALValue jointAliases;
 
@@ -289,7 +289,7 @@ void mpc_walk::initFastWrite()
 /**
  * @brief Initialize commands, that will be sent to DCM.
  */
-void mpc_walk::preparePositionActuatorCommand()
+void oru_walk::preparePositionActuatorCommand()
 {
     // create the structure of the commands
     walkCommands.arraySetSize(6);

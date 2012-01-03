@@ -5,10 +5,11 @@
  * @author Alexander Sherikov
  */
 
-#include "mpc_walk.h"
+#include "oru_walk.h"
+#include "log_debug.h"
 
 
-void mpc_walk::walk()
+void oru_walk::walk()
 {
     /// @attention Hardcoded parameters.
     control_sampling_time_ms = 10;
@@ -49,17 +50,14 @@ void mpc_walk::walk()
     wmg->initState (nao.CoM_position[0], nao.CoM_position[1], wmg->X_tilde);
     cur_control[0] = cur_control[1] = 0;
 
-#ifdef ORU_LOG_JOINTS
-    FJointsLog = fopen ("./oru_joints.log", "w");
-#endif
-
+    ORUW_LOG_OPEN;
 
 // Connect callback to the DCM post proccess
     try
     {
         fDCMPostProcessConnection =
             getParentBroker()->getProxy("DCM")->getModule()->atPostProcess
-            (boost::bind(&mpc_walk::callbackEveryCycle_walk, this));
+            (boost::bind(&oru_walk::callbackEveryCycle_walk, this));
 
     }
     catch (const AL::ALError &e)
@@ -70,12 +68,11 @@ void mpc_walk::walk()
 }
 
 
-void mpc_walk::stopWalking()
+void oru_walk::stopWalking()
 {
     fDCMPostProcessConnection.disconnect();
-#ifdef ORU_LOG_JOINTS
-    fclose (FJointsLog);
-#endif
+
+    ORUW_LOG_CLOSE;
 }
 
 
@@ -84,16 +81,10 @@ void mpc_walk::stopWalking()
  * @attention REAL-TIME!
  * @todo set commands in advance
  */
-void mpc_walk::callbackEveryCycle_walk()
+void oru_walk::callbackEveryCycle_walk()
 {
-#ifdef ORU_MEASURE_EXEC_TIME
-    qi::os::timeval start_time;
-    qi::os::gettimeofday (&start_time);
-#endif
-
-#ifdef ORU_LOG_JOINTS
-    logJointValues ();
-#endif
+    ORUW_TIMER;
+    ORUW_LOG_JOINTS(accessSensorValues, accessActuatorValues);
 
     solveMPCProblem ();
 
@@ -151,82 +142,14 @@ void mpc_walk::callbackEveryCycle_walk()
     }
 
     next_preview_len_ms -= control_sampling_time_ms;
-
-#ifdef ORU_MEASURE_EXEC_TIME
-    qi::os::timeval end_time;
-    qi::os::gettimeofday (&end_time);
-    qiLogInfo ("module.oru_walk", "Exec time (sec): %f\n", 
-        (double) end_time.tv_sec - start_time.tv_sec + 0.000001* (end_time.tv_usec - start_time.tv_usec));
-#endif
 }
-
-
-void mpc_walk::logJointValues()
-{
-    accessSensorValues->GetValues (sensorValues);
-    fprintf (FJointsLog, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f    ",
-                        sensorValues[HEAD_PITCH],
-                        sensorValues[HEAD_YAW],
-                        //
-                        sensorValues[L_ANKLE_PITCH],
-                        sensorValues[L_ANKLE_ROLL],
-                        sensorValues[L_ELBOW_ROLL],
-                        sensorValues[L_ELBOW_YAW],
-                        sensorValues[L_HIP_PITCH],
-                        sensorValues[L_HIP_ROLL],
-                        sensorValues[L_HIP_YAW_PITCH],
-                        sensorValues[L_KNEE_PITCH],
-                        sensorValues[L_SHOULDER_PITCH],
-                        sensorValues[L_SHOULDER_ROLL],
-                        sensorValues[L_WRIST_YAW],
-                        //
-                        sensorValues[R_ANKLE_PITCH],
-                        sensorValues[R_ANKLE_ROLL],
-                        sensorValues[R_ELBOW_ROLL],
-                        sensorValues[R_ELBOW_YAW],
-                        sensorValues[R_HIP_PITCH],
-                        sensorValues[R_HIP_ROLL],
-                        sensorValues[R_KNEE_PITCH],
-                        sensorValues[R_SHOULDER_PITCH],
-                        sensorValues[R_SHOULDER_ROLL],
-                        sensorValues[R_WRIST_YAW]);
-    
-    accessActuatorValues->GetValues (sensorValues);
-    fprintf (FJointsLog, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
-                        sensorValues[HEAD_PITCH],
-                        sensorValues[HEAD_YAW],
-                        //
-                        sensorValues[L_ANKLE_PITCH],
-                        sensorValues[L_ANKLE_ROLL],
-                        sensorValues[L_ELBOW_ROLL],
-                        sensorValues[L_ELBOW_YAW],
-                        sensorValues[L_HIP_PITCH],
-                        sensorValues[L_HIP_ROLL],
-                        sensorValues[L_HIP_YAW_PITCH],
-                        sensorValues[L_KNEE_PITCH],
-                        sensorValues[L_SHOULDER_PITCH],
-                        sensorValues[L_SHOULDER_ROLL],
-                        sensorValues[L_WRIST_YAW],
-                        //
-                        sensorValues[R_ANKLE_PITCH],
-                        sensorValues[R_ANKLE_ROLL],
-                        sensorValues[R_ELBOW_ROLL],
-                        sensorValues[R_ELBOW_YAW],
-                        sensorValues[R_HIP_PITCH],
-                        sensorValues[R_HIP_ROLL],
-                        sensorValues[R_KNEE_PITCH],
-                        sensorValues[R_SHOULDER_PITCH],
-                        sensorValues[R_SHOULDER_ROLL],
-                        sensorValues[R_WRIST_YAW]);
-}
-
 
 
 
 /**
  * @brief 
  */
-void mpc_walk::initNaoModel ()
+void oru_walk::initNaoModel ()
 {
     // read joint anglesand initialize model
     accessSensorValues->GetValues (sensorValues);
@@ -254,7 +177,7 @@ void mpc_walk::initNaoModel ()
 /**
  * @brief 
  */
-void mpc_walk::initWMG (const int preview_window_size)
+void oru_walk::initWMG (const int preview_window_size)
 {
     if (wmg != NULL)
     {
@@ -320,7 +243,7 @@ void mpc_walk::initWMG (const int preview_window_size)
 /**
  * @brief 
  */
-void mpc_walk::solveMPCProblem ()
+void oru_walk::solveMPCProblem ()
 {
     if (next_preview_len_ms == 0)
     {

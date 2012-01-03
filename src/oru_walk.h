@@ -10,20 +10,6 @@
 #define ORU_MODULE_MPC_WALK_H
 
 
-/**
- * Measure execution time of the callback function.
- * By default naoqi prints logs to stdout, when executed on a PC,
- * the location of the log file on the robot is /var/log/naoqi.log
- */
-#define ORU_MEASURE_EXEC_TIME
-
-/**
- * @brief Read and log values of joint sensors and actuators.
- */
-#define ORU_LOG_JOINTS
-
-
-
 //----------------------------------------
 // INCLUDES
 //----------------------------------------
@@ -62,18 +48,6 @@
 #include "joints_sensors_id.h"
 #include "nao_igm.h"
 
-
-#ifdef ORU_MEASURE_EXEC_TIME
-#include <qi/os.hpp>
-#include <qi/log.hpp>
-#endif
-
-#ifdef ORU_LOG_JOINTS
-#include <cstdio>
-#endif
-
-
-
 //----------------------------------------
 // DEFINITIONS
 //----------------------------------------
@@ -87,12 +61,12 @@ using namespace std;
 /**
  * @brief The main walking module class.
  */
-class mpc_walk : public ALModule
+class oru_walk : public ALModule
 {
 public:
     // constructors / destructors
-    mpc_walk(ALPtr<ALBroker> broker, const string& name);
-    ~mpc_walk ();
+    oru_walk(ALPtr<ALBroker> broker, const string& name);
+    ~oru_walk ();
 
 
     // is called automatically when a library is loaded 
@@ -155,10 +129,6 @@ private:
     int next_preview_len_ms;
     int control_sampling_time_ms;
     int preview_sampling_time_ms;
-
-#ifdef ORU_LOG_JOINTS
-    FILE *FJointsLog;
-#endif
 };
 
 #endif  // ORU_MODULE_MPC_WALK_H

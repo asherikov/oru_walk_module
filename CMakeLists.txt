@@ -18,21 +18,21 @@ set (CMAKE_RULE_MESSAGES OFF CACHE BOOL "")
 ####################################
 
 
-project ( oru_module )
-file (GLOB ORU_MODULE_SRC "${PROJECT_SOURCE_DIR}/src/*.cpp")
-qi_create_lib(oru_module ${ORU_MODULE_SRC})
+project ( oru_walk )
+file (GLOB ORU_WALK_SRC "${PROJECT_SOURCE_DIR}/src/*.cpp")
+qi_create_lib(oru_walk ${ORU_WALK_SRC})
 
 
 # link to libraries
-target_link_libraries(oru_module 
+target_link_libraries(oru_walk
     "${PROJECT_SOURCE_DIR}/smpc_solver/lib/libwmg.a" 
     "${PROJECT_SOURCE_DIR}/smpc_solver/lib/libsmpc_solver.a" 
     "${PROJECT_SOURCE_DIR}/nao_igm/lib/libnaoigm.a")
 
 
 # set path to directories containing headers
-include_directories(oru_module "${PROJECT_SOURCE_DIR}/smpc_solver/include")
-include_directories(oru_module "${PROJECT_SOURCE_DIR}/nao_igm/include")
+include_directories(oru_walk "${PROJECT_SOURCE_DIR}/smpc_solver/include")
+include_directories(oru_walk "${PROJECT_SOURCE_DIR}/nao_igm/include")
 
 
-qi_use_lib(oru_module ALCOMMON ALMEMORYFASTACCESS)
+qi_use_lib(oru_walk ALCOMMON ALMEMORYFASTACCESS)

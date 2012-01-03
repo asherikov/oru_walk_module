@@ -5,7 +5,7 @@
  * @author Alexander Sherikov
  */
 
-#include "mpc_walk.h"
+#include "oru_walk.h"
 
 
 /**
@@ -13,7 +13,7 @@
  *
  * @param[in] stiffnessValue value of stiffness [0;1]
  */
-void mpc_walk::setStiffness(const float &stiffnessValue)
+void oru_walk::setStiffness(const float &stiffnessValue)
 {
     ALValue stiffnessCommands;
 
@@ -62,7 +62,7 @@ void mpc_walk::setStiffness(const float &stiffnessValue)
 /**
  * @brief 
  */
-void mpc_walk::initPosition()
+void oru_walk::initPosition()
 {
     ALValue initPositionCommands;
 

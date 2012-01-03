@@ -13,12 +13,12 @@
 #include <alcommon/altoolsmain.h>
 
 
-#include "mpc_walk.h"
+#include "oru_walk.h"
 
 
 
 
-#ifdef ORU_MODULE_IS_REMOTE_OFF // shared library
+#ifdef ORU_WALK_IS_REMOTE_OFF // shared library
 
 # ifdef _WIN32
     #define ALCALL __declspec(dllexport)
@@ -28,7 +28,7 @@
 
 #else // standalone executable
     #define ALCALL
-#endif // ORU_MODULE_IS_REMOTE_OFF
+#endif // ORU_WALK_IS_REMOTE_OFF
 
 
 
@@ -46,7 +46,7 @@ ALCALL int _createModule( AL::ALPtr<AL::ALBroker> pBroker )
   AL::ALBrokerManager::getInstance()->addBroker(pBroker);
 
 
-  AL::ALModule::createModule<mpc_walk>( pBroker, "mpc_walk" );
+  AL::ALModule::createModule<oru_walk>( pBroker, "oru_walk" );
 
 
   return 0;
@@ -62,15 +62,6 @@ ALCALL int _closeModule(  )
 # endif
 
 
-
-#ifdef ORU_MODULE_IS_REMOTE_ON // standalone executable
-int main( int argc, char *argv[] )
-{
-  // pointer to createModule
-  TMainType sig;
-  sig = &_createModule;
-
-  // call main
-  ALTools::mainFunction("oru_module",argc, argv,sig);
-}
+#ifdef ORU_MODULE_IS_REMOTE_ON
+    #error Remote operation is not supported for this module!
 #endif // ORU_MODULE_IS_REMOTE_ON

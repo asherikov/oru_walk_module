@@ -21,7 +21,7 @@ print '----- Started'
 
 
 try:
-    walk_proxy = ALProxy("mpc_walk", options.IP, options.PORT)
+    walk_proxy = ALProxy("oru_walk", options.IP, options.PORT)
     motion_proxy = ALProxy("ALMotion", options.IP, options.PORT)
 except Exception,e:
     print "Error when creating proxy:"

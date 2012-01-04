@@ -42,7 +42,7 @@ void oru_walk::walk()
     wmg->init_param (     
             (double) preview_sampling_time_ms / 1000, // sampling time in seconds
             nao.CoM_position[2],                      // height of the center of mass
-            0.015);                // step hight (for interpolation of feet movements)
+            0.015);                // step height (for interpolation of feet movements)
     /// 0.0135 in our version
     /// @ref AldNaoPaper "0.015 in the paper"
 

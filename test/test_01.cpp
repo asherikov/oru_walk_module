@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     smpc_solver solver(
             wmg.N, // size of the preview window
             300.0,  // Alpha
-            5000.0,  // Beta
+            800.0,  // Beta
             1.0,    // Gamma
             0.01,   // regularization
             1e-7);  // tolerance
@@ -169,9 +169,10 @@ int main(int argc, char **argv)
             cout << "IGM failed!" << endl;
             break;
         }
-        if (nao.checkJointBounds() >= 0)
+        int failed_joint = nao.checkJointBounds();
+        if (failed_joint >= 0)
         {
-            cout << "MAX or MIN joint limit is violated!" << endl;
+            cout << "MAX or MIN joint limit is violated! Number of the joint: " << failed_joint << endl;
             break;
         }
         //-----------------------------------------------------------
@@ -200,12 +201,14 @@ int main(int argc, char **argv)
 
     //-----------------------------------------------------------
     // output
+    /*
     fprintf(file_op,"SFP = [\n");
     for (unsigned int i=0; i < swing_foot_x.size(); i++)
     {
         fprintf(file_op, "%f %f %f;\n", swing_foot_x[i], swing_foot_y[i], swing_foot_z[i]);
     }
     fprintf(file_op, "];\n\n plot3(SFP(:,1), SFP(:,2), SFP(:,3), 'r')\n");
+    */
 
 
     fprintf(file_op,"ZMP = [\n");
@@ -213,7 +216,7 @@ int main(int argc, char **argv)
     {
         fprintf(file_op, "%f %f;\n", ZMP_x[i], ZMP_y[i]);
     }
-    fprintf(file_op, "];\n\n plot3(ZMP(:,1), ZMP(:,2), 'k')\n");
+    fprintf(file_op, "];\n\n plot(ZMP(:,1), ZMP(:,2), 'k')\n");
 
 
     fprintf(file_op,"CoM = [\n");
@@ -221,7 +224,7 @@ int main(int argc, char **argv)
     {
         fprintf(file_op, "%f %f;\n", CoM_x[i], CoM_y[i]);
     }
-    fprintf(file_op, "];\n\n plot3(CoM(:,1), CoM(:,2), 'b')\n");
+    fprintf(file_op, "];\n\n plot(CoM(:,1), CoM(:,2), 'b')\n");
 
 
     fprintf(file_op,"hold off\n");

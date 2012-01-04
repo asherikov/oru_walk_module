@@ -223,7 +223,7 @@ void oru_walk::initWMG (const int preview_window_size)
     // 2 reference ZMP positions in single support 
     // 1 in double support
     // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 6,  8, d);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 5,  6, d);
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);

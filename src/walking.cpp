@@ -89,6 +89,12 @@ void oru_walk::callbackEveryCycle_walk()
 
     solveMPCProblem ();
 
+    // update joint angles in the NAO model
+    accessSensorValues->GetValues (sensorValues);
+    for (int i = 0; i < JOINTS_NUM; i++)
+    {
+        nao.q[i] = sensorValues[i];
+    }
 
     // support foot and swing foot position/orientation
     double swing_foot_pos[POSITION_VECTOR_SIZE];

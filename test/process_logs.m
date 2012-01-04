@@ -6,7 +6,7 @@ function process_logs(dir)
 
 try
     clear oru_joints
-%    load (strcat(dir, '/oru_joints.log'));
+    load (strcat(dir, '/oru_joints.log'));
 
     if exist('oru_joints')
         Names = {
@@ -103,6 +103,25 @@ try
         title ('CoM');
         plot3 (CoM_expected(:,1), CoM_expected(:,2), CoM_expected(:,3), 'b');
         plot3 (CoM_true(:,1), CoM_true(:,2), CoM_true(:,3), 'r');
+        legend ('Expected', 'True')
+        hold off;
+    end
+catch
+end
+
+
+try
+    clear oru_swing_foot
+    load (strcat(dir, '/oru_swing_foot.log'));
+
+    if exist('oru_com')
+        sf_expected = oru_swing_foot(:, 1:3);
+        sf_true = oru_swing_foot(:, 4:6);
+        figure ('Position', get(0,'Screensize')*0.9);
+        hold on;
+        title ('Swing foot position');
+        plot3 (sf_expected(:,1), sf_expected(:,2), sf_expected(:,3), 'b');
+        plot3 (sf_true(:,1), sf_true(:,2), sf_true(:,3), 'r');
         legend ('Expected', 'True')
         hold off;
     end

@@ -86,6 +86,7 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_TIMER;
     ORUW_LOG_JOINTS(accessSensorValues, accessActuatorValues);
     ORUW_LOG_COM(nao, accessSensorValues);
+    ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
 
     solveMPCProblem ();
 

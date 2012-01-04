@@ -31,12 +31,14 @@ oruw_log::oruw_log ()
 {
     FJointsLog = fopen ("./oru_joints.log", "w");
     FCoMLog = fopen ("./oru_com.log", "w");
+    FSwingFootLog = fopen ("./oru_swing_foot.log", "w");
 }
 
 oruw_log::~oruw_log ()
 {
     fclose (FJointsLog);
     fclose (FCoMLog);
+    fclose (FSwingFootLog);
 }
 
 
@@ -108,10 +110,10 @@ void oruw_log::logCoM(
         nao_igm nao,
         ALPtr<ALMemoryFastAccess> accessSensorValues)
 {
-    double *CoM;
+    double CoM[3];
 
 
-    CoM = nao.getUpdatedCoM();
+    nao.getUpdatedCoM(CoM);
     fprintf (FCoMLog, "%f %f %f    ", CoM[0], CoM[1], CoM[2]);
 
 
@@ -120,7 +122,28 @@ void oruw_log::logCoM(
     {
         nao.q[i] = sensorValues[i];
     }
-    CoM = nao.getUpdatedCoM();
+    nao.getUpdatedCoM(CoM);
     fprintf (FCoMLog, "%f %f %f\n", CoM[0], CoM[1], CoM[2]);
+}
+
+
+void oruw_log::logSwingFoot(
+        nao_igm nao,
+        ALPtr<ALMemoryFastAccess> accessSensorValues)
+{
+    double swing_foot[3];
+
+
+    nao.getUpdatedSwingFoot(swing_foot);
+    fprintf (FSwingFootLog, "%f %f %f    ", swing_foot[0], swing_foot[1], swing_foot[2]);
+
+
+    accessSensorValues->GetValues (sensorValues);
+    for (int i = 0; i < JOINTS_NUM; i++)
+    {
+        nao.q[i] = sensorValues[i];
+    }
+    nao.getUpdatedSwingFoot(swing_foot);
+    fprintf (FSwingFootLog, "%f %f %f\n", swing_foot[0], swing_foot[1], swing_foot[2]);
 }
 #endif // ORUW_LOG_ENABLE

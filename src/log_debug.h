@@ -15,6 +15,9 @@
  */
 #define ORUW_TIMER_ENABLE
 
+/**
+ * Enable logging.
+ */
 #define ORUW_LOG_ENABLE
 
 
@@ -69,9 +72,14 @@ class oruw_log
                 nao_igm nao,
                 ALPtr<ALMemoryFastAccess> accessSensorValues);
 
+        void logSwingFoot (
+                nao_igm nao,
+                ALPtr<ALMemoryFastAccess> accessSensorValues);
+
     private:
         FILE *FJointsLog;
         FILE *FCoMLog;
+        FILE *FSwingFootLog;
         vector<float> sensorValues;
 };
 
@@ -81,6 +89,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_CLOSE delete oruw_log_instance
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
 #define ORUW_LOG_COM(nao,sensors) oruw_log_instance->logCoM(nao,sensors)
+#define ORUW_LOG_SWING_FOOT(nao,sensors) oruw_log_instance->logSwingFoot(nao,sensors)
 
 #else // ORUW_LOG_ENABLE
 
@@ -88,6 +97,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_CLOSE 
 #define ORUW_LOG_JOINTS(sensors,actuators)
 #define ORUW_LOG_COM(nao,sensors)
+#define ORUW_LOG_SWING_FOOT(nao,sensors)
 
 #endif // ORUW_LOG_ENABLE
 

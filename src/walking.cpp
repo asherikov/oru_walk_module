@@ -13,9 +13,9 @@ void oru_walk::walk()
 {
     /// @attention Hardcoded parameters.
     control_sampling_time_ms = 10;
-    preview_sampling_time_ms = 100;
+    preview_sampling_time_ms = 20;
     next_preview_len_ms = 0;
-    int preview_window_size = 15;
+    int preview_window_size = 40;
 
 
 // WMG
@@ -30,8 +30,8 @@ void oru_walk::walk()
     /// @attention Hardcoded parameters.
     solver = new smpc_solver(
             wmg->N, // size of the preview window
-            300.0,  // Alpha
-            800.0,  // Beta
+            500.0,  // Alpha
+            700.0,  // Beta
             1.0,    // Gamma
             0.01,   // regularization
             1e-7);  // tolerance
@@ -212,7 +212,7 @@ void oru_walk::initWMG (const int preview_window_size)
     d[1] = 0.075;
     d[2] = 0.03;
     d[3] = 0.025;
-    wmg->AddFootstep(0.0, -step_y/2, 0.0, 1, 1, d, FS_TYPE_DS);
+    wmg->AddFootstep(0.0, -step_y/2, 0.0, 5, 5, d, FS_TYPE_DS);
     // ZMP, CoM are at [0;0]
 
 
@@ -224,7 +224,7 @@ void oru_walk::initWMG (const int preview_window_size)
     // 2 reference ZMP positions in single support 
     // 1 in double support
     // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 5,  6, d);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 25,  30, d);
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);
@@ -238,7 +238,7 @@ void oru_walk::initWMG (const int preview_window_size)
     d[1] = 0.025;
     d[2] = 0.03;
     d[3] = 0.075;
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 30, 30, d, FS_TYPE_DS);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 140, 150, d, FS_TYPE_DS);
     d[0] = 0.09;
     d[1] = 0.025;
     d[2] = 0.03;

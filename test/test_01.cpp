@@ -81,6 +81,8 @@ int main(int argc, char **argv)
 
     vector<double> ZMP_x;
     vector<double> ZMP_y;
+    vector<double> ZMPref_x;
+    vector<double> ZMPref_y;
     vector<double> CoM_x;
     vector<double> CoM_y;
 
@@ -104,6 +106,11 @@ int main(int argc, char **argv)
             {
                 cout << "EXIT (halt = 1)" << endl;
                 break;
+            }
+            for (int j = 0; j < wmg.N; j++)
+            {
+                ZMPref_x.push_back(wmg.zref_x[j]);
+                ZMPref_y.push_back(wmg.zref_y[j]);
             }
 
             if (wmg_retval == WMG_SWITCH_REFERENCE_FOOT)
@@ -202,9 +209,10 @@ int main(int argc, char **argv)
 
     //-----------------------------------------------------------
     // output
-    //printVectors (file_op, swing_foot_x, swing_foot_y, swing_foot_z, "SFP");
-    printVectors (file_op, ZMP_x, ZMP_y, "ZMP");
-    printVectors (file_op, CoM_x, CoM_y, "CoM");
+    //printVectors (file_op, swing_foot_x, swing_foot_y, swing_foot_z, "SFP", "r");
+    printVectors (file_op, ZMP_x, ZMP_y, "ZMP", "k");
+    printVectors (file_op, ZMPref_x, ZMPref_y, "ZMPref", "x");
+    printVectors (file_op, CoM_x, CoM_y, "CoM", "b");
     fprintf(file_op,"hold off\n");
     fclose(file_op);
     //-----------------------------------------------------------

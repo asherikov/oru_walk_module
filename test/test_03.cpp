@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
     // sampling
     int control_sampling_time_ms = 10;
-    int preview_sampling_time_ms = 100;
+    int preview_sampling_time_ms = 20;
     int next_preview_len_ms = 0;
     //-----------------------------------------------------------
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
     // initialize classes
     WMG wmg;
-    init_04 (&wmg);
+    init_07 (&wmg);
 
 
     nao_igm nao;
@@ -46,16 +46,16 @@ int main(int argc, char **argv)
     wmg.init_param(
             (double) preview_sampling_time_ms / 1000, // sampling time in seconds
             nao.CoM_position[2],                      // height of the center of mass
-            0.0135);
+            0.015);
 
-    std::string fs_out_filename("test_01_fs.m");
-    wmg.FS2file(fs_out_filename); // output results for later use in Matlab/Octave
+    std::string fs_out_filename("test_03_fs.m");
+    wmg.FS2file(fs_out_filename, false); // output results for later use in Matlab/Octave
 
 
     smpc_solver solver(
             wmg.N, // size of the preview window
-            300.0,  // Alpha
-            800.0,  // Beta
+            1500.0,  // Alpha
+            6000.0,  // Beta
             1.0,    // Gamma
             0.01,   // regularization
             1e-7);  // tolerance

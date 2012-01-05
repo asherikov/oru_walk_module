@@ -21,6 +21,7 @@ using namespace std;
 
 
 #include "init_steps_nao.cpp"
+#include "tests_common.cpp"
 
 
 
@@ -201,32 +202,9 @@ int main(int argc, char **argv)
 
     //-----------------------------------------------------------
     // output
-    /*
-    fprintf(file_op,"SFP = [\n");
-    for (unsigned int i=0; i < swing_foot_x.size(); i++)
-    {
-        fprintf(file_op, "%f %f %f;\n", swing_foot_x[i], swing_foot_y[i], swing_foot_z[i]);
-    }
-    fprintf(file_op, "];\n\n plot3(SFP(:,1), SFP(:,2), SFP(:,3), 'r')\n");
-    */
-
-
-    fprintf(file_op,"ZMP = [\n");
-    for (unsigned int i=0; i < ZMP_x.size(); i++)
-    {
-        fprintf(file_op, "%f %f;\n", ZMP_x[i], ZMP_y[i]);
-    }
-    fprintf(file_op, "];\n\n plot(ZMP(:,1), ZMP(:,2), 'k')\n");
-
-
-    fprintf(file_op,"CoM = [\n");
-    for (unsigned int i=0; i < CoM_x.size(); i++)
-    {
-        fprintf(file_op, "%f %f;\n", CoM_x[i], CoM_y[i]);
-    }
-    fprintf(file_op, "];\n\n plot(CoM(:,1), CoM(:,2), 'b')\n");
-
-
+    //printVectors (file_op, swing_foot_x, swing_foot_y, swing_foot_z, "SFP");
+    printVectors (file_op, ZMP_x, ZMP_y, "ZMP");
+    printVectors (file_op, CoM_x, CoM_y, "CoM");
     fprintf(file_op,"hold off\n");
     fclose(file_op);
     //-----------------------------------------------------------

@@ -22,7 +22,7 @@ void init_04 (WMG *wmg)
     d[1] = 0.075;
     d[2] = 0.03;
     d[3] = 0.075;
-    wmg->AddFootstep(0.0, -step_y/2, 0.0, 1, 1, d, FS_TYPE_DS);
+    wmg->AddFootstep(0.0, -step_y/2, 0.0, 2, 2, d, FS_TYPE_DS);
     // ZMP, CoM are at [0;0]
 
 
@@ -82,7 +82,7 @@ void init_07 (WMG *wmg)
     d[1] = 0.075;
     d[2] = 0.03;
     d[3] = 0.075;
-    wmg->AddFootstep(0.0, -step_y/2, 0.0, 5, 5, d, FS_TYPE_DS);
+    wmg->AddFootstep(0.0, -step_y/2, 0.0, 10, 10, d, FS_TYPE_DS);
     // ZMP, CoM are at [0;0]
 
 

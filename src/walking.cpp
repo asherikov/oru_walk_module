@@ -30,8 +30,8 @@ void oru_walk::walk()
     /// @attention Hardcoded parameters.
     solver = new smpc_solver(
             wmg->N, // size of the preview window
-            500.0,  // Alpha
-            700.0,  // Beta
+            1500.0,  // Alpha
+            10000.0,  // Beta
             1.0,    // Gamma
             0.01,   // regularization
             1e-7);  // tolerance
@@ -212,7 +212,7 @@ void oru_walk::initWMG (const int preview_window_size)
     d[1] = 0.075;
     d[2] = 0.03;
     d[3] = 0.025;
-    wmg->AddFootstep(0.0, -step_y/2, 0.0, 5, 5, d, FS_TYPE_DS);
+    wmg->AddFootstep(0.0, -step_y/2, 0.0, 10, 10, d, FS_TYPE_DS);
     // ZMP, CoM are at [0;0]
 
 

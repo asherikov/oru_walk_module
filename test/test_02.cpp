@@ -65,12 +65,16 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
     // initialize control & state matrices
     wmg.initABMatrices ((double) control_sampling_time_ms / 1000);
-    wmg.initState (nao.CoM_position[0], nao.CoM_position[1], wmg.X_tilde);
+    wmg.init_state[0] = nao.CoM_position[0];
+    wmg.init_state[1] = 0;
+    wmg.init_state[2] = 0;
+    wmg.init_state[3] = nao.CoM_position[1];
+    wmg.init_state[4] = 0;
+    wmg.init_state[5] = 0;
     double cur_control[2];
     cur_control[0] = cur_control[1] = 0;
     //-----------------------------------------------------------
 
-    double X[SMPC_NUM_STATE_VAR];
 
     initSDL();
     isRunning=1;
@@ -97,17 +101,13 @@ int main(int argc, char **argv)
 
         //------------------------------------------------------
         wmg.T[0] = (double) next_preview_len_ms / 1000; // get seconds
-        solver.set_parameters (wmg.T, wmg.h, wmg.angle, wmg.zref_x, wmg.zref_y, wmg.lb, wmg.ub);
-        solver.form_init_fp (wmg.fp_x, wmg.fp_y, wmg.X_tilde, wmg.X);
+        solver.set_parameters (wmg.T, wmg.h, wmg.h[0], wmg.angle, wmg.zref_x, wmg.zref_y, wmg.lb, wmg.ub);
+        solver.form_init_fp (wmg.fp_x, wmg.fp_y, wmg.init_state, wmg.X);
         solver.solve();
-        solver.get_next_state (X);
-        solver.get_first_controls (cur_control);
-        //------------------------------------------------------
-
-
         //-----------------------------------------------------------
         // update state
-        wmg.calculateNextState(cur_control, wmg.X_tilde);
+        solver.get_first_controls (cur_control);
+        wmg.calculateNextState(cur_control, wmg.init_state);
         //-----------------------------------------------------------
 
         //-----------------------------------------------------------
@@ -129,7 +129,7 @@ int main(int argc, char **argv)
             angle); // yaw angle
 
         // position of CoM
-        nao.setCoM(X[0], X[3], wmg.hCoM);
+        nao.setCoM(wmg.init_state[0], wmg.init_state[3], wmg.hCoM);
 
 
         if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)

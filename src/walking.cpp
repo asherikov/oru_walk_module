@@ -47,7 +47,12 @@ void oru_walk::walk()
     /// @ref AldNaoPaper "0.015 in the paper"
 
     wmg->initABMatrices ((double) control_sampling_time_ms / 1000);
-    wmg->initState (nao.CoM_position[0], nao.CoM_position[1], wmg->X_tilde);
+    wmg->init_state[0] = nao.CoM_position[0];
+    wmg->init_state[1] = 0;
+    wmg->init_state[2] = 0;
+    wmg->init_state[3] = nao.CoM_position[1];
+    wmg->init_state[4] = 0;
+    wmg->init_state[5] = 0;
     cur_control[0] = cur_control[1] = 0;
 
     ORUW_LOG_OPEN;
@@ -116,7 +121,7 @@ void oru_walk::callbackEveryCycle_walk()
 
     // position of CoM
     /// @attention hCoM is constant!
-    nao.setCoM(next_state[0], next_state[3], wmg->hCoM);
+    nao.setCoM(wmg->init_state[0], wmg->init_state[3], wmg->hCoM);
 
 
     if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)
@@ -274,13 +279,12 @@ void oru_walk::solveMPCProblem ()
 
     wmg->T[0] = (double) next_preview_len_ms / 1000; // get seconds
     //------------------------------------------------------
-    solver->set_parameters (wmg->T, wmg->h, wmg->angle, wmg->zref_x, wmg->zref_y, wmg->lb, wmg->ub);
-    solver->form_init_fp (wmg->fp_x, wmg->fp_y, wmg->X_tilde, wmg->X);
+    solver->set_parameters (wmg->T, wmg->h, wmg->h[0], wmg->angle, wmg->zref_x, wmg->zref_y, wmg->lb, wmg->ub);
+    solver->form_init_fp (wmg->fp_x, wmg->fp_y, wmg->init_state, wmg->X);
     solver->solve();
-    solver->get_next_state (next_state);
-    solver->get_first_controls (cur_control);
     //------------------------------------------------------
-
     // update state
-    wmg->calculateNextState(cur_control, wmg->X_tilde);
+    solver->get_first_controls (cur_control);
+    wmg->calculateNextState(cur_control, wmg->init_state);
+    //------------------------------------------------------
 }

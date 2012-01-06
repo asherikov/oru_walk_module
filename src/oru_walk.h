@@ -122,7 +122,6 @@ private:
 
 
 
-    double next_state[SMPC_NUM_STATE_VAR];
     double cur_control[SMPC_NUM_CONTROL_VAR];
 
 

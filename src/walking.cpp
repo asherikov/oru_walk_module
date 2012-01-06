@@ -31,7 +31,7 @@ void oru_walk::walk()
     solver = new smpc_solver(
             wmg->N, // size of the preview window
             1500.0,  // Alpha
-            10000.0,  // Beta
+            9000.0,  // Beta
             1.0,    // Gamma
             0.01,   // regularization
             1e-7);  // tolerance
@@ -224,7 +224,7 @@ void oru_walk::initWMG (const int preview_window_size)
     // 2 reference ZMP positions in single support 
     // 1 in double support
     // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 25,  30, d);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 20,  25, d);
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);
@@ -238,7 +238,7 @@ void oru_walk::initWMG (const int preview_window_size)
     d[1] = 0.025;
     d[2] = 0.03;
     d[3] = 0.075;
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 140, 150, d, FS_TYPE_DS);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 140, 140, d, FS_TYPE_DS);
     d[0] = 0.09;
     d[1] = 0.025;
     d[2] = 0.03;
@@ -255,7 +255,8 @@ void oru_walk::solveMPCProblem ()
 {
     if (next_preview_len_ms == 0)
     {
-        WMGret wmg_retval = wmg->FormPreviewWindow();
+        bool switch_foot = false;
+        WMGret wmg_retval = wmg->FormPreviewWindow(&switch_foot);
 
         if (wmg_retval == WMG_HALT)
         {
@@ -263,7 +264,7 @@ void oru_walk::solveMPCProblem ()
             return;
         }
 
-        if (wmg_retval == WMG_SWITCH_REFERENCE_FOOT)
+        if (switch_foot)
         {
             nao.switchSupportFoot();
         }

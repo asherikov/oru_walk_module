@@ -4,7 +4,8 @@ include ../common.mk
 
 TESTS=\
 	test_01 \
-	test_03
+	test_03 \
+	test_04
 
 
 all: ${TESTS}

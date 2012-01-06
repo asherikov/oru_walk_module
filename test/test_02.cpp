@@ -78,7 +78,8 @@ int main(int argc, char **argv)
     {
         if (next_preview_len_ms == 0)
         {
-            WMGret wmg_retval = wmg.FormPreviewWindow();
+            bool switch_foot = false;
+            WMGret wmg_retval = wmg.FormPreviewWindow(&switch_foot);
 
             if (wmg_retval == WMG_HALT)
             {
@@ -86,7 +87,7 @@ int main(int argc, char **argv)
                 break;
             }
 
-            if (wmg_retval == WMG_SWITCH_REFERENCE_FOOT)
+            if (switch_foot)
             {
                 nao.switchSupportFoot();
             }

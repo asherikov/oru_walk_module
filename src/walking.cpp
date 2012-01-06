@@ -101,7 +101,7 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_COM(nao, accessSensorValues);
     ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
 
-    correctStateAndModel ();
+    updateModelJoints ();
 
     solveMPCProblem ();
 

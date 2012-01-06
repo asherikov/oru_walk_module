@@ -120,11 +120,6 @@ private:
     smpc_solver *solver;
     nao_igm nao;
 
-
-
-    double cur_control[SMPC_NUM_CONTROL_VAR];
-
-
     int next_preview_len_ms;
     int control_sampling_time_ms;
     int preview_sampling_time_ms;

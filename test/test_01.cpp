@@ -68,13 +68,10 @@ int main(int argc, char **argv)
     // initialize control & state matrices
     wmg.initABMatrices ((double) control_sampling_time_ms / 1000);
     wmg.init_state[0] = nao.CoM_position[0];
-    wmg.init_state[1] = 0;
-    wmg.init_state[2] = 0;
+    wmg.init_state[1] = wmg.init_state[2] = 0;
     wmg.init_state[3] = nao.CoM_position[1];
-    wmg.init_state[4] = 0;
-    wmg.init_state[5] = 0;
-    double cur_control[2];
-    cur_control[0] = cur_control[1] = 0;
+    wmg.init_state[4] = wmg.init_state[5] = 0;
+    wmg.next_control[0] = wmg.next_control[1] = 0;
     //-----------------------------------------------------------
 
 
@@ -135,8 +132,8 @@ int main(int argc, char **argv)
         solver.solve();
         //-----------------------------------------------------------
         // update state
-        solver.get_first_controls (cur_control);
-        wmg.calculateNextState(cur_control, wmg.init_state);
+        solver.get_first_controls (wmg.next_control);
+        wmg.calculateNextState(wmg.next_control, wmg.init_state);
         //-----------------------------------------------------------
 
 

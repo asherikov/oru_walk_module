@@ -16,6 +16,7 @@ void oru_walk::walk()
     preview_sampling_time_ms = 20;
     next_preview_len_ms = 0;
     int preview_window_size = 40;
+    feedback_gain = 0.5;
 
 
 // WMG
@@ -51,7 +52,15 @@ void oru_walk::walk()
     wmg->init_state[1] = wmg->init_state[2] = 0;
     wmg->init_state[3] = nao.CoM_position[1];
     wmg->init_state[4] = wmg->init_state[5] = 0;
-    wmg.next_control[0] = wmg.next_control[1] = 0;
+    wmg->next_control[0] = wmg->next_control[1] = 0;
+
+    old_state[0] = wmg->init_state[0];
+    old_state[1] = wmg->init_state[1];
+    old_state[2] = wmg->init_state[2];
+    old_state[3] = wmg->init_state[3];
+    old_state[4] = wmg->init_state[4];
+    old_state[5] = wmg->init_state[5];
+
 
     ORUW_LOG_OPEN;
 
@@ -79,6 +88,7 @@ void oru_walk::stopWalking()
 }
 
 
+
 /**
  * @brief 
  * @attention REAL-TIME!
@@ -91,14 +101,10 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_COM(nao, accessSensorValues);
     ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
 
+    correctStateAndModel ();
+
     solveMPCProblem ();
 
-    // update joint angles in the NAO model
-    accessSensorValues->GetValues (sensorValues);
-    for (int i = 0; i < JOINTS_NUM; i++)
-    {
-        nao.q[i] = sensorValues[i];
-    }
 
     // support foot and swing foot position/orientation
     double swing_foot_pos[POSITION_VECTOR_SIZE];
@@ -158,16 +164,46 @@ void oru_walk::callbackEveryCycle_walk()
 
 
 /**
+ * @brief Correct state and the model based on the sensor data.
+ */
+void oru_walk::correctStateAndModel ()
+{
+    updateModelJoints ();
+
+    double CoM_pos[POSITION_VECTOR_SIZE];
+    nao.getUpdatedCoM (CoM_pos);
+
+    double true_state[SMPC_NUM_STATE_VAR];
+    true_state[0] = CoM_pos[0];
+    true_state[1] = (true_state[0] - old_state[0]) / control_sampling_time_ms;
+    true_state[2] = (true_state[1] - old_state[1]) / control_sampling_time_ms;
+    true_state[3] = CoM_pos[1];
+    true_state[4] = (true_state[3] - old_state[3]) / control_sampling_time_ms;
+    true_state[5] = (true_state[4] - old_state[4]) / control_sampling_time_ms;
+
+    wmg->init_state[0] -= feedback_gain * (wmg->init_state[0] - true_state[0]);
+    wmg->init_state[1] -= 0; //feedback_gain * (wmg->init_state[1] - true_state[1]);
+    wmg->init_state[2] -= 0; //feedback_gain * (wmg->init_state[2] - true_state[2]);
+    wmg->init_state[3] -= feedback_gain * (wmg->init_state[3] - true_state[3]);
+    wmg->init_state[4] -= 0; //feedback_gain * (wmg->init_state[4] - true_state[4]);
+    wmg->init_state[5] -= 0; //feedback_gain * (wmg->init_state[5] - true_state[5]);
+
+    old_state[0] = wmg->init_state[0];
+    old_state[1] = wmg->init_state[1];
+    old_state[2] = wmg->init_state[2];
+    old_state[3] = wmg->init_state[3];
+    old_state[4] = wmg->init_state[4];
+    old_state[5] = wmg->init_state[5];
+}
+
+
+
+/**
  * @brief 
  */
 void oru_walk::initNaoModel ()
 {
-    // read joint anglesand initialize model
-    accessSensorValues->GetValues (sensorValues);
-    for (int i = 0; i < JOINTS_NUM; i++)
-    {
-        nao.q[i] = sensorValues[i];
-    }
+    updateModelJoints();
 
 
     // support foot position and orientation
@@ -181,6 +217,20 @@ void oru_walk::initNaoModel ()
             IGM_SUPPORT_RIGHT,
             foot_position, 
             foot_orientation);
+}
+
+
+
+/**
+ * @brief Update joint angles in the NAO model.
+ */
+void oru_walk::updateModelJoints()
+{
+    accessSensorValues->GetValues (sensorValues);
+    for (int i = 0; i < JOINTS_NUM; i++)
+    {
+        nao.q[i] = sensorValues[i];
+    }
 }
 
 
@@ -282,7 +332,7 @@ void oru_walk::solveMPCProblem ()
     solver->solve();
     //------------------------------------------------------
     // update state
-    solver->get_first_controls (wmg.next_control);
-    wmg->calculateNextState(wmg.next_control, wmg->init_state);
+    solver->get_first_controls (wmg->next_control);
+    wmg->calculateNextState(wmg->next_control, wmg->init_state);
     //------------------------------------------------------
 }

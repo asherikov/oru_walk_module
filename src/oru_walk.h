@@ -91,8 +91,9 @@ private:
     void readSensorsToNaoModel ();
     void initWMG (const int);
     void initNaoModel ();
+    void updateModelJoints();
     void solveMPCProblem ();
-    void logJointValues();
+    void correctStateAndModel ();
 
     // Callback called by the DCM every 10ms
     void callbackEveryCycle_walk();
@@ -123,6 +124,9 @@ private:
     int next_preview_len_ms;
     int control_sampling_time_ms;
     int preview_sampling_time_ms;
+    double feedback_gain;
+
+    double old_state[SMPC_NUM_STATE_VAR];
 };
 
 #endif  // ORU_MODULE_MPC_WALK_H

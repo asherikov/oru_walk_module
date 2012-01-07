@@ -124,7 +124,10 @@ private:
     int next_preview_len_ms;
     int control_sampling_time_ms;
     int preview_sampling_time_ms;
+
+
     double feedback_gain;
+    double feedback_threshold;
 
     double old_state[SMPC_NUM_STATE_VAR];
 };

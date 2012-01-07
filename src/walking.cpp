@@ -17,6 +17,7 @@ void oru_walk::walk()
     next_preview_len_ms = 0;
     int preview_window_size = 40;
     feedback_gain = 0.5;
+    feedback_threshold = 0.003;
 
 
 // WMG
@@ -101,7 +102,8 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_COM(nao, accessSensorValues);
     ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
 
-    updateModelJoints ();
+    correctStateAndModel ();
+    //updateModelJoints ();
 
     solveMPCProblem ();
 
@@ -173,20 +175,54 @@ void oru_walk::correctStateAndModel ()
     double CoM_pos[POSITION_VECTOR_SIZE];
     nao.getUpdatedCoM (CoM_pos);
 
-    double true_state[SMPC_NUM_STATE_VAR];
-    true_state[0] = CoM_pos[0];
-    true_state[1] = (true_state[0] - old_state[0]) / control_sampling_time_ms;
-    true_state[2] = (true_state[1] - old_state[1]) / control_sampling_time_ms;
-    true_state[3] = CoM_pos[1];
-    true_state[4] = (true_state[3] - old_state[3]) / control_sampling_time_ms;
-    true_state[5] = (true_state[4] - old_state[4]) / control_sampling_time_ms;
+    double sensor_state[SMPC_NUM_STATE_VAR];
+    sensor_state[0] = CoM_pos[0];
+    sensor_state[1] = (sensor_state[0] - old_state[0]) / control_sampling_time_ms;
+    sensor_state[2] = (sensor_state[1] - old_state[1]) / control_sampling_time_ms;
+    sensor_state[3] = CoM_pos[1];
+    sensor_state[4] = (sensor_state[3] - old_state[3]) / control_sampling_time_ms;
+    sensor_state[5] = (sensor_state[4] - old_state[4]) / control_sampling_time_ms;
 
-    wmg->init_state[0] -= feedback_gain * (wmg->init_state[0] - true_state[0]);
-    wmg->init_state[1] -= 0; //feedback_gain * (wmg->init_state[1] - true_state[1]);
-    wmg->init_state[2] -= 0; //feedback_gain * (wmg->init_state[2] - true_state[2]);
-    wmg->init_state[3] -= feedback_gain * (wmg->init_state[3] - true_state[3]);
-    wmg->init_state[4] -= 0; //feedback_gain * (wmg->init_state[4] - true_state[4]);
-    wmg->init_state[5] -= 0; //feedback_gain * (wmg->init_state[5] - true_state[5]);
+    double error_state[SMPC_NUM_STATE_VAR];
+    error_state[0] = wmg->init_state[0] - sensor_state[0];
+    error_state[1] = wmg->init_state[1] - sensor_state[1];
+    error_state[2] = wmg->init_state[2] - sensor_state[2];
+    error_state[3] = wmg->init_state[3] - sensor_state[3];
+    error_state[4] = wmg->init_state[4] - sensor_state[4];
+    error_state[5] = wmg->init_state[5] - sensor_state[5];
+
+    if (error_state[0] > feedback_threshold)
+    {
+        error_state[0] = error_state[0] - feedback_threshold;
+    }
+    else if (error_state[0] < -feedback_threshold)
+    {
+        error_state[0] = error_state[0] + feedback_threshold;
+    }
+    else
+    {
+        error_state[0] = 0.0;
+    }
+
+    if (error_state[3] > feedback_threshold)
+    {
+        error_state[3] = error_state[3] - feedback_threshold;
+    }
+    else if (error_state[3] < -feedback_threshold)
+    {
+        error_state[3] = error_state[3] + feedback_threshold;
+    }
+    else
+    {
+        error_state[3] = 0.0;
+    }
+
+    wmg->init_state[0] -= feedback_gain * error_state[0];
+    wmg->init_state[1] -= 0;
+    wmg->init_state[2] -= 0;
+    wmg->init_state[3] -= feedback_gain * error_state[3];
+    wmg->init_state[4] -= 0;
+    wmg->init_state[5] -= 0;
 
     old_state[0] = wmg->init_state[0];
     old_state[1] = wmg->init_state[1];

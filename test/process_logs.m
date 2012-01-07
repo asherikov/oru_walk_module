@@ -97,13 +97,13 @@ try
 
     if exist('oru_com')
         CoM_expected = oru_com(:, 1:3);
-        CoM_true = oru_com(:, 4:6);
+        CoM_sensor = oru_com(:, 4:6);
         figure ('Position', get(0,'Screensize')*0.9);
         hold on;
         title ('CoM');
         plot3 (CoM_expected(:,1), CoM_expected(:,2), CoM_expected(:,3), 'b');
-        plot3 (CoM_true(:,1), CoM_true(:,2), CoM_true(:,3), 'r');
-        legend ('Expected', 'True')
+        plot3 (CoM_sensor(:,1), CoM_sensor(:,2), CoM_sensor(:,3), 'r');
+        legend ('Expected', 'Based on sensor data')
         hold off;
     end
 catch
@@ -116,13 +116,13 @@ try
 
     if exist('oru_com')
         sf_expected = oru_swing_foot(:, 1:3);
-        sf_true = oru_swing_foot(:, 4:6);
+        sf_sensor = oru_swing_foot(:, 4:6);
         figure ('Position', get(0,'Screensize')*0.9);
         hold on;
         title ('Swing foot position');
         plot3 (sf_expected(:,1), sf_expected(:,2), sf_expected(:,3), 'b');
-        plot3 (sf_true(:,1), sf_true(:,2), sf_true(:,3), 'r');
-        legend ('Expected', 'True')
+        plot3 (sf_sensor(:,1), sf_sensor(:,2), sf_sensor(:,3), 'r');
+        legend ('Expected', 'Based on sensor data')
         hold off;
     end
 catch

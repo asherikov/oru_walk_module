@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         nao.CoM_position[2],                      // height of the center of mass
         0.0135);
 
-    smpc_solver solver(
+    smpc::solver solver(
         wmg.N, // size of the preview window
         300.0,  // Alpha
         800.0,  // Beta
@@ -65,11 +65,8 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
     // initialize control & state matrices
     wmg.initABMatrices ((double) control_sampling_time_ms / 1000);
-    wmg.init_state[0] = nao.CoM_position[0];
-    wmg.init_state[1] = wmg.init_state[2] = 0;
-    wmg.init_state[3] = nao.CoM_position[1];
-    wmg.init_state[4] = wmg.init_state[5] = 0;
-    wmg.next_control[0] = wmg.next_control[1] = 0;
+    wmg.init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
+    wmg.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
     //-----------------------------------------------------------
 
 
@@ -103,7 +100,7 @@ int main(int argc, char **argv)
         solver.solve();
         //-----------------------------------------------------------
         // update state
-        solver.get_first_controls (wmg.next_control);
+        wmg.next_control.get_first_controls (solver);
         wmg.calculateNextState(wmg.next_control, wmg.init_state);
         //-----------------------------------------------------------
 
@@ -126,7 +123,7 @@ int main(int argc, char **argv)
             angle); // yaw angle
 
         // position of CoM
-        nao.setCoM(wmg.init_state[0], wmg.init_state[3], wmg.hCoM);
+        nao.setCoM(wmg.init_state.x(), wmg.init_state.y(), wmg.hCoM); 
 
 
         if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)

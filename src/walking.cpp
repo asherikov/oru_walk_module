@@ -30,7 +30,7 @@ void oru_walk::walk()
         delete solver;
     }
     /// @attention Hardcoded parameters.
-    solver = new smpc_solver(
+    solver = new smpc::solver(
             wmg->N, // size of the preview window
             1500.0,  // Alpha
             9000.0,  // Beta
@@ -49,18 +49,8 @@ void oru_walk::walk()
     /// @ref AldNaoPaper "0.015 in the paper"
 
     wmg->initABMatrices ((double) control_sampling_time_ms / 1000);
-    wmg->init_state[0] = nao.CoM_position[0];
-    wmg->init_state[1] = wmg->init_state[2] = 0;
-    wmg->init_state[3] = nao.CoM_position[1];
-    wmg->init_state[4] = wmg->init_state[5] = 0;
-    wmg->next_control[0] = wmg->next_control[1] = 0;
-
-    old_state[0] = wmg->init_state[0];
-    old_state[1] = wmg->init_state[1];
-    old_state[2] = wmg->init_state[2];
-    old_state[3] = wmg->init_state[3];
-    old_state[4] = wmg->init_state[4];
-    old_state[5] = wmg->init_state[5];
+    wmg->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
+    old_state = wmg->init_state;
 
 
     ORUW_LOG_OPEN;
@@ -102,7 +92,7 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_COM(nao, accessSensorValues);
     ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
 
-    correctStateAndModel ();
+    //correctStateAndModel ();
     //updateModelJoints ();
 
     solveMPCProblem ();
@@ -127,7 +117,7 @@ void oru_walk::callbackEveryCycle_walk()
 
     // position of CoM
     /// @attention hCoM is constant!
-    nao.setCoM(wmg->init_state[0], wmg->init_state[3], wmg->hCoM);
+    nao.setCoM(wmg->init_state.x(), wmg->init_state.y(), wmg->hCoM);
 
 
     if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)
@@ -175,61 +165,57 @@ void oru_walk::correctStateAndModel ()
     double CoM_pos[POSITION_VECTOR_SIZE];
     nao.getUpdatedCoM (CoM_pos);
 
-    double sensor_state[SMPC_NUM_STATE_VAR];
-    sensor_state[0] = CoM_pos[0];
-    sensor_state[1] = (sensor_state[0] - old_state[0]) / control_sampling_time_ms;
-    sensor_state[2] = (sensor_state[1] - old_state[1]) / control_sampling_time_ms;
-    sensor_state[3] = CoM_pos[1];
-    sensor_state[4] = (sensor_state[3] - old_state[3]) / control_sampling_time_ms;
-    sensor_state[5] = (sensor_state[4] - old_state[4]) / control_sampling_time_ms;
+    smpc::state_orig sensor_state;
+    sensor_state.x()  = CoM_pos[0];
+    sensor_state.vx() = (sensor_state.x()  - old_state.x())  / control_sampling_time_ms;
+    sensor_state.ax() = (sensor_state.vx() - old_state.vx()) / control_sampling_time_ms;
+    sensor_state.y()  = CoM_pos[1];
+    sensor_state.vy() = (sensor_state.y()  - old_state.y())  / control_sampling_time_ms;
+    sensor_state.ay() = (sensor_state.vy() - old_state.vy()) / control_sampling_time_ms;
 
-    double error_state[SMPC_NUM_STATE_VAR];
-    error_state[0] = wmg->init_state[0] - sensor_state[0];
-    error_state[1] = wmg->init_state[1] - sensor_state[1];
-    error_state[2] = wmg->init_state[2] - sensor_state[2];
-    error_state[3] = wmg->init_state[3] - sensor_state[3];
-    error_state[4] = wmg->init_state[4] - sensor_state[4];
-    error_state[5] = wmg->init_state[5] - sensor_state[5];
+    smpc::state_orig error_state;
+    error_state.set (
+            wmg->init_state.x()  - sensor_state.x(),
+            wmg->init_state.vx() - sensor_state.vx(),
+            wmg->init_state.ax() - sensor_state.ax(),
+            wmg->init_state.y()  - sensor_state.y(),
+            wmg->init_state.vy() - sensor_state.vy(),
+            wmg->init_state.ay() - sensor_state.ay());
 
-    if (error_state[0] > feedback_threshold)
+    if (error_state.x() > feedback_threshold)
     {
-        error_state[0] = error_state[0] - feedback_threshold;
+        error_state.x() -= feedback_threshold;
     }
-    else if (error_state[0] < -feedback_threshold)
+    else if (error_state.x() < -feedback_threshold)
     {
-        error_state[0] = error_state[0] + feedback_threshold;
+        error_state.x() += feedback_threshold;
     }
     else
     {
-        error_state[0] = 0.0;
+        error_state.x() = 0.0;
     }
 
-    if (error_state[3] > feedback_threshold)
+    if (error_state.y() > feedback_threshold)
     {
-        error_state[3] = error_state[3] - feedback_threshold;
+        error_state.y() -= feedback_threshold;
     }
-    else if (error_state[3] < -feedback_threshold)
+    else if (error_state.y() < -feedback_threshold)
     {
-        error_state[3] = error_state[3] + feedback_threshold;
+        error_state.y() += feedback_threshold;
     }
     else
     {
-        error_state[3] = 0.0;
+        error_state.y() = 0.0;
     }
 
-    wmg->init_state[0] -= feedback_gain * error_state[0];
-    wmg->init_state[1] -= 0;
-    wmg->init_state[2] -= 0;
-    wmg->init_state[3] -= feedback_gain * error_state[3];
-    wmg->init_state[4] -= 0;
-    wmg->init_state[5] -= 0;
+    wmg->init_state.x()  -= feedback_gain * error_state.x();
+    //wmg->init_state.vx() -= 0;
+    //wmg->init_state.ax() -= 0;
+    wmg->init_state.y()  -= feedback_gain * error_state.y();
+    //wmg->init_state.vy() -= 0;
+    //wmg->init_state.ay() -= 0;
 
-    old_state[0] = wmg->init_state[0];
-    old_state[1] = wmg->init_state[1];
-    old_state[2] = wmg->init_state[2];
-    old_state[3] = wmg->init_state[3];
-    old_state[4] = wmg->init_state[4];
-    old_state[5] = wmg->init_state[5];
+    old_state = wmg->init_state;
 }
 
 
@@ -319,6 +305,10 @@ void oru_walk::initWMG (const int preview_window_size)
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);
+    wmg->AddFootstep(step_x, -step_y, 0.0);
+    wmg->AddFootstep(step_x,  step_y, 0.0);
+    wmg->AddFootstep(step_x, -step_y, 0.0);
+    wmg->AddFootstep(step_x,  step_y, 0.0);
 
     // here we give many reference points, since otherwise we 
     // would not have enough steps in preview window to reach 
@@ -368,7 +358,7 @@ void oru_walk::solveMPCProblem ()
     solver->solve();
     //------------------------------------------------------
     // update state
-    solver->get_first_controls (wmg->next_control);
+    wmg->next_control.get_first_controls (*solver);
     wmg->calculateNextState(wmg->next_control, wmg->init_state);
     //------------------------------------------------------
 }

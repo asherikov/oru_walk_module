@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     wmg.FS2file(fs_out_filename, false); // output results for later use in Matlab/Octave
 
 
-    smpc_solver solver(
+    smpc::solver solver(
             wmg.N, // size of the preview window
             1500.0,  // Alpha
             9000.0,  // Beta
@@ -67,11 +67,8 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
     // initialize control & state matrices
     wmg.initABMatrices ((double) control_sampling_time_ms / 1000);
-    wmg.init_state[0] = nao.CoM_position[0];
-    wmg.init_state[1] = wmg.init_state[2] = 0;
-    wmg.init_state[3] = nao.CoM_position[1];
-    wmg.init_state[4] = wmg.init_state[5] = 0;
-    wmg.next_control[0] = wmg.next_control[1] = 0;
+    wmg.init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
+    wmg.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
     //-----------------------------------------------------------
 
 
@@ -132,7 +129,7 @@ int main(int argc, char **argv)
         solver.solve();
         //-----------------------------------------------------------
         // update state
-        solver.get_first_controls (wmg.next_control);
+        wmg.next_control.get_first_controls (solver);
         wmg.calculateNextState(wmg.next_control, wmg.init_state);
         //-----------------------------------------------------------
 
@@ -142,12 +139,12 @@ int main(int argc, char **argv)
         // output
         if (next_preview_len_ms == preview_sampling_time_ms)
         {
-            solver.get_next_state_tilde (wmg.X_tilde);
-            ZMP_x.push_back(wmg.X_tilde[0]);
-            ZMP_y.push_back(wmg.X_tilde[3]);
+            ZMP_x.push_back(wmg.X_tilde.x());
+            ZMP_y.push_back(wmg.X_tilde.y());
+            wmg.X_tilde.get_next_state (solver);
         }
-        CoM_x.push_back(wmg.init_state[0]);
-        CoM_y.push_back(wmg.init_state[3]);
+        CoM_x.push_back(wmg.init_state.x());
+        CoM_y.push_back(wmg.init_state.y());
         //-----------------------------------------------------------
     
 
@@ -171,7 +168,7 @@ int main(int argc, char **argv)
                 angle); // yaw angle
 
         // position of CoM
-        nao.setCoM(wmg.init_state[0], wmg.init_state[3], wmg.hCoM); 
+        nao.setCoM(wmg.init_state.x(), wmg.init_state.y(), wmg.hCoM); 
 
 
         if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)

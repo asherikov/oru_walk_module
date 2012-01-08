@@ -118,7 +118,7 @@ private:
 
 
     WMG *wmg;
-    smpc_solver *solver;
+    smpc::solver *solver;
     nao_igm nao;
 
     int next_preview_len_ms;
@@ -129,7 +129,7 @@ private:
     double feedback_gain;
     double feedback_threshold;
 
-    double old_state[SMPC_NUM_STATE_VAR];
+    smpc::state_orig old_state;
 };
 
 #endif  // ORU_MODULE_MPC_WALK_H

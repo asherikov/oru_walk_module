@@ -100,6 +100,10 @@ void init_07 (WMG *wmg)
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);
+    wmg->AddFootstep(step_x, -step_y, 0.0);
+    wmg->AddFootstep(step_x,  step_y, 0.0);
+    wmg->AddFootstep(step_x, -step_y, 0.0);
+    wmg->AddFootstep(step_x,  step_y, 0.0);
 
     // here we give many reference points, since otherwise we 
     // would not have enough steps in preview window to reach 

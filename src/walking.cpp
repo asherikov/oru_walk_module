@@ -16,7 +16,7 @@ void oru_walk::walk()
     preview_sampling_time_ms = 20;
     next_preview_len_ms = 0;
     int preview_window_size = 40;
-    feedback_gain = 0.5;
+    feedback_gain = 0.1;
     feedback_threshold = 0.003;
 
 
@@ -91,7 +91,7 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_COM(nao, accessSensorValues);
     ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
 
-    //correctStateAndModel ();
+    correctStateAndModel ();
     //updateModelJoints ();
 
     solveMPCProblem ();

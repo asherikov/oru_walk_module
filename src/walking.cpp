@@ -83,7 +83,6 @@ void oru_walk::stopWalking()
 /**
  * @brief 
  * @attention REAL-TIME!
- * @todo set commands in advance
  */
 void oru_walk::callbackEveryCycle_walk()
 {
@@ -133,7 +132,7 @@ void oru_walk::callbackEveryCycle_walk()
     }
 
 
-    for (int i = 0; i < JOINTS_NUM; i++)
+    for (int i = 0; i < LOWER_JOINTS_NUM; i++)
     {
         walkCommands[5][i][0] = nao.q[i];
     }

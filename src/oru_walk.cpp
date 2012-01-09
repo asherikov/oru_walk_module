@@ -283,7 +283,42 @@ void oru_walk::initFastWrite()
     {
         throw ALERROR(getName(), __FUNCTION__, "Error when creating Alias : " + e.toString());
     }
+
+
+
+    // access to the actuators in the lower body only
+    jointAliases[1].clear();
+    jointAliases[1].arraySetSize(LOWER_JOINTS_NUM);
+
+    // positions of actuators.
+    jointAliases[0] = std::string("lowerJointActuator"); // Alias for all joint actuators
+    // Joints actuator list
+    jointAliases[1][L_ANKLE_PITCH]    = std::string("Device/SubDeviceList/LAnklePitch/Position/Actuator/Value");
+    jointAliases[1][L_ANKLE_ROLL]     = std::string("Device/SubDeviceList/LAnkleRoll/Position/Actuator/Value");
+    jointAliases[1][L_HIP_PITCH]      = std::string("Device/SubDeviceList/LHipPitch/Position/Actuator/Value");
+    jointAliases[1][L_HIP_ROLL]       = std::string("Device/SubDeviceList/LHipRoll/Position/Actuator/Value");
+    jointAliases[1][L_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/LHipYawPitch/Position/Actuator/Value");
+    jointAliases[1][L_KNEE_PITCH]     = std::string("Device/SubDeviceList/LKneePitch/Position/Actuator/Value");
+
+    jointAliases[1][R_ANKLE_PITCH]    = std::string("Device/SubDeviceList/RAnklePitch/Position/Actuator/Value");
+    jointAliases[1][R_ANKLE_ROLL]     = std::string("Device/SubDeviceList/RAnkleRoll/Position/Actuator/Value");
+    jointAliases[1][R_HIP_PITCH]      = std::string("Device/SubDeviceList/RHipPitch/Position/Actuator/Value");
+    jointAliases[1][R_HIP_ROLL]       = std::string("Device/SubDeviceList/RHipRoll/Position/Actuator/Value");
+    // note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
+    jointAliases[1][R_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/RHipYawPitch/Position/Sensor/Value");
+    jointAliases[1][R_KNEE_PITCH]     = std::string("Device/SubDeviceList/RKneePitch/Position/Actuator/Value");
+
+    // Create alias
+    try
+    {
+        dcmProxy->createAlias(jointAliases);
+    }
+    catch (const ALError &e)
+    {
+        throw ALERROR(getName(), __FUNCTION__, "Error when creating Alias : " + e.toString());
+    }
 }
+
 
 
 /**
@@ -293,15 +328,15 @@ void oru_walk::preparePositionActuatorCommand()
 {
     // create the structure of the commands
     walkCommands.arraySetSize(6);
-    walkCommands[0] = string("jointActuator");
+    walkCommands[0] = string("lowerJointActuator");
     walkCommands[1] = string("ClearAll");
     walkCommands[2] = string("time-separate");
     walkCommands[3] = 0;
 
     walkCommands[4].arraySetSize(1);
 
-    walkCommands[5].arraySetSize(JOINTS_NUM); // For all joints
-    for (int i=0; i < JOINTS_NUM; i++)
+    walkCommands[5].arraySetSize(LOWER_JOINTS_NUM); // For all joints
+    for (int i=0; i < LOWER_JOINTS_NUM; i++)
     {
         walkCommands[5][i].arraySetSize(1);
     }

@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     smpc::solver solver(
             wmg.N, // size of the preview window
             1500.0,  // Alpha
-            9000.0,  // Beta
+            11000.0,  // Beta
             1.0,    // Gamma
             0.01,   // regularization
             1e-7);  // tolerance

@@ -16,7 +16,7 @@
 #include "smpc_solver.h"
 
 #include "nao_igm.h"
-#include "maple_functions.h"
+#include "public_maple_functions.h"
 #include "leg2joints.h"
 #include "joints_sensors_id.h"
 

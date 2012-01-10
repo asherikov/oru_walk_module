@@ -11,7 +11,7 @@ endif
 	cd build; ${MAKE}
 
 
-test: solver igm
+test: solver igm-test
 	cd test; ${MAKE}
 
 
@@ -21,6 +21,8 @@ solver:
 igm:
 	cd ${IGM_DIR}; ${MAKE} cmake ${DEBUGFLAGS} TOOLCHAIN=${TOOLCHAIN};
 
+igm-test:
+	cd ${IGM_DIR}; ${MAKE} cmake ${DEBUGFLAGS} TOOLCHAIN=${TOOLCHAIN} LEG2JOINTS_ENABLE=1;
 
 clean: igm-clean solver-clean
 	cd test; ${MAKE} clean

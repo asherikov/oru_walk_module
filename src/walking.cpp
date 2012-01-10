@@ -16,8 +16,8 @@ void oru_walk::walk()
     preview_sampling_time_ms = 20;
     next_preview_len_ms = 0;
     int preview_window_size = 40;
-    feedback_gain = 0.1;
-    feedback_threshold = 0.003;
+    feedback_gain = 0.2;
+    feedback_threshold = 0.008;
 
 
 // WMG
@@ -33,7 +33,7 @@ void oru_walk::walk()
     solver = new smpc::solver(
             wmg->N, // size of the preview window
             1500.0,  // Alpha
-            9000.0,  // Beta
+            11000.0,  // Beta
             1.0,    // Gamma
             0.01,   // regularization
             1e-7);  // tolerance
@@ -164,53 +164,58 @@ void oru_walk::correctStateAndModel ()
     double CoM_pos[POSITION_VECTOR_SIZE];
     nao.getUpdatedCoM (CoM_pos);
 
-    smpc::state_orig sensor_state;
-    sensor_state.x()  = CoM_pos[0];
-    sensor_state.vx() = (sensor_state.x()  - old_state.x())  / control_sampling_time_ms;
-    sensor_state.ax() = (sensor_state.vx() - old_state.vx()) / control_sampling_time_ms;
-    sensor_state.y()  = CoM_pos[1];
-    sensor_state.vy() = (sensor_state.y()  - old_state.y())  / control_sampling_time_ms;
-    sensor_state.ay() = (sensor_state.vy() - old_state.vy()) / control_sampling_time_ms;
+    smpc::state_orig state_sensor;
+    state_sensor.x()  = CoM_pos[0];
+    state_sensor.y()  = CoM_pos[1];
+    //state_sensor.vx() = (state_sensor.x()  - old_state.x())  / control_sampling_time_ms;
+    //state_sensor.ax() = (state_sensor.vx() - old_state.vx()) / control_sampling_time_ms;
+    //state_sensor.vy() = (state_sensor.y()  - old_state.y())  / control_sampling_time_ms;
+    //state_sensor.ay() = (state_sensor.vy() - old_state.vy()) / control_sampling_time_ms;
 
-    smpc::state_orig error_state;
-    error_state.set (
-            wmg->init_state.x()  - sensor_state.x(),
-            wmg->init_state.vx() - sensor_state.vx(),
-            wmg->init_state.ax() - sensor_state.ax(),
-            wmg->init_state.y()  - sensor_state.y(),
-            wmg->init_state.vy() - sensor_state.vy(),
-            wmg->init_state.ay() - sensor_state.ay());
+    smpc::state_orig state_error;
+    state_error.set (
+            wmg->init_state.x()  - state_sensor.x(),
+            wmg->init_state.y()  - state_sensor.y());
+    /*
+    state_error.set (
+            wmg->init_state.x()  - state_sensor.x(),
+            wmg->init_state.vx() - state_sensor.vx(),
+            wmg->init_state.ax() - state_sensor.ax(),
+            wmg->init_state.y()  - state_sensor.y(),
+            wmg->init_state.vy() - state_sensor.vy(),
+            wmg->init_state.ay() - state_sensor.ay());
+    */
 
-    if (error_state.x() > feedback_threshold)
+    if (state_error.x() > feedback_threshold)
     {
-        error_state.x() -= feedback_threshold;
+        state_error.x() -= feedback_threshold;
     }
-    else if (error_state.x() < -feedback_threshold)
+    else if (state_error.x() < -feedback_threshold)
     {
-        error_state.x() += feedback_threshold;
+        state_error.x() += feedback_threshold;
     }
     else
     {
-        error_state.x() = 0.0;
+        state_error.x() = 0.0;
     }
 
-    if (error_state.y() > feedback_threshold)
+    if (state_error.y() > feedback_threshold)
     {
-        error_state.y() -= feedback_threshold;
+        state_error.y() -= feedback_threshold;
     }
-    else if (error_state.y() < -feedback_threshold)
+    else if (state_error.y() < -feedback_threshold)
     {
-        error_state.y() += feedback_threshold;
+        state_error.y() += feedback_threshold;
     }
     else
     {
-        error_state.y() = 0.0;
+        state_error.y() = 0.0;
     }
 
-    wmg->init_state.x()  -= feedback_gain * error_state.x();
+    wmg->init_state.x()  -= feedback_gain * state_error.x();
+    wmg->init_state.y()  -= feedback_gain * state_error.y();
     //wmg->init_state.vx() -= 0;
     //wmg->init_state.ax() -= 0;
-    wmg->init_state.y()  -= feedback_gain * error_state.y();
     //wmg->init_state.vy() -= 0;
     //wmg->init_state.ay() -= 0;
 

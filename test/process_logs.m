@@ -105,16 +105,16 @@ try
         plot3 (CoM_sensor(:,1), CoM_sensor(:,2), CoM_sensor(:,3), 'r');
         legend ('Expected', 'Computed from sensor data')
         hold off;
-    end
 
-    figure ('Position', get(0,'Screensize')*0.9);
-    hold on;
-    title ('Error in CoM position');
-    plot(oru_com (:,1) - oru_com(:,4), 'b')
-    plot(oru_com (:,2) - oru_com(:,5), 'r')
-    plot(oru_com (:,3) - oru_com(:,6), 'k')
-    legend ('along X axis', 'along Y axis', 'along Z axis');
-    hold off;
+        figure ('Position', get(0,'Screensize')*0.9);
+        hold on;
+        title ('Error in CoM position');
+        plot(oru_com (:,1) - oru_com(:,4), 'b')
+        plot(oru_com (:,2) - oru_com(:,5), 'r')
+        plot(oru_com (:,3) - oru_com(:,6), 'k')
+        legend ('along X axis', 'along Y axis', 'along Z axis');
+        hold off;
+    end
 catch
 end
 

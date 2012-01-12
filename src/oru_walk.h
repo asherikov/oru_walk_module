@@ -88,7 +88,6 @@ private:
 
 
     // walking
-    void readSensorsToNaoModel ();
     void initWMG (const int);
     void initNaoModel ();
     void updateModelJoints();

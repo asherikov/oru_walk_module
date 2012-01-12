@@ -51,12 +51,6 @@ oru_walk::~oru_walk()
     // Remove the postProcess call back connection
     fDCMPostProcessConnection.disconnect();
 
-    // BE CAREFULL:
-    // STIFFNESS IS NOT SET = 0 !!!
-    // because when we reach initial position, we want to stay there
-    // this function is called (among other plances) at the end of 
-    // initPosition() when the desired angles have been reached.
-    
     if (wmg != NULL)
     {
         delete wmg;
@@ -85,12 +79,12 @@ void oru_walk::init()
     }
     catch (ALError& e)
     {
-        throw ALERROR(getName(), "startLoop()", "Error when connecting to DCM : " + e.toString());
+        throw ALERROR(getName(), __FUNCTION__, "Error when connecting to DCM : " + e.toString());
     }
 
     if (!isDCMRunning)
     {
-        throw ALERROR(getName(), "startLoop()", "Error no DCM running ");
+        throw ALERROR(getName(), __FUNCTION__, "Error no DCM running ");
     }
 
     try
@@ -100,7 +94,7 @@ void oru_walk::init()
     }
     catch (ALError& e)
     {
-        throw ALERROR(getName(), "startLoop()", "Impossible to create DCM Proxy : " + e.toString());
+        throw ALERROR(getName(), __FUNCTION__, "Impossible to create DCM Proxy : " + e.toString());
     }
 
 // Initialisation of ALmemory fast access, DCM commands, Alias, stiffness, ...

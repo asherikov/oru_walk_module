@@ -44,9 +44,10 @@ void oru_walk::walk()
     wmg->init_param (     
             (double) preview_sampling_time_ms / 1000, // sampling time in seconds
             nao.CoM_position[2],                      // height of the center of mass
-            0.015);                // step height (for interpolation of feet movements)
-    /// 0.0135 in our version
+            0.02);                // step height (for interpolation of feet movements)
+    /// 0.0135 in the old version of our module
     /// @ref AldNaoPaper "0.015 in the paper"
+    /// 0.02 is used in the built-in module
 
     wmg->initABMatrices ((double) control_sampling_time_ms / 1000);
     wmg->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
@@ -140,7 +141,7 @@ void oru_walk::callbackEveryCycle_walk()
     // Get time
     try
     {
-        walkCommands[4][0] = dcmProxy->getTime(next_preview_len_ms);
+        walkCommands[4][0] = dcmProxy->getTime(control_sampling_time_ms);
         dcmProxy->setAlias(walkCommands);
     }
     catch (const AL::ALError &e)

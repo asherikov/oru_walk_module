@@ -129,6 +129,7 @@ private:
     double feedback_threshold;
 
     smpc::state_orig old_state;
+    smpc::state_orig next_state;
 };
 
 #endif  // ORU_WALK_H

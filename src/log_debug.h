@@ -53,6 +53,7 @@ class oruw_timer
 #include <almemoryfastaccess/almemoryfastaccess.h>
 
 #include "nao_igm.h"
+#include "WMG.h"
 #include "joints_sensors_id.h"
 
 using namespace AL;
@@ -65,16 +66,17 @@ class oruw_log
         ~oruw_log ();
 
         void logJointValues (
-                ALPtr<ALMemoryFastAccess> accessSensorValues,
-                ALPtr<ALMemoryFastAccess> accessActuatorValues);
+                ALPtr<ALMemoryFastAccess>,
+                ALPtr<ALMemoryFastAccess>);
 
         void logCoM (
-                nao_igm nao,
-                ALPtr<ALMemoryFastAccess> accessSensorValues);
+                WMG *,
+                nao_igm,
+                ALPtr<ALMemoryFastAccess>);
 
         void logSwingFoot (
                 nao_igm nao,
-                ALPtr<ALMemoryFastAccess> accessSensorValues);
+                ALPtr<ALMemoryFastAccess>);
 
     private:
         FILE *FJointsLog;
@@ -88,7 +90,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_OPEN oruw_log_instance = new oruw_log
 #define ORUW_LOG_CLOSE delete oruw_log_instance
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
-#define ORUW_LOG_COM(nao,sensors) oruw_log_instance->logCoM(nao,sensors)
+#define ORUW_LOG_COM(wmg,nao,sensors) oruw_log_instance->logCoM(wmg,nao,sensors)
 #define ORUW_LOG_SWING_FOOT(nao,sensors) oruw_log_instance->logSwingFoot(nao,sensors)
 
 #else // ORUW_LOG_ENABLE
@@ -96,7 +98,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_OPEN 
 #define ORUW_LOG_CLOSE 
 #define ORUW_LOG_JOINTS(sensors,actuators)
-#define ORUW_LOG_COM(nao,sensors)
+#define ORUW_LOG_COM(wmg,nao,sensors)
 #define ORUW_LOG_SWING_FOOT(nao,sensors)
 
 #endif // ORUW_LOG_ENABLE

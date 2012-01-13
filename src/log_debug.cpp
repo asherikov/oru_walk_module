@@ -107,14 +107,11 @@ void oruw_log::logJointValues(
 
 
 void oruw_log::logCoM(
+        WMG *wmg,
         nao_igm nao,
         ALPtr<ALMemoryFastAccess> accessSensorValues)
 {
-    double CoM[3];
-
-
-    nao.getUpdatedCoM(CoM);
-    fprintf (FCoMLog, "%f %f %f    ", CoM[0], CoM[1], CoM[2]);
+    fprintf (FCoMLog, "%f %f %f    ", wmg->init_state.x(), wmg->init_state.y(), wmg->hCoM);
 
 
     accessSensorValues->GetValues (sensorValues);
@@ -122,6 +119,7 @@ void oruw_log::logCoM(
     {
         nao.q[i] = sensorValues[i];
     }
+    double CoM[3];
     nao.getUpdatedCoM(CoM);
     fprintf (FCoMLog, "%f %f %f\n", CoM[0], CoM[1], CoM[2]);
 }

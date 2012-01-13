@@ -6,8 +6,8 @@
  */
 
 
-#ifndef ORU_MODULE_MPC_WALK_H
-#define ORU_MODULE_MPC_WALK_H
+#ifndef ORU_WALK_H
+#define ORU_WALK_H
 
 
 //----------------------------------------
@@ -131,4 +131,4 @@ private:
     smpc::state_orig old_state;
 };
 
-#endif  // ORU_MODULE_MPC_WALK_H
+#endif  // ORU_WALK_H

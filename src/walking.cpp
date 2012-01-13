@@ -44,7 +44,7 @@ void oru_walk::walk()
     wmg->init_param (     
             (double) preview_sampling_time_ms / 1000, // sampling time in seconds
             nao.CoM_position[2],                      // height of the center of mass
-            0.02);                // step height (for interpolation of feet movements)
+            0.015);                // step height (for interpolation of feet movements)
     /// 0.0135 in the old version of our module
     /// @ref AldNaoPaper "0.015 in the paper"
     /// 0.02 is used in the built-in module
@@ -91,7 +91,7 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_COM(wmg, nao, accessSensorValues);
     ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
 
-    //correctStateAndModel ();
+    correctStateAndModel ();
     //updateModelJoints ();
 
     solveMPCProblem ();

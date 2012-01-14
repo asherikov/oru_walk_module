@@ -47,6 +47,7 @@
 #include "smpc_solver.h" // solver
 #include "joints_sensors_id.h"
 #include "nao_igm.h"
+#include "avg_filter.h"
 
 //----------------------------------------
 // DEFINITIONS
@@ -118,6 +119,7 @@ private:
 
     WMG *wmg;
     smpc::solver *solver;
+    avgFilter *com_filter;
     nao_igm nao;
 
     int next_preview_len_ms;

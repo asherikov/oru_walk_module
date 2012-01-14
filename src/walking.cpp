@@ -38,6 +38,7 @@ void oru_walk::walk()
             0.01,   // regularization
             1e-7);  // tolerance
 
+    com_filter = new avgFilter(10);
 
 // models
     initNaoModel ();
@@ -165,8 +166,9 @@ void oru_walk::correctStateAndModel ()
     nao.getUpdatedCoM (CoM_pos);
 
     smpc::state_orig state_sensor;
-    state_sensor.x()  = CoM_pos[0];
-    state_sensor.y()  = CoM_pos[1];
+    com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
+    //state_sensor.x()  = CoM_pos[0];
+    //state_sensor.y()  = CoM_pos[1];
     //state_sensor.vx() = (state_sensor.x()  - old_state.x())  / control_sampling_time_ms;
     //state_sensor.ax() = (state_sensor.vx() - old_state.vx()) / control_sampling_time_ms;
     //state_sensor.vy() = (state_sensor.y()  - old_state.y())  / control_sampling_time_ms;

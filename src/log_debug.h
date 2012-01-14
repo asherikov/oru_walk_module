@@ -55,6 +55,7 @@ class oruw_timer
 #include "nao_igm.h"
 #include "WMG.h"
 #include "joints_sensors_id.h"
+#include "avg_filter.h"
 
 using namespace AL;
 using namespace std;
@@ -82,6 +83,7 @@ class oruw_log
         FILE *FJointsLog;
         FILE *FCoMLog;
         FILE *FSwingFootLog;
+        avgFilter *com_filter;
         vector<float> sensorValues;
 };
 

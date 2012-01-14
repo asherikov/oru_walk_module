@@ -91,7 +91,7 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_COM(wmg, nao, accessSensorValues);
     ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
 
-    correctStateAndModel ();
+    //correctStateAndModel ();
     //updateModelJoints ();
 
     solveMPCProblem ();
@@ -102,8 +102,8 @@ void oru_walk::callbackEveryCycle_walk()
     double angle;
     wmg->getSwingFootPosition (
             WMG_SWING_2D_PARABOLA, 
-            1,
-            1,
+            preview_sampling_time_ms/control_sampling_time_ms,
+            (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms,
             swing_foot_pos,
             &angle);
     nao.initPosture (
@@ -116,7 +116,7 @@ void oru_walk::callbackEveryCycle_walk()
 
     // position of CoM
     /// @attention hCoM is constant!
-    nao.setCoM(next_state.x(), next_state.y(), wmg->hCoM);
+    nao.setCoM(wmg->init_state.x(), wmg->init_state.y(), wmg->hCoM);
 
 
     if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)
@@ -141,7 +141,7 @@ void oru_walk::callbackEveryCycle_walk()
     // Get time
     try
     {
-        walkCommands[4][0] = dcmProxy->getTime(next_preview_len_ms);
+        walkCommands[4][0] = dcmProxy->getTime(control_sampling_time_ms);
         dcmProxy->setAlias(walkCommands);
     }
     catch (const AL::ALError &e)
@@ -364,6 +364,5 @@ void oru_walk::solveMPCProblem ()
     // update state
     wmg->next_control.get_first_controls (*solver);
     wmg->calculateNextState(wmg->next_control, wmg->init_state);
-    next_state.get_next_state (*solver);
     //------------------------------------------------------
 }

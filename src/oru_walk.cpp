@@ -35,6 +35,15 @@ oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) :
     functionName( "stopWalking", getName() , "stopWalking");
     BIND_METHOD( oru_walk::stopWalking );
 
+    functionName( "setWalkParameters" , getName(), "change parameters of the walk");
+    addParam( "feedback_gain_", "Feedback gain");
+    addParam( "feedback_threshold_", "Feedback threshold");
+    addParam( "mpc_alpha_", "Alpha gain");
+    addParam( "mpc_beta_", "Beta gain");
+    addParam( "mpc_gamma_", "Gamma gain");
+    addParam( "step_height_", "Step height");
+    BIND_METHOD( oru_walk::setStiffness );
+
 
     wmg = NULL;
     solver = NULL;
@@ -55,14 +64,17 @@ oru_walk::~oru_walk()
     if (wmg != NULL)
     {
         delete wmg;
+        wmg = NULL;
     }
     if (solver != NULL)
     {
         delete solver;
+        solver = NULL;
     }
     if (com_filter != NULL)
     {
         delete com_filter;
+        com_filter = NULL;
     }
 }
 

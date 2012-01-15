@@ -139,7 +139,7 @@ void oruw_log::logCoM(
     }
     double CoM[3];
     nao.getUpdatedCoM(CoM);
-    com_filter->addValue(CoM[0], CoM[1], CoM[0], CoM[1]);
+    //com_filter->addValue(CoM[0], CoM[1], CoM[0], CoM[1]);
 
     fprintf (FCoMLog, "%f %f %f\n", CoM[0], CoM[1], CoM[2]);
 }

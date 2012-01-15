@@ -8,49 +8,60 @@
 #include "oru_walk.h"
 #include "log_debug.h"
 
+/**
+ * @brief Changes specified parameters.
+ *
+ * @param[in] feedback_gain_ feedback gain
+ * @param[in] feedback_threshold_ feedback threshold
+ * @param[in] mpc_alpha_ alpha gain for the QP objective
+ * @param[in] mpc_beta_ beta gain for the QP objective
+ * @param[in] mpc_gamma_ gamma gain for the QP objective
+ * @param[in] step_height_ height of a step
+ */
+void oru_walk::setWalkParameters (
+        const double feedback_gain_,
+        const double feedback_threshold_,
+        const double mpc_alpha_,
+        const double mpc_beta_,
+        const double mpc_gamma_,
+        const double step_height_)
+{
+    wp.set (
+        feedback_gain_,
+        feedback_threshold_,
+        mpc_alpha_,
+        mpc_beta_,
+        mpc_gamma_,
+        step_height_);
+}
+
+
+
 
 void oru_walk::walk()
 {
-    /// @attention Hardcoded parameters.
-    control_sampling_time_ms = 10;
-    preview_sampling_time_ms = 20;
     next_preview_len_ms = 0;
-    int preview_window_size = 40;
-    feedback_gain = 0.3;
-    feedback_threshold = 0.006;
-
-
-// WMG
-    initWMG (preview_window_size);
 
 
 // solver    
-    if (solver != NULL)
-    {
-        delete solver;
-    }
-    /// @attention Hardcoded parameters.
     solver = new smpc::solver(
-            wmg->N, // size of the preview window
-            1000.0,  // Alpha
-            11000.0,  // Beta
-            1.0,    // Gamma
-            0.01,   // regularization
-            1e-7);  // tolerance
+            wp.preview_window_size, // size of the preview window
+            wp.mpc_alpha,
+            wp.mpc_beta,
+            wp.mpc_gamma,
+            wp.mpc_regularization,
+            wp.mpc_tolerance);
 
     com_filter = new avgFilter(10);
 
 // models
-    initNaoModel ();
+    initSteps_NaoModel();
     wmg->init_param (     
-            (double) preview_sampling_time_ms / 1000, // sampling time in seconds
+            (double) wp.preview_sampling_time_ms / 1000, // sampling time in seconds
             nao.CoM_position[2],                      // height of the center of mass
-            0.013);                // step height (for interpolation of feet movements)
-    /// 0.0135 in the old version of our module
-    /// @ref AldNaoPaper "0.015 in the paper"
-    /// 0.02 is used in the built-in module
+            wp.step_height);                // step height (for interpolation of feet movements)
 
-    wmg->initABMatrices ((double) control_sampling_time_ms / 1000);
+    wmg->initABMatrices ((double) wp.control_sampling_time_ms / 1000);
     wmg->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
     old_state = wmg->init_state;
 
@@ -77,6 +88,24 @@ void oru_walk::stopWalking()
     fDCMPostProcessConnection.disconnect();
 
     ORUW_LOG_CLOSE;
+
+    if (solver != NULL)
+    {
+        delete solver;
+        solver = NULL;
+    }
+
+    if (wmg != NULL)
+    {
+        delete wmg;
+        wmg = NULL;
+    }
+
+    if (com_filter != NULL)
+    {
+        delete com_filter;
+        com_filter = NULL;
+    }
 }
 
 
@@ -92,10 +121,13 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_COM(wmg, nao, accessSensorValues);
     ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
 
-    //correctStateAndModel ();
+    correctStateAndModel ();
     //updateModelJoints ();
 
-    solveMPCProblem ();
+    if (! solveMPCProblem ())
+    {
+        return;
+    }
 
 
     // support foot and swing foot position/orientation
@@ -103,8 +135,8 @@ void oru_walk::callbackEveryCycle_walk()
     double angle;
     wmg->getSwingFootPosition (
             WMG_SWING_2D_PARABOLA, 
-            preview_sampling_time_ms/control_sampling_time_ms,
-            (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms,
+            wp.preview_sampling_time_ms/wp.control_sampling_time_ms,
+            (wp.preview_sampling_time_ms - next_preview_len_ms)/wp.control_sampling_time_ms,
             swing_foot_pos,
             &angle);
     nao.initPosture (
@@ -142,15 +174,16 @@ void oru_walk::callbackEveryCycle_walk()
     // Get time
     try
     {
-        walkCommands[4][0] = dcmProxy->getTime(control_sampling_time_ms);
+        walkCommands[4][0] = dcmProxy->getTime(wp.control_sampling_time_ms);
         dcmProxy->setAlias(walkCommands);
     }
     catch (const AL::ALError &e)
     {
+        stopWalking();
         throw ALERROR(getName(), __FUNCTION__, "Cannot set joint angles: " + e.toString());
     }
 
-    next_preview_len_ms -= control_sampling_time_ms;
+    next_preview_len_ms -= wp.control_sampling_time_ms;
 }
 
 
@@ -175,60 +208,38 @@ void oru_walk::correctStateAndModel ()
             wmg->init_state.x()  - state_sensor.x(),
             wmg->init_state.y()  - state_sensor.y());
 
-    if (state_error.x() > feedback_threshold)
+    if (state_error.x() > wp.feedback_threshold)
     {
-        state_error.x() -= feedback_threshold;
+        state_error.x() -= wp.feedback_threshold;
     }
-    else if (state_error.x() < -feedback_threshold)
+    else if (state_error.x() < -wp.feedback_threshold)
     {
-        state_error.x() += feedback_threshold;
+        state_error.x() += wp.feedback_threshold;
     }
     else
     {
         state_error.x() = 0.0;
     }
 
-    if (state_error.y() > feedback_threshold)
+    if (state_error.y() > wp.feedback_threshold)
     {
-        state_error.y() -= feedback_threshold;
+        state_error.y() -= wp.feedback_threshold;
     }
-    else if (state_error.y() < -feedback_threshold)
+    else if (state_error.y() < -wp.feedback_threshold)
     {
-        state_error.y() += feedback_threshold;
+        state_error.y() += wp.feedback_threshold;
     }
     else
     {
         state_error.y() = 0.0;
     }
 
-    wmg->init_state.x()  -= feedback_gain * state_error.x();
-    wmg->init_state.y()  -= feedback_gain * state_error.y();
+    wmg->init_state.x()  -= wp.feedback_gain * state_error.x();
+    wmg->init_state.y()  -= wp.feedback_gain * state_error.y();
 
     old_state = wmg->init_state;
 }
 
-
-
-/**
- * @brief 
- */
-void oru_walk::initNaoModel ()
-{
-    updateModelJoints();
-
-
-    // support foot position and orientation
-    /// @attention Hardcoded parameters.
-    double foot_position[POSITION_VECTOR_SIZE] = {0.0, -0.05, 0.0};
-    double foot_orientation[ORIENTATION_MATRIX_SIZE] = {
-        1.0, 0.0, 0.0,
-        0.0, 1.0, 0.0,
-        0.0, 0.0, 1.0};
-    nao.init (
-            IGM_SUPPORT_RIGHT,
-            foot_position, 
-            foot_orientation);
-}
 
 
 
@@ -248,15 +259,12 @@ void oru_walk::updateModelJoints()
 
 /**
  * @brief 
+ * @attention Hardcoded parameters.
  */
-void oru_walk::initWMG (const int preview_window_size)
+void oru_walk::initSteps_NaoModel()
 {
-    if (wmg != NULL)
-    {
-        delete wmg;
-    }
     wmg = new WMG();
-    wmg->init(preview_window_size);     // size of the preview window
+    wmg->init(wp.preview_window_size);     // size of the preview window
 
     double d[4];
 
@@ -312,6 +320,21 @@ void oru_walk::initWMG (const int preview_window_size)
     d[2] = 0.03;
     d[3] = 0.025;
     wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 0,  0, d, FS_TYPE_SS_R);
+
+
+// Nao
+    updateModelJoints();
+
+    // support foot position and orientation
+    double foot_position[POSITION_VECTOR_SIZE] = {0.0, -0.05, 0.0};
+    double foot_orientation[ORIENTATION_MATRIX_SIZE] = {
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0};
+    nao.init (
+            IGM_SUPPORT_RIGHT,
+            foot_position, 
+            foot_orientation);
 }
 
 
@@ -319,7 +342,7 @@ void oru_walk::initWMG (const int preview_window_size)
 /**
  * @brief 
  */
-void oru_walk::solveMPCProblem ()
+bool oru_walk::solveMPCProblem ()
 {
     if (next_preview_len_ms == 0)
     {
@@ -329,7 +352,7 @@ void oru_walk::solveMPCProblem ()
         if (wmg_retval == WMG_HALT)
         {
             stopWalking();
-            return;
+            return (false);
         }
 
         if (switch_foot)
@@ -337,7 +360,7 @@ void oru_walk::solveMPCProblem ()
             nao.switchSupportFoot();
         }
 
-        next_preview_len_ms = preview_sampling_time_ms;
+        next_preview_len_ms = wp.preview_sampling_time_ms;
     }
 
     wmg->T[0] = (double) next_preview_len_ms / 1000; // get seconds
@@ -350,4 +373,6 @@ void oru_walk::solveMPCProblem ()
     wmg->next_control.get_first_controls (*solver);
     wmg->calculateNextState(wmg->next_control, wmg->init_state);
     //------------------------------------------------------
+    
+    return (true);
 }

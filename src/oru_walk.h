@@ -58,6 +58,38 @@ using namespace AL;
 using namespace std;
 
 
+/**
+ * @brief A container for constant parameters.
+ */
+class walk_parameters
+{
+    public:
+        walk_parameters();
+
+        void set(const double,
+            const double,
+            const double,
+            const double,
+            const double,
+            const double);
+
+
+        double feedback_gain;
+        double feedback_threshold;
+
+        double mpc_alpha;
+        double mpc_beta;
+        double mpc_gamma;
+        double mpc_regularization;
+        double mpc_tolerance;
+
+        double step_height;
+
+        int control_sampling_time_ms;
+        int preview_sampling_time_ms;
+        int preview_window_size;
+};
+
 
 /**
  * @brief The main walking module class.
@@ -79,6 +111,13 @@ public:
     void initPosition();
     void setStiffness(const float &);
     void walk();
+    void setWalkParameters (
+            const double,
+            const double,
+            const double,
+            const double,
+            const double,
+            const double);
 
 
 private:
@@ -89,10 +128,9 @@ private:
 
 
     // walking
-    void initWMG (const int);
-    void initNaoModel ();
+    void initSteps_NaoModel ();
     void updateModelJoints();
-    void solveMPCProblem ();
+    bool solveMPCProblem ();
     void correctStateAndModel ();
 
     // Callback called by the DCM every 10ms
@@ -122,15 +160,10 @@ private:
     avgFilter *com_filter;
     nao_igm nao;
 
-    int next_preview_len_ms;
-    int control_sampling_time_ms;
-    int preview_sampling_time_ms;
-
-
-    double feedback_gain;
-    double feedback_threshold;
-
     smpc::state_orig old_state;
+
+    walk_parameters wp;
+    int next_preview_len_ms;
 };
 
 #endif  // ORU_WALK_H

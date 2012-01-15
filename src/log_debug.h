@@ -24,26 +24,37 @@
 
 
 #ifdef ORUW_TIMER_ENABLE
+#include <string>
+
 #include <qi/os.hpp>
 #include <qi/log.hpp>
+#include <alcore/alerror.h>
+
+
+using namespace std;
+
 
 /**
- * @brief Log time of existance on destruction.
+ * @brief Log time of existance on destruction. Throw an error, if the given
+ * upper limit is not satisfied.
  */
 class oruw_timer
 {
     public:
-        oruw_timer();
+        oruw_timer(const char* timer_id, const unsigned int timer_limit);
         ~oruw_timer();
 
     private:
         qi::os::timeval end_time;
         qi::os::timeval start_time;
+
+        string id;
+        double limit;
 };
 
-#define ORUW_TIMER oruw_timer timer
+#define ORUW_TIMER(id,limit) oruw_timer timer(id,limit)
 #else // ORUW_TIMER_ENABLE
-#define ORUW_TIMER
+#define ORUW_TIMER(id,limit)
 #endif // ORUW_TIMER_ENABLE
 
 

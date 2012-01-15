@@ -9,18 +9,34 @@
 
 
 #ifdef ORUW_TIMER_ENABLE
-oruw_timer::oruw_timer()
+/**
+ * @brief Create timer
+ *
+ * @param[in] timer_id identifier of the timer
+ * @param[in] timer_limit the upper limit
+ */
+oruw_timer::oruw_timer(const char* timer_id, const unsigned int timer_limit) : id(timer_id)
 {
     qi::os::gettimeofday (&start_time);
+    limit = (double) timer_limit / 1000000;
 }
 
+/**
+ * @brief Destroy the timer: log time, throw an error if needed.
+ */
 oruw_timer::~oruw_timer()
 {
     qi::os::gettimeofday (&end_time);
-    qiLogInfo ("module.oru_walk", "Exec time (sec): %f\n",
-        (double) end_time.tv_sec - start_time.tv_sec + 0.000001* (end_time.tv_usec - start_time.tv_usec));
+    double timediff = (double) end_time.tv_sec - start_time.tv_sec + 0.000001* (end_time.tv_usec - start_time.tv_usec);
+
+    qiLogInfo ("module.oru_walk", "Timer '%s' (sec): %f\n", id.c_str(), timediff);
+    if (timediff > limit)
+    {
+        throw ALERROR("oru_walk", __FUNCTION__, "Time limit is not satisfied!");
+    }
 }
 #endif // ORUW_TIMER_ENABLE
+
 
 
 #ifdef ORUW_LOG_ENABLE

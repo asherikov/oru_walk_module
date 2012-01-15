@@ -16,8 +16,8 @@ void oru_walk::walk()
     preview_sampling_time_ms = 20;
     next_preview_len_ms = 0;
     int preview_window_size = 40;
-    feedback_gain = 0.2;
-    feedback_threshold = 0.008;
+    feedback_gain = 0.3;
+    feedback_threshold = 0.006;
 
 
 // WMG
@@ -32,7 +32,7 @@ void oru_walk::walk()
     /// @attention Hardcoded parameters.
     solver = new smpc::solver(
             wmg->N, // size of the preview window
-            1500.0,  // Alpha
+            1000.0,  // Alpha
             11000.0,  // Beta
             1.0,    // Gamma
             0.01,   // regularization
@@ -45,7 +45,7 @@ void oru_walk::walk()
     wmg->init_param (     
             (double) preview_sampling_time_ms / 1000, // sampling time in seconds
             nao.CoM_position[2],                      // height of the center of mass
-            0.015);                // step height (for interpolation of feet movements)
+            0.013);                // step height (for interpolation of feet movements)
     /// 0.0135 in the old version of our module
     /// @ref AldNaoPaper "0.015 in the paper"
     /// 0.02 is used in the built-in module
@@ -87,7 +87,7 @@ void oru_walk::stopWalking()
  */
 void oru_walk::callbackEveryCycle_walk()
 {
-    ORUW_TIMER;
+    ORUW_TIMER(__FUNCTION__, 9000);
     ORUW_LOG_JOINTS(accessSensorValues, accessActuatorValues);
     ORUW_LOG_COM(wmg, nao, accessSensorValues);
     ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
@@ -166,27 +166,14 @@ void oru_walk::correctStateAndModel ()
     nao.getUpdatedCoM (CoM_pos);
 
     smpc::state_orig state_sensor;
-    com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
-    //state_sensor.x()  = CoM_pos[0];
-    //state_sensor.y()  = CoM_pos[1];
-    //state_sensor.vx() = (state_sensor.x()  - old_state.x())  / control_sampling_time_ms;
-    //state_sensor.ax() = (state_sensor.vx() - old_state.vx()) / control_sampling_time_ms;
-    //state_sensor.vy() = (state_sensor.y()  - old_state.y())  / control_sampling_time_ms;
-    //state_sensor.ay() = (state_sensor.vy() - old_state.vy()) / control_sampling_time_ms;
+    //com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
+    state_sensor.x()  = CoM_pos[0];
+    state_sensor.y()  = CoM_pos[1];
 
     smpc::state_orig state_error;
     state_error.set (
             wmg->init_state.x()  - state_sensor.x(),
             wmg->init_state.y()  - state_sensor.y());
-    /*
-    state_error.set (
-            wmg->init_state.x()  - state_sensor.x(),
-            wmg->init_state.vx() - state_sensor.vx(),
-            wmg->init_state.ax() - state_sensor.ax(),
-            wmg->init_state.y()  - state_sensor.y(),
-            wmg->init_state.vy() - state_sensor.vy(),
-            wmg->init_state.ay() - state_sensor.ay());
-    */
 
     if (state_error.x() > feedback_threshold)
     {
@@ -216,10 +203,6 @@ void oru_walk::correctStateAndModel ()
 
     wmg->init_state.x()  -= feedback_gain * state_error.x();
     wmg->init_state.y()  -= feedback_gain * state_error.y();
-    //wmg->init_state.vx() -= 0;
-    //wmg->init_state.ax() -= 0;
-    //wmg->init_state.vy() -= 0;
-    //wmg->init_state.ay() -= 0;
 
     old_state = wmg->init_state;
 }

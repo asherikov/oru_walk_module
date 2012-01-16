@@ -50,12 +50,12 @@ void walk_parameters::set (
         const double mpc_gamma_,
         const double step_height_)
 {
-    feedback_gain;
-    feedback_threshold;
+    feedback_gain = feedback_gain_;
+    feedback_threshold = feedback_threshold_;
 
-    mpc_alpha;
-    mpc_beta;
-    mpc_gamma;
+    mpc_alpha = mpc_alpha_;
+    mpc_beta = mpc_beta_;
+    mpc_gamma = mpc_gamma_;
 
-    step_height;
+    step_height = step_height_;
 }

@@ -65,7 +65,7 @@ while True:
             walk_proxy.stopWalking()
         elif nao_action == 5:
             walk_proxy.walk()
-        elif nao_action == 7:
+        elif nao_action == 6:
             # feedback_gain, feedback_threshold, mpc_alpha, mpc_beta, mpc_gamma, step_height
             walk_proxy.setWalkParameters(0.3, 0.006, 1000.0, 11000.0, 1.0, 0.013)
         elif nao_action == 7:

@@ -42,7 +42,7 @@ oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) :
     addParam( "mpc_beta_", "Beta gain");
     addParam( "mpc_gamma_", "Gamma gain");
     addParam( "step_height_", "Step height");
-    BIND_METHOD( oru_walk::setStiffness );
+    BIND_METHOD( oru_walk::setWalkParameters );
 
 
     wmg = NULL;

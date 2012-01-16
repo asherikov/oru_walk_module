@@ -19,12 +19,12 @@
  * @param[in] step_height_ height of a step
  */
 void oru_walk::setWalkParameters (
-        const double feedback_gain_,
-        const double feedback_threshold_,
-        const double mpc_alpha_,
-        const double mpc_beta_,
-        const double mpc_gamma_,
-        const double step_height_)
+        const float &feedback_gain_,
+        const float &feedback_threshold_,
+        const float &mpc_alpha_,
+        const float &mpc_beta_,
+        const float &mpc_gamma_,
+        const float &step_height_)
 {
     wp.set (
         feedback_gain_,

@@ -112,12 +112,12 @@ public:
     void setStiffness(const float &);
     void walk();
     void setWalkParameters (
-            const double,
-            const double,
-            const double,
-            const double,
-            const double,
-            const double);
+            const float&,
+            const float&,
+            const float&,
+            const float&,
+            const float&,
+            const float&);
 
 
 private:

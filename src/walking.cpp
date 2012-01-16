@@ -52,7 +52,7 @@ void oru_walk::walk()
             wp.mpc_regularization,
             wp.mpc_tolerance);
 
-    com_filter = new avgFilter(10);
+    com_filter = new avgFilter(wp.filter_window_length);
 
 // models
     initSteps_NaoModel();
@@ -66,7 +66,7 @@ void oru_walk::walk()
     old_state = wmg->init_state;
 
 
-    ORUW_LOG_OPEN;
+    ORUW_LOG_OPEN(wp.filter_window_length);
 
 // Connect callback to the DCM post proccess
     try
@@ -199,9 +199,7 @@ void oru_walk::correctStateAndModel ()
     nao.getUpdatedCoM (CoM_pos);
 
     smpc::state_orig state_sensor;
-    //com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
-    state_sensor.x()  = CoM_pos[0];
-    state_sensor.y()  = CoM_pos[1];
+    com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
 
     smpc::state_orig state_error;
     state_error.set (

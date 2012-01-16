@@ -88,6 +88,8 @@ class walk_parameters
         int control_sampling_time_ms;
         int preview_sampling_time_ms;
         int preview_window_size;
+
+        unsigned int filter_window_length;
 };
 
 

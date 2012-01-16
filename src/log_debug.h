@@ -74,7 +74,7 @@ using namespace std;
 class oruw_log
 {
     public:
-        oruw_log ();
+        oruw_log (unsigned int);
         ~oruw_log ();
 
         void logJointValues (
@@ -100,7 +100,7 @@ class oruw_log
 
 extern oruw_log *oruw_log_instance;
 
-#define ORUW_LOG_OPEN oruw_log_instance = new oruw_log
+#define ORUW_LOG_OPEN(filter_len) oruw_log_instance = new oruw_log(filter_len)
 #define ORUW_LOG_CLOSE delete oruw_log_instance
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
 #define ORUW_LOG_COM(wmg,nao,sensors) oruw_log_instance->logCoM(wmg,nao,sensors)
@@ -108,7 +108,7 @@ extern oruw_log *oruw_log_instance;
 
 #else // ORUW_LOG_ENABLE
 
-#define ORUW_LOG_OPEN 
+#define ORUW_LOG_OPEN(filter_len) 
 #define ORUW_LOG_CLOSE 
 #define ORUW_LOG_JOINTS(sensors,actuators)
 #define ORUW_LOG_COM(wmg,nao,sensors)

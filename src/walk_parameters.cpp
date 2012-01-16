@@ -12,6 +12,7 @@ walk_parameters::walk_parameters()
     feedback_gain = 0.3;
     feedback_threshold = 0.006;
 
+
     mpc_alpha = 1000.0;
     mpc_beta = 11000.0;
     mpc_gamma = 1.0;
@@ -28,6 +29,9 @@ walk_parameters::walk_parameters()
     control_sampling_time_ms = 10;
     preview_sampling_time_ms = 20;
     preview_window_size = 40;
+
+
+    filter_window_length = 10;
 }
 
 

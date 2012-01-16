@@ -31,7 +31,7 @@ walk_parameters::walk_parameters()
     preview_window_size = 40;
 
 
-    filter_window_length = 10;
+    filter_window_length = 1;
 }
 
 

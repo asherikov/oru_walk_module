@@ -342,6 +342,8 @@ void oru_walk::initSteps_NaoModel()
  */
 bool oru_walk::solveMPCProblem ()
 {
+    ORUW_TIMER(__FUNCTION__, 9000);
+
     if (next_preview_len_ms == 0)
     {
         bool switch_foot = false;
@@ -365,7 +367,8 @@ bool oru_walk::solveMPCProblem ()
     //------------------------------------------------------
     solver->set_parameters (wmg->T, wmg->h, wmg->h[0], wmg->angle, wmg->zref_x, wmg->zref_y, wmg->lb, wmg->ub);
     solver->form_init_fp (wmg->fp_x, wmg->fp_y, wmg->init_state, wmg->X);
-    solver->solve();
+    int num_iq_constr = solver->solve();
+    ORUW_LOG_NUM_CONSTRAINTS(num_iq_constr);
     //------------------------------------------------------
     // update state
     wmg->next_control.get_first_controls (*solver);

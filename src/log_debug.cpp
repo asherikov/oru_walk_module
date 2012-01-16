@@ -33,7 +33,7 @@ oruw_timer::~oruw_timer()
     qiLogInfo ("module.oru_walk", "Timer '%s' (sec): %f\n", id.c_str(), timediff);
     if (timediff > limit)
     {
-        throw ALERROR("oru_walk", __FUNCTION__, "Time limit is not satisfied!");
+        throw ALERROR("module.oru_walk", __FUNCTION__, "Time limit is not satisfied!");
     }
 }
 #endif // ORUW_TIMER_ENABLE
@@ -165,5 +165,11 @@ void oruw_log::logSwingFoot(
     }
     nao.getUpdatedSwingFoot(swing_foot);
     fprintf (FSwingFootLog, "%f %f %f\n", swing_foot[0], swing_foot[1], swing_foot[2]);
+}
+
+
+void oruw_log::logNumConstraints(const int num)
+{
+    qiLogInfo ("module.oru_walk", "Num of active constraints: %d\n", num);
 }
 #endif // ORUW_LOG_ENABLE

@@ -62,6 +62,7 @@ class oruw_timer
 #include <cstdio>
 #include <alcore/alptr.h>
 #include <almemoryfastaccess/almemoryfastaccess.h>
+#include <qi/log.hpp>
 
 #include "nao_igm.h"
 #include "WMG.h"
@@ -87,8 +88,11 @@ class oruw_log
                 ALPtr<ALMemoryFastAccess>);
 
         void logSwingFoot (
-                nao_igm nao,
+                nao_igm,
                 ALPtr<ALMemoryFastAccess>);
+
+        void logNumConstraints(const int);
+
 
     private:
         FILE *FJointsLog;
@@ -105,6 +109,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
 #define ORUW_LOG_COM(wmg,nao,sensors) oruw_log_instance->logCoM(wmg,nao,sensors)
 #define ORUW_LOG_SWING_FOOT(nao,sensors) oruw_log_instance->logSwingFoot(nao,sensors)
+#define ORUW_LOG_NUM_CONSTRAINTS(num) oruw_log_instance->logNumConstraints(num)
 
 #else // ORUW_LOG_ENABLE
 
@@ -113,6 +118,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_JOINTS(sensors,actuators)
 #define ORUW_LOG_COM(wmg,nao,sensors)
 #define ORUW_LOG_SWING_FOOT(nao,sensors)
+#define ORUW_LOG_NUM_CONSTRAINTS(num)
 
 #endif // ORUW_LOG_ENABLE
 

@@ -126,7 +126,8 @@ private:
     // initialization
     void initFastRead ();
     void initFastWrite ();
-    void preparePositionActuatorCommand();
+    void initWalkCommands ();
+    void initJointAngles ();
 
 
     // walking
@@ -166,6 +167,8 @@ private:
 
     walk_parameters wp;
     int next_preview_len_ms;
+
+    double init_joint_angles[JOINTS_NUM];
 };
 
 #endif  // ORU_WALK_H

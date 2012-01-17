@@ -55,7 +55,9 @@ class oruw_timer
 };
 
 #define ORUW_TIMER(id,limit) oruw_timer timer(id,limit)
-#define ORUW_TIMER_CHECK if(!timer.isLimitSatisfied()){throw ALERROR(getName(),__FUNCTION__,"Exec. time protection!");}
+#define ORUW_TIMER_CHECK if(!timer.isLimitSatisfied())\
+    {   stopWalking(); \
+        throw ALERROR(getName(),__FUNCTION__,"Exec. time protection!");}
 #else // ORUW_TIMER_ENABLE
 #define ORUW_TIMER(id,limit)
 #define ORUW_TIMER_CHECK

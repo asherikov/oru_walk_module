@@ -117,238 +117,101 @@ void oru_walk::init()
 // Initialisation of ALmemory fast access, DCM commands, Alias, stiffness, ...
     initFastRead();
     initFastWrite();
-
-    preparePositionActuatorCommand();
+    initWalkCommands();
+    initJointAngles();
 }
 
 
-
 /**
- * @brief Initializes variables, that are necessary for fast reading of data from memory.
+ * @brief Set stiffness of joints.
+ *
+ * @param[in] stiffnessValue value of stiffness [0;1]
  */
-void oru_walk::initFastRead()
+void oru_walk::setStiffness(const float &stiffnessValue)
 {
-    // Sensors names
-    vector<string> fSensorKeys;
-
-    fSensorKeys.clear();
-
-    //  Here as an example /*inertial*/ + joints + /*FSR*/ are read
-    fSensorKeys.resize(/*7 +*/ JOINTS_NUM /*+ 6*/);
-
-    // Joints Sensor list
-    fSensorKeys[HEAD_PITCH]       = std::string("Device/SubDeviceList/HeadPitch/Position/Sensor/Value");
-    fSensorKeys[HEAD_YAW]         = std::string("Device/SubDeviceList/HeadYaw/Position/Sensor/Value");
-
-    fSensorKeys[L_ANKLE_PITCH]    = std::string("Device/SubDeviceList/LAnklePitch/Position/Sensor/Value");
-    fSensorKeys[L_ANKLE_ROLL]     = std::string("Device/SubDeviceList/LAnkleRoll/Position/Sensor/Value");
-    fSensorKeys[L_ELBOW_ROLL]     = std::string("Device/SubDeviceList/LElbowRoll/Position/Sensor/Value");
-    fSensorKeys[L_ELBOW_YAW]      = std::string("Device/SubDeviceList/LElbowYaw/Position/Sensor/Value");
-    fSensorKeys[L_HIP_PITCH]      = std::string("Device/SubDeviceList/LHipPitch/Position/Sensor/Value");
-    fSensorKeys[L_HIP_ROLL]       = std::string("Device/SubDeviceList/LHipRoll/Position/Sensor/Value");
-    fSensorKeys[L_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/LHipYawPitch/Position/Sensor/Value");
-    fSensorKeys[L_KNEE_PITCH]     = std::string("Device/SubDeviceList/LKneePitch/Position/Sensor/Value");
-    fSensorKeys[L_SHOULDER_PITCH] = std::string("Device/SubDeviceList/LShoulderPitch/Position/Sensor/Value");
-    fSensorKeys[L_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/LShoulderRoll/Position/Sensor/Value");
-    fSensorKeys[L_WRIST_YAW]      = std::string("Device/SubDeviceList/LWristYaw/Position/Sensor/Value");
-
-    fSensorKeys[R_ANKLE_PITCH]    = std::string("Device/SubDeviceList/RAnklePitch/Position/Sensor/Value");
-    fSensorKeys[R_ANKLE_ROLL]     = std::string("Device/SubDeviceList/RAnkleRoll/Position/Sensor/Value");
-    fSensorKeys[R_ELBOW_ROLL]     = std::string("Device/SubDeviceList/RElbowRoll/Position/Sensor/Value");
-    fSensorKeys[R_ELBOW_YAW]      = std::string("Device/SubDeviceList/RElbowYaw/Position/Sensor/Value");
-    fSensorKeys[R_HIP_PITCH]      = std::string("Device/SubDeviceList/RHipPitch/Position/Sensor/Value");
-    fSensorKeys[R_HIP_ROLL]       = std::string("Device/SubDeviceList/RHipRoll/Position/Sensor/Value");
-    // note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
-    fSensorKeys[R_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/RHipYawPitch/Position/Sensor/Value");
-    fSensorKeys[R_KNEE_PITCH]     = std::string("Device/SubDeviceList/RKneePitch/Position/Sensor/Value");
-    fSensorKeys[R_SHOULDER_PITCH] = std::string("Device/SubDeviceList/RShoulderPitch/Position/Sensor/Value");
-    fSensorKeys[R_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/RShoulderRoll/Position/Sensor/Value");
-    fSensorKeys[R_WRIST_YAW]      = std::string("Device/SubDeviceList/RWristYaw/Position/Sensor/Value");
-
-    // Create the fast memory access
-    accessSensorValues->ConnectToVariables(getParentBroker(), fSensorKeys, false);
+    ALValue stiffnessCommands;
 
 
-    // Joints Sensor list
-    fSensorKeys[HEAD_PITCH]       = std::string("Device/SubDeviceList/HeadPitch/Position/Actuator/Value");
-    fSensorKeys[HEAD_YAW]         = std::string("Device/SubDeviceList/HeadYaw/Position/Actuator/Value");
-
-    fSensorKeys[L_ANKLE_PITCH]    = std::string("Device/SubDeviceList/LAnklePitch/Position/Actuator/Value");
-    fSensorKeys[L_ANKLE_ROLL]     = std::string("Device/SubDeviceList/LAnkleRoll/Position/Actuator/Value");
-    fSensorKeys[L_ELBOW_ROLL]     = std::string("Device/SubDeviceList/LElbowRoll/Position/Actuator/Value");
-    fSensorKeys[L_ELBOW_YAW]      = std::string("Device/SubDeviceList/LElbowYaw/Position/Actuator/Value");
-    fSensorKeys[L_HIP_PITCH]      = std::string("Device/SubDeviceList/LHipPitch/Position/Actuator/Value");
-    fSensorKeys[L_HIP_ROLL]       = std::string("Device/SubDeviceList/LHipRoll/Position/Actuator/Value");
-    fSensorKeys[L_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/LHipYawPitch/Position/Actuator/Value");
-    fSensorKeys[L_KNEE_PITCH]     = std::string("Device/SubDeviceList/LKneePitch/Position/Actuator/Value");
-    fSensorKeys[L_SHOULDER_PITCH] = std::string("Device/SubDeviceList/LShoulderPitch/Position/Actuator/Value");
-    fSensorKeys[L_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/LShoulderRoll/Position/Actuator/Value");
-    fSensorKeys[L_WRIST_YAW]      = std::string("Device/SubDeviceList/LWristYaw/Position/Actuator/Value");
-
-    fSensorKeys[R_ANKLE_PITCH]    = std::string("Device/SubDeviceList/RAnklePitch/Position/Actuator/Value");
-    fSensorKeys[R_ANKLE_ROLL]     = std::string("Device/SubDeviceList/RAnkleRoll/Position/Actuator/Value");
-    fSensorKeys[R_ELBOW_ROLL]     = std::string("Device/SubDeviceList/RElbowRoll/Position/Actuator/Value");
-    fSensorKeys[R_ELBOW_YAW]      = std::string("Device/SubDeviceList/RElbowYaw/Position/Actuator/Value");
-    fSensorKeys[R_HIP_PITCH]      = std::string("Device/SubDeviceList/RHipPitch/Position/Actuator/Value");
-    fSensorKeys[R_HIP_ROLL]       = std::string("Device/SubDeviceList/RHipRoll/Position/Actuator/Value");
-    // note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
-    fSensorKeys[R_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/RHipYawPitch/Position/Actuator/Value");
-    fSensorKeys[R_KNEE_PITCH]     = std::string("Device/SubDeviceList/RKneePitch/Position/Actuator/Value");
-    fSensorKeys[R_SHOULDER_PITCH] = std::string("Device/SubDeviceList/RShoulderPitch/Position/Actuator/Value");
-    fSensorKeys[R_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/RShoulderRoll/Position/Actuator/Value");
-    fSensorKeys[R_WRIST_YAW]      = std::string("Device/SubDeviceList/RWristYaw/Position/Actuator/Value");
-
-    // Create the fast memory access
-    accessActuatorValues->ConnectToVariables(getParentBroker(), fSensorKeys, false);
-}
+    if ((stiffnessValue < 0) || (stiffnessValue > 1))
+    {
+        throw ALERROR(getName(), __FUNCTION__, "Wrong parameters");
+    }
 
 
+    // Prepare one dcm command:
+    // it will linearly "Merge" all joint stiffness
+    // from last value to "stiffnessValue" in 1 seconde
+    stiffnessCommands.arraySetSize(3);
+    stiffnessCommands[0] = std::string("jointStiffness");
+    stiffnessCommands[1] = std::string("Merge");
+    stiffnessCommands[2].arraySetSize(1);
+    stiffnessCommands[2][0].arraySetSize(2);
+    stiffnessCommands[2][0][0] = stiffnessValue;
 
-/**
- * @brief Initializes variables, that are necessary for fast sending of parameters to DCM.
- */
-void oru_walk::initFastWrite()
-{
-    ALValue jointAliases;
 
-    jointAliases.arraySetSize(2);
-    jointAliases[1].arraySetSize(JOINTS_NUM);
-
-    // positions of actuators.
-    jointAliases[0] = std::string("jointActuator"); // Alias for all joint actuators
-    // Joints actuator list
-    jointAliases[1][HEAD_PITCH]       = std::string("Device/SubDeviceList/HeadPitch/Position/Actuator/Value");
-    jointAliases[1][HEAD_YAW]         = std::string("Device/SubDeviceList/HeadYaw/Position/Actuator/Value");
-    jointAliases[1][L_ANKLE_PITCH]    = std::string("Device/SubDeviceList/LAnklePitch/Position/Actuator/Value");
-    jointAliases[1][L_ANKLE_ROLL]     = std::string("Device/SubDeviceList/LAnkleRoll/Position/Actuator/Value");
-    jointAliases[1][L_ELBOW_ROLL]     = std::string("Device/SubDeviceList/LElbowRoll/Position/Actuator/Value");
-    jointAliases[1][L_ELBOW_YAW]      = std::string("Device/SubDeviceList/LElbowYaw/Position/Actuator/Value");
-    jointAliases[1][L_HIP_PITCH]      = std::string("Device/SubDeviceList/LHipPitch/Position/Actuator/Value");
-    jointAliases[1][L_HIP_ROLL]       = std::string("Device/SubDeviceList/LHipRoll/Position/Actuator/Value");
-    jointAliases[1][L_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/LHipYawPitch/Position/Actuator/Value");
-    jointAliases[1][L_KNEE_PITCH]     = std::string("Device/SubDeviceList/LKneePitch/Position/Actuator/Value");
-    jointAliases[1][L_SHOULDER_PITCH] = std::string("Device/SubDeviceList/LShoulderPitch/Position/Actuator/Value");
-    jointAliases[1][L_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/LShoulderRoll/Position/Actuator/Value");
-    jointAliases[1][L_WRIST_YAW]      = std::string("Device/SubDeviceList/LWristYaw/Position/Actuator/Value");
-
-    jointAliases[1][R_ANKLE_PITCH]    = std::string("Device/SubDeviceList/RAnklePitch/Position/Actuator/Value");
-    jointAliases[1][R_ANKLE_ROLL]     = std::string("Device/SubDeviceList/RAnkleRoll/Position/Actuator/Value");
-    jointAliases[1][R_ELBOW_ROLL]     = std::string("Device/SubDeviceList/RElbowRoll/Position/Actuator/Value");
-    jointAliases[1][R_ELBOW_YAW]      = std::string("Device/SubDeviceList/RElbowYaw/Position/Actuator/Value");
-    jointAliases[1][R_HIP_PITCH]      = std::string("Device/SubDeviceList/RHipPitch/Position/Actuator/Value");
-    jointAliases[1][R_HIP_ROLL]       = std::string("Device/SubDeviceList/RHipRoll/Position/Actuator/Value");
-    // note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
-    jointAliases[1][R_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/RHipYawPitch/Position/Sensor/Value");
-    jointAliases[1][R_KNEE_PITCH]     = std::string("Device/SubDeviceList/RKneePitch/Position/Actuator/Value");
-    jointAliases[1][R_SHOULDER_PITCH] = std::string("Device/SubDeviceList/RShoulderPitch/Position/Actuator/Value");
-    jointAliases[1][R_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/RShoulderRoll/Position/Actuator/Value");
-    jointAliases[1][R_WRIST_YAW]      = std::string("Device/SubDeviceList/RWristYaw/Position/Actuator/Value");
-
-    // Create alias
+    /// @attention Hardcoded parameter!
+    int stiffness_change_time = 1000;
     try
     {
-        dcmProxy->createAlias(jointAliases);
+        stiffnessCommands[2][0][1] = dcmProxy->getTime(stiffness_change_time);
     }
     catch (const ALError &e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error when creating Alias : " + e.toString());
+        throw ALERROR(getName(), __FUNCTION__, "Error on DCM getTime : " + e.toString());
     }
 
 
-
-    //  stiffness of actuators.
-    jointAliases[0] = std::string("jointStiffness"); // Alias for all actuators
-    jointAliases[1][HEAD_PITCH]       = std::string("Device/SubDeviceList/HeadPitch/Hardness/Actuator/Value");
-    jointAliases[1][HEAD_YAW]         = std::string("Device/SubDeviceList/HeadYaw/Hardness/Actuator/Value");
-    jointAliases[1][L_ANKLE_PITCH]    = std::string("Device/SubDeviceList/LAnklePitch/Hardness/Actuator/Value");
-    jointAliases[1][L_ANKLE_ROLL]     = std::string("Device/SubDeviceList/LAnkleRoll/Hardness/Actuator/Value");
-    jointAliases[1][L_ELBOW_ROLL]     = std::string("Device/SubDeviceList/LElbowRoll/Hardness/Actuator/Value");
-    jointAliases[1][L_ELBOW_YAW]      = std::string("Device/SubDeviceList/LElbowYaw/Hardness/Actuator/Value");
-    jointAliases[1][L_HIP_PITCH]      = std::string("Device/SubDeviceList/LHipPitch/Hardness/Actuator/Value");
-    jointAliases[1][L_HIP_ROLL]       = std::string("Device/SubDeviceList/LHipRoll/Hardness/Actuator/Value");
-    jointAliases[1][L_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/LHipYawPitch/Hardness/Actuator/Value");
-    jointAliases[1][L_KNEE_PITCH]     = std::string("Device/SubDeviceList/LKneePitch/Hardness/Actuator/Value");
-    jointAliases[1][L_SHOULDER_PITCH] = std::string("Device/SubDeviceList/LShoulderPitch/Hardness/Actuator/Value");
-    jointAliases[1][L_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/LShoulderRoll/Hardness/Actuator/Value");
-    jointAliases[1][L_WRIST_YAW]      = std::string("Device/SubDeviceList/LWristYaw/Hardness/Actuator/Value");
-
-    jointAliases[1][R_ANKLE_PITCH]    = std::string("Device/SubDeviceList/RAnklePitch/Hardness/Actuator/Value");
-    jointAliases[1][R_ANKLE_ROLL]     = std::string("Device/SubDeviceList/RAnkleRoll/Hardness/Actuator/Value");
-    jointAliases[1][R_ELBOW_ROLL]     = std::string("Device/SubDeviceList/RElbowRoll/Hardness/Actuator/Value");
-    jointAliases[1][R_ELBOW_YAW]      = std::string("Device/SubDeviceList/RElbowYaw/Hardness/Actuator/Value");
-    jointAliases[1][R_HIP_PITCH]      = std::string("Device/SubDeviceList/RHipPitch/Hardness/Actuator/Value");
-    jointAliases[1][R_HIP_ROLL]       = std::string("Device/SubDeviceList/RHipRoll/Hardness/Actuator/Value");
-    // note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
-    jointAliases[1][R_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/RHipYawPitch/Hardness/Sensor/Value");
-    jointAliases[1][R_KNEE_PITCH]     = std::string("Device/SubDeviceList/RKneePitch/Hardness/Actuator/Value");
-    jointAliases[1][R_SHOULDER_PITCH] = std::string("Device/SubDeviceList/RShoulderPitch/Hardness/Actuator/Value");
-    jointAliases[1][R_SHOULDER_ROLL]  = std::string("Device/SubDeviceList/RShoulderRoll/Hardness/Actuator/Value");
-    jointAliases[1][R_WRIST_YAW]      = std::string("Device/SubDeviceList/RWristYaw/Hardness/Actuator/Value");
-
-    // Create alias
     try
     {
-        dcmProxy->createAlias(jointAliases);
+        dcmProxy->set(stiffnessCommands);
     }
     catch (const ALError &e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error when creating Alias : " + e.toString());
-    }
-
-
-
-    // access to the actuators in the lower body only
-    jointAliases[1].clear();
-    jointAliases[1].arraySetSize(LOWER_JOINTS_NUM);
-
-    // positions of actuators.
-    jointAliases[0] = std::string("lowerJointActuator"); // Alias for all joint actuators
-    // Joints actuator list
-    jointAliases[1][L_ANKLE_PITCH]    = std::string("Device/SubDeviceList/LAnklePitch/Position/Actuator/Value");
-    jointAliases[1][L_ANKLE_ROLL]     = std::string("Device/SubDeviceList/LAnkleRoll/Position/Actuator/Value");
-    jointAliases[1][L_HIP_PITCH]      = std::string("Device/SubDeviceList/LHipPitch/Position/Actuator/Value");
-    jointAliases[1][L_HIP_ROLL]       = std::string("Device/SubDeviceList/LHipRoll/Position/Actuator/Value");
-    jointAliases[1][L_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/LHipYawPitch/Position/Actuator/Value");
-    jointAliases[1][L_KNEE_PITCH]     = std::string("Device/SubDeviceList/LKneePitch/Position/Actuator/Value");
-
-    jointAliases[1][R_ANKLE_PITCH]    = std::string("Device/SubDeviceList/RAnklePitch/Position/Actuator/Value");
-    jointAliases[1][R_ANKLE_ROLL]     = std::string("Device/SubDeviceList/RAnkleRoll/Position/Actuator/Value");
-    jointAliases[1][R_HIP_PITCH]      = std::string("Device/SubDeviceList/RHipPitch/Position/Actuator/Value");
-    jointAliases[1][R_HIP_ROLL]       = std::string("Device/SubDeviceList/RHipRoll/Position/Actuator/Value");
-    // note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
-    jointAliases[1][R_HIP_YAW_PITCH]  = std::string("Device/SubDeviceList/RHipYawPitch/Position/Sensor/Value");
-    jointAliases[1][R_KNEE_PITCH]     = std::string("Device/SubDeviceList/RKneePitch/Position/Actuator/Value");
-
-    // Create alias
-    try
-    {
-        dcmProxy->createAlias(jointAliases);
-    }
-    catch (const ALError &e)
-    {
-        throw ALERROR(getName(), __FUNCTION__, "Error when creating Alias : " + e.toString());
+        throw ALERROR (getName(), __FUNCTION__, "Error when sending stiffness to DCM : " + e.toString());
     }
 }
 
 
 
 /**
- * @brief Initialize commands, that will be sent to DCM.
+ * @brief 
  */
-void oru_walk::preparePositionActuatorCommand()
+void oru_walk::initPosition()
 {
-    // create the structure of the commands
-    walkCommands.arraySetSize(6);
-    walkCommands[0] = string("lowerJointActuator");
-    walkCommands[1] = string("ClearAll");
-    walkCommands[2] = string("time-separate");
-    walkCommands[3] = 0;
+    ALValue initPositionCommands;
 
-    walkCommands[4].arraySetSize(1);
-
-    walkCommands[5].arraySetSize(LOWER_JOINTS_NUM); // For all joints
-    for (int i=0; i < LOWER_JOINTS_NUM; i++)
+    initPositionCommands.arraySetSize(6);
+    initPositionCommands[0] = string("jointActuator");
+    initPositionCommands[1] = string("ClearAll");
+    initPositionCommands[2] = string("time-separate");
+    initPositionCommands[3] = 0;
+    initPositionCommands[4].arraySetSize(1);
+    initPositionCommands[5].arraySetSize(JOINTS_NUM);
+    for (int i = 0; i < JOINTS_NUM; i++)
     {
-        walkCommands[5][i].arraySetSize(1);
+        initPositionCommands[5][i].arraySetSize(1);
+        initPositionCommands[5][i][0]  =  init_joint_angles[i];
+    }
+
+    // set time
+    try
+    {
+        /// @attention Hardcoded parameter!
+        initPositionCommands[4][0] = dcmProxy->getTime(1200);
+    }
+    catch (const ALError &e)
+    {
+        throw ALERROR(getName(), __FUNCTION__, "Error on DCM getTime : " + e.toString());
+    }
+
+
+    // send commands
+    try
+    {
+        dcmProxy->setAlias(initPositionCommands);
+    }
+    catch (const AL::ALError &e)
+    {
+        throw ALERROR(getName(), __FUNCTION__, "Error with DCM setAlias : " + e.toString());
     }
 }

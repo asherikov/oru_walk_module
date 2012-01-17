@@ -22,6 +22,20 @@ oruw_timer::oruw_timer(const char* timer_id, const unsigned int timer_limit) : i
 }
 
 
+bool oruw_timer::isLimitSatisfied ()
+{
+    qi::os::gettimeofday (&end_time);
+    double timediff = (double) end_time.tv_sec - start_time.tv_sec + 0.000001* (end_time.tv_usec - start_time.tv_usec);
+    if (timediff > limit)
+    {
+        qiLogInfo ("module.oru_walk", "Timer '%s' (sec): %f > %f (limit)\n", id.c_str(), timediff, limit);
+        return (false);
+    }
+
+    return (true);
+}
+
+
 /**
  * @brief Destroy the timer: log time, throw an error if needed.
  */
@@ -31,10 +45,6 @@ oruw_timer::~oruw_timer()
     double timediff = (double) end_time.tv_sec - start_time.tv_sec + 0.000001* (end_time.tv_usec - start_time.tv_usec);
 
     qiLogInfo ("module.oru_walk", "Timer '%s' (sec): %f\n", id.c_str(), timediff);
-    if (timediff > limit)
-    {
-        throw ALERROR("module.oru_walk", __FUNCTION__, "Time limit is not satisfied!");
-    }
 }
 #endif // ORUW_TIMER_ENABLE
 

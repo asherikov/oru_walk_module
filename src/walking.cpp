@@ -184,6 +184,7 @@ void oru_walk::callbackEveryCycle_walk()
     }
 
     next_preview_len_ms -= wp.control_sampling_time_ms;
+    ORUW_TIMER_CHECK;
 }
 
 
@@ -375,5 +376,6 @@ bool oru_walk::solveMPCProblem ()
     wmg->calculateNextState(wmg->next_control, wmg->init_state);
     //------------------------------------------------------
     
+    ORUW_TIMER_CHECK;
     return (true);
 }

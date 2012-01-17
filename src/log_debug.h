@@ -44,6 +44,8 @@ class oruw_timer
         oruw_timer(const char* timer_id, const unsigned int timer_limit);
         ~oruw_timer();
 
+        bool isLimitSatisfied ();
+
     private:
         qi::os::timeval end_time;
         qi::os::timeval start_time;
@@ -53,8 +55,10 @@ class oruw_timer
 };
 
 #define ORUW_TIMER(id,limit) oruw_timer timer(id,limit)
+#define ORUW_TIMER_CHECK if(!timer.isLimitSatisfied()){throw ALERROR(getName(),__FUNCTION__,"Exec. time protection!");}
 #else // ORUW_TIMER_ENABLE
 #define ORUW_TIMER(id,limit)
+#define ORUW_TIMER_CHECK
 #endif // ORUW_TIMER_ENABLE
 
 

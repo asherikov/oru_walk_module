@@ -13,8 +13,8 @@ walk_parameters::walk_parameters()
     feedback_threshold = 0.006;
 
 
-    mpc_alpha = 1000.0;
-    mpc_beta = 11000.0;
+    mpc_alpha = 400.0;
+    mpc_beta = 8000.0;
     mpc_gamma = 1.0;
     mpc_regularization = 0.01;
     mpc_tolerance = 1e-7;

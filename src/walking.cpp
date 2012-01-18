@@ -127,8 +127,7 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_COM(wmg, nao, accessSensorValues);
     ORUW_LOG_SWING_FOOT(nao, accessSensorValues);
 
-    correctStateAndModel ();
-    //updateModelJoints ();
+    feedbackError ();
 
     if (! solveMPCProblem ())
     {
@@ -197,13 +196,10 @@ void oru_walk::callbackEveryCycle_walk()
 /**
  * @brief Correct state and the model based on the sensor data.
  */
-void oru_walk::correctStateAndModel (nao_igm nao_copy)
+void oru_walk::feedbackError ()
 {
-    accessSensorValues->GetValues (sensorValues);
-    for (int i = 0; i < JOINTS_NUM; i++)
-    {
-        nao_copy.q[i] = sensorValues[i];
-    }
+    nao_igm nao_copy = nao;
+    updateModelJoints(nao_copy);
 
     double CoM_pos[POSITION_VECTOR_SIZE];
     nao_copy.getUpdatedCoM (CoM_pos);
@@ -256,12 +252,12 @@ void oru_walk::correctStateAndModel (nao_igm nao_copy)
 /**
  * @brief Update joint angles in the NAO model.
  */
-void oru_walk::updateModelJoints()
+void oru_walk::updateModelJoints(nao_igm& nao_model)
 {
     accessSensorValues->GetValues (sensorValues);
     for (int i = 0; i < JOINTS_NUM; i++)
     {
-        nao.q[i] = sensorValues[i];
+        nao_model.q[i] = sensorValues[i];
     }
 }
 
@@ -322,6 +318,10 @@ void oru_walk::initSteps_NaoModel()
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);
+    wmg->AddFootstep(step_x, -step_y, 0.0);
+    wmg->AddFootstep(step_x,  step_y, 0.0);
+    wmg->AddFootstep(step_x, -step_y, 0.0);
+    wmg->AddFootstep(step_x,  step_y, 0.0);
 
     // here we give many reference points, since otherwise we 
     // would not have enough steps in preview window to reach 
@@ -339,7 +339,7 @@ void oru_walk::initSteps_NaoModel()
 
 
 // Nao
-    updateModelJoints();
+    updateModelJoints(nao);
 
     // support foot position and orientation
     double foot_position[POSITION_VECTOR_SIZE] = {0.0, -0.05, 0.0};

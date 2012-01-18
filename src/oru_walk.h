@@ -133,9 +133,9 @@ private:
 
     // walking
     void initSteps_NaoModel ();
-    void updateModelJoints();
+    void updateModelJoints(nao_igm&);
     bool solveMPCProblem ();
-    void correctStateAndModel ();
+    void feedbackError ();
     void halt(const string&, const char *);
 
     // Callback called by the DCM every 10ms

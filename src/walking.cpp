@@ -40,6 +40,24 @@ void oru_walk::setWalkParameters (
 
 void oru_walk::walk()
 {
+    if (solver != NULL)
+    {
+        delete solver;
+        solver = NULL;
+    }
+
+    if (wmg != NULL)
+    {
+        delete wmg;
+        wmg = NULL;
+    }
+
+    if (com_filter != NULL)
+    {
+        delete com_filter;
+        com_filter = NULL;
+    }
+
     next_preview_len_ms = 0;
 
 
@@ -77,35 +95,23 @@ void oru_walk::walk()
     }
     catch (const AL::ALError &e)
     {
-        throw ALERROR(getName(), __FUNCTION__, 
-                "Error when connecting to DCM postProccess: " + e.toString());
+        ORUW_HALT("Error when connecting to DCM postProccess: " + e.toString());
     }
 }
 
 
-void oru_walk::stopWalking()
+void oru_walk::halt(const string &message, const char* function)
 {
+    stopWalking(message);
+    throw ALERROR(getName(), function, message);
+}
+
+
+void oru_walk::stopWalking(const string& message)
+{
+    qiLogInfo ("module.oru_walk", message.c_str());
     fDCMPostProcessConnection.disconnect();
-
     ORUW_LOG_CLOSE;
-
-    if (solver != NULL)
-    {
-        delete solver;
-        solver = NULL;
-    }
-
-    if (wmg != NULL)
-    {
-        delete wmg;
-        wmg = NULL;
-    }
-
-    if (com_filter != NULL)
-    {
-        delete com_filter;
-        com_filter = NULL;
-    }
 }
 
 
@@ -154,14 +160,14 @@ void oru_walk::callbackEveryCycle_walk()
 
     if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)
     {
-        stopWalking();
-        throw ALERROR(getName(), __FUNCTION__, "IK does not converge.");
+        ORUW_HALT("IK does not converge.\n");
     }
 
-    if (nao.checkJointBounds() >= 0)
+    int failed_joint = nao.checkJointBounds();
+    if (failed_joint >= 0)
     {
-        stopWalking();
-        throw ALERROR(getName(), __FUNCTION__, "Joint bounds are violated.");
+        qiLogInfo ("module.oru_walk", "Failed joint: %d\n", failed_joint);
+        ORUW_HALT("Joint bounds are violated.\n");
     }
 
 
@@ -179,8 +185,7 @@ void oru_walk::callbackEveryCycle_walk()
     }
     catch (const AL::ALError &e)
     {
-        stopWalking();
-        throw ALERROR(getName(), __FUNCTION__, "Cannot set joint angles: " + e.toString());
+        ORUW_HALT("Cannot set joint angles: " + e.toString());
     }
 
     next_preview_len_ms -= wp.control_sampling_time_ms;
@@ -200,7 +205,9 @@ void oru_walk::correctStateAndModel ()
     nao.getUpdatedCoM (CoM_pos);
 
     smpc::state_orig state_sensor;
-    com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
+    //com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
+    state_sensor.x() = CoM_pos[0];
+    state_sensor.y() = CoM_pos[1];
 
     smpc::state_orig state_error;
     state_error.set (
@@ -352,7 +359,7 @@ bool oru_walk::solveMPCProblem ()
 
         if (wmg_retval == WMG_HALT)
         {
-            stopWalking();
+            stopWalking("Not enough steps to form preview window. Stopping.");
             return (false);
         }
 

@@ -13,41 +13,40 @@
 //----------------------------------------
 // INCLUDES
 //----------------------------------------
+
+// standard headers
+#include <string> // string
+
+
+// NAO headers
+#include <qi/log.hpp>
+
 #include <alcore/alptr.h>
+#include <alcore/alerror.h>
+
 #include <alcommon/alproxy.h>
 #include <alcommon/albroker.h>
 #include <alcommon/almodule.h>
 
-#include <alcore/alerror.h>
-
-// Use DCM proxy
-#include <alproxies/dcmproxy.h>
-
-// Used to read values of ALMemory directly in RAM
-#include <almemoryfastaccess/almemoryfastaccess.h>
-
-#include <boost/bind.hpp>
-
-
-#include <alcore/alptr.h> // ALPtr
-#include <alcommon/almodule.h> // ALModule, ProcessSignalConnection (almodulesynchronization.h)
-#include <alcommon/albroker.h> // ALBroker
-
-#include <almemoryfastaccess/almemoryfastaccess.h> // ALMemoryFastAccess
-
-#include <alproxies/dcmproxy.h> // DCMProxy
-
 #include <alvalue/alvalue.h> // ALValue
 
+#include <alproxies/dcmproxy.h>
 
-#include <string> // string
+#include <almemoryfastaccess/almemoryfastaccess.h>
 
 
+// other libraries
+#include <boost/bind.hpp> // callback hook
+
+
+// our headers
 #include "WMG.h" // footsteps & parameters
 #include "smpc_solver.h" // solver
 #include "joints_sensors_id.h"
 #include "nao_igm.h"
 #include "avg_filter.h"
+
+
 
 //----------------------------------------
 // DEFINITIONS
@@ -56,6 +55,8 @@
 
 using namespace AL;
 using namespace std;
+
+#define ORUW_HALT(message) halt(message, __FUNCTION__)
 
 
 /**
@@ -109,7 +110,7 @@ public:
 
 
 // These methods will be advertised to other modules.
-    void stopWalking();
+    void stopWalking(const string& message = "Stopped by request.");
     void initPosition();
     void setStiffness(const float &);
     void walk();
@@ -135,6 +136,7 @@ private:
     void updateModelJoints();
     bool solveMPCProblem ();
     void correctStateAndModel ();
+    void halt(const string&, const char *);
 
     // Callback called by the DCM every 10ms
     void callbackEveryCycle_walk();

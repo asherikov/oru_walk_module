@@ -197,12 +197,16 @@ void oru_walk::callbackEveryCycle_walk()
 /**
  * @brief Correct state and the model based on the sensor data.
  */
-void oru_walk::correctStateAndModel ()
+void oru_walk::correctStateAndModel (nao_igm nao_copy)
 {
-    updateModelJoints ();
+    accessSensorValues->GetValues (sensorValues);
+    for (int i = 0; i < JOINTS_NUM; i++)
+    {
+        nao_copy.q[i] = sensorValues[i];
+    }
 
     double CoM_pos[POSITION_VECTOR_SIZE];
-    nao.getUpdatedCoM (CoM_pos);
+    nao_copy.getUpdatedCoM (CoM_pos);
 
     smpc::state_orig state_sensor;
     //com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
@@ -303,6 +307,12 @@ void oru_walk::initSteps_NaoModel()
     // 1 in double support
     // 1 + 2 = 3
     wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 20,  25, d);
+    wmg->AddFootstep(step_x,  step_y, 0.0);
+    wmg->AddFootstep(step_x, -step_y, 0.0);
+    wmg->AddFootstep(step_x,  step_y, 0.0);
+    wmg->AddFootstep(step_x, -step_y, 0.0);
+    wmg->AddFootstep(step_x,  step_y, 0.0);
+    wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);

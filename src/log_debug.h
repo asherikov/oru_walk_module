@@ -88,11 +88,11 @@ class oruw_log
 
         void logCoM (
                 WMG *,
-                nao_igm,
+                modelState,
                 ALPtr<ALMemoryFastAccess>);
 
         void logSwingFoot (
-                nao_igm,
+                modelState,
                 ALPtr<ALMemoryFastAccess>);
 
         void logNumConstraints(const int);

@@ -138,7 +138,7 @@ void oruw_log::logJointValues(
 
 void oruw_log::logCoM(
         WMG *wmg,
-        nao_igm nao,
+        modelState nao_state,
         ALPtr<ALMemoryFastAccess> accessSensorValues)
 {
     fprintf (FCoMLog, "%f %f %f    ", wmg->init_state.x(), wmg->init_state.y(), wmg->hCoM);
@@ -147,10 +147,10 @@ void oruw_log::logCoM(
     accessSensorValues->GetValues (sensorValues);
     for (int i = 0; i < JOINTS_NUM; i++)
     {
-        nao.q[i] = sensorValues[i];
+        nao_state.q[i] = sensorValues[i];
     }
     double CoM[3];
-    nao.getUpdatedCoM(CoM);
+    nao_state.getCoM(CoM);
     //com_filter->addValue(CoM[0], CoM[1], CoM[0], CoM[1]);
 
     fprintf (FCoMLog, "%f %f %f\n", CoM[0], CoM[1], CoM[2]);
@@ -158,22 +158,22 @@ void oruw_log::logCoM(
 
 
 void oruw_log::logSwingFoot(
-        nao_igm nao,
+        modelState nao_state,
         ALPtr<ALMemoryFastAccess> accessSensorValues)
 {
     double swing_foot[3];
 
 
-    nao.getUpdatedSwingFoot(swing_foot);
+    nao_state.getSwingFoot(swing_foot);
     fprintf (FSwingFootLog, "%f %f %f    ", swing_foot[0], swing_foot[1], swing_foot[2]);
 
 
     accessSensorValues->GetValues (sensorValues);
     for (int i = 0; i < JOINTS_NUM; i++)
     {
-        nao.q[i] = sensorValues[i];
+        nao_state.q[i] = sensorValues[i];
     }
-    nao.getUpdatedSwingFoot(swing_foot);
+    nao_state.getSwingFoot(swing_foot);
     fprintf (FSwingFootLog, "%f %f %f\n", swing_foot[0], swing_foot[1], swing_foot[2]);
 }
 

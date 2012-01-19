@@ -133,7 +133,7 @@ private:
 
     // walking
     void initSteps_NaoModel ();
-    void updateModelJoints(nao_igm&);
+    void updateModelJoints(modelState&);
     bool solveMPCProblem ();
     void feedbackError ();
     void halt(const string&, const char *);

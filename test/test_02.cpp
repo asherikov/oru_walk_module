@@ -115,8 +115,7 @@ int main(int argc, char **argv)
             LegPos,
             &angle);
 
-        nao.initPosture (
-            nao.swing_foot_posture,
+        nao.setSwingFootPosture (
             LegPos,
             0.0,    // roll angle
             0.0,    // pitch angle
@@ -126,7 +125,7 @@ int main(int argc, char **argv)
         nao.setCoM(wmg.init_state.x(), wmg.init_state.y(), wmg.hCoM); 
 
 
-        if (nao.igm_3(nao.swing_foot_posture, nao.CoM_position, nao.torso_orientation) < 0)
+        if (nao.igm () < 0)
         {
             cout << "IGM failed!" << endl;
             break;
@@ -141,13 +140,13 @@ int main(int argc, char **argv)
         next_preview_len_ms -= control_sampling_time_ms;
 
 
-        drawSDL(50, x_coord, y_coord, angle_rot, nao.support_foot, nao.q);
+        drawSDL(50, x_coord, y_coord, angle_rot, nao.state.support_foot, nao.state.q);
     }
 
     // keep the visualization active (until ESC is pressed)
     while (isRunning)
     {
-        drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.q);
+        drawSDL(0, x_coord, y_coord, angle_rot, nao.state.support_foot, nao.state.q);
     }
 
     return 0;

@@ -12,7 +12,7 @@ endif
 
 
 test: solver igm-test
-	cd test; ${MAKE}
+	cd test; ${MAKE} ${DEBUGFLAGS}
 
 
 solver:

@@ -152,7 +152,6 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
         double LegPos[POSITION_VECTOR_SIZE + 1];
-        double angle;
         wmg.getSwingFootPosition (
                 preview_sampling_time_ms/control_sampling_time_ms,
                 (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms+1,

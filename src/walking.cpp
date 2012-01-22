@@ -141,7 +141,7 @@ void oru_walk::callbackEveryCycle_walk()
     wmg->getSwingFootPosition (
             WMG_SWING_2D_PARABOLA, 
             wp.preview_sampling_time_ms/wp.control_sampling_time_ms,
-            (wp.preview_sampling_time_ms - next_preview_len_ms)/wp.control_sampling_time_ms,
+            (wp.preview_sampling_time_ms - next_preview_len_ms)/wp.control_sampling_time_ms+1,
             swing_foot_pos,
             &angle);
     nao.setSwingFootPosture (
@@ -341,14 +341,10 @@ void oru_walk::initSteps_NaoModel()
     updateModelJoints(nao.state);
 
     // support foot position and orientation
-    double foot_orientation[ORIENTATION_MATRIX_SIZE] = {
-        1.0, 0.0, 0.0,
-        0.0, 1.0, 0.0,
-        0.0, 0.0, 1.0};
     nao.init (
             IGM_SUPPORT_RIGHT,
-            0.0, -0.05, 0.0,
-            foot_orientation);
+            0.0, -0.05, 0.0, // position
+            0.0, 0.0, 0.0);  // orientation
 }
 
 

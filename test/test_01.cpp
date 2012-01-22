@@ -156,7 +156,7 @@ int main(int argc, char **argv)
         wmg.getSwingFootPosition (
                 WMG_SWING_2D_PARABOLA,
                 preview_sampling_time_ms/control_sampling_time_ms,
-                (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms,
+                (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms+1,
                 LegPos,
                 &angle);
 

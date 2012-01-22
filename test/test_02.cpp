@@ -106,20 +106,17 @@ int main(int argc, char **argv)
 
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
-        double LegPos[POSITION_VECTOR_SIZE];
-        double angle;
+        double LegPos[POSITION_VECTOR_SIZE + 1];
         wmg.getSwingFootPosition (
-            WMG_SWING_2D_PARABOLA,
             preview_sampling_time_ms/control_sampling_time_ms,
             (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms+1,
-            LegPos,
-            &angle);
+            LegPos);
 
         nao.setSwingFootPosture (
             LegPos,
             0.0,    // roll angle
             0.0,    // pitch angle
-            angle); // yaw angle
+            LegPos[3]); // yaw angle
 
         // position of CoM
         nao.setCoM(wmg.init_state.x(), wmg.init_state.y(), wmg.hCoM); 

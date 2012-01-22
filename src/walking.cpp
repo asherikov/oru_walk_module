@@ -136,19 +136,16 @@ void oru_walk::callbackEveryCycle_walk()
 
 
     // support foot and swing foot position/orientation
-    double swing_foot_pos[POSITION_VECTOR_SIZE];
-    double angle;
+    double swing_foot_pos[POSITION_VECTOR_SIZE + 1];
     wmg->getSwingFootPosition (
-            WMG_SWING_2D_PARABOLA, 
             wp.preview_sampling_time_ms/wp.control_sampling_time_ms,
             (wp.preview_sampling_time_ms - next_preview_len_ms)/wp.control_sampling_time_ms+1,
-            swing_foot_pos,
-            &angle);
+            swing_foot_pos);
     nao.setSwingFootPosture (
             swing_foot_pos, 
-            0.0,    // roll angle 
-            0.0,    // pitch angle
-            angle); // yaw angle
+            0.0,                // roll angle 
+            0.0,                // pitch angle
+            swing_foot_pos[3]); // yaw angle
 
 
     // position of CoM

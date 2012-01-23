@@ -1,72 +1,76 @@
-function process_logs(dir)
+function process_logs(dir, plot_velocities)
 %
 % dir - path to the directory containing logs.
+% plot_velocities - controls the plotting of velocities (1=true, 0=false)
 %
 
 
-try
-    clear oru_joints
+Names = {
+' 1 L HIP YAW PITCH' \
+' 2 L HIP ROLL' \
+' 3 L HIP PITCH' \
+' 4 L KNEE PITCH' \
+' 5 L ANKLE PITCH' \
+' 6 L ANKLE ROLL' \
+' 7 R HIP YAW PITCH ' \
+' 8 R HIP ROLL' \
+' 9 R HIP PITCH' \
+'10 R KNEE PITCH' \
+'11 R ANKLE PITCH' \
+'12 R ANKLE ROLL' \
+'13 L SHOULDER PITCH' \
+'14 L SHOULDER ROLL' \
+'15 L ELBOW YAW' \
+'16 L ELBOW ROLL' \
+'17 L WRIST YAW' \
+'18 R SHOULDER PITCH' \
+'19 R SHOULDER ROLL' \
+'20 R ELBOW YAW' \
+'21 R ELBOW ROLL' \
+'22 R WRIST YAW' \
+'23 HEAD PITCH' \
+'24 HEAD YAW'}
+
+
+PlotSensors = {[5 11] [6 12] [3 9] [2 8] [4 10] [1]};
+
+%   min     max     max_velocity
+Limits = [
+  -1.14530299999999996   0.74080999999999997   4.16173744201999973;
+  -0.37947199999999998   0.79047699999999999   4.16173744201999973;
+  -1.77391199999999993   0.48409000000000002   6.40239143372000008;
+  -0.09234600000000000   2.11252800000000018   6.40239143372000008;
+  -1.18951600000000002   0.92274699999999998   6.40239143372000008;
+  -0.76900100000000005   0.39788000000000001   4.16173744201999973;
+  -1.14530299999999996   0.74080999999999997   4.16173744201999973;
+  -0.73832100000000001   0.41475400000000001   4.16173744201999973;
+  -1.77230799999999999   0.48562400000000000   6.40239143372000008;
+  -0.10308299999999999   2.12019799999999980   6.40239143372000008;
+  -1.18644799999999995   0.93205600000000000   6.40239143372000008;
+  -0.38867600000000002   0.78587499999999999   4.16173744201999973;
+  -2.08559999999999990   2.08559999999999990   8.26797389983999942;
+   0.00870000000000000   1.64939999999999998   7.19407272338999970;
+  -2.08559999999999990   2.08559999999999990   8.26797389983999942;
+  -1.56210000000000004  -0.00870000000000000   7.19407272338999970;
+  -1.82380000000000009   1.82380000000000009   5.03143501282000027;
+  -2.08559999999999990   2.08559999999999990   8.26797389983999942;
+  -1.64939999999999998  -0.00870000000000000   7.19407272338999970;
+  -2.08559999999999990   2.08559999999999990   8.26797389983999942;
+   0.00870000000000000   1.56210000000000004   7.19407272338999970;
+  -1.82380000000000009   1.82380000000000009   5.03143501282000027;
+  -2.08570000000000011   2.08570000000000011   7.19407272338999970;
+  -0.67200000000000004   0.51490000000000002   8.26797389983999942;
+];
+
+
+NumJoints = size(Names, 2);
+
+
+
+%try
     load (strcat(dir, '/oru_joints.log'));
 
     if exist('oru_joints')
-        Names = {
-        ' 1 HEAD PITCH' \
-        ' 2 HEAD YAW' \
-        \
-        ' 3 L ANKLE PITCH' \
-        ' 4 L ANKLE ROLL' \
-        ' 5 L ELBOW ROLL' \
-        ' 6 L ELBOW YAW' \
-        ' 7 L HIP PITCH' \
-        ' 8 L HIP ROLL' \
-        ' 9 L HIP YAW PITCH' \
-        '10 L KNEE PITCH' \
-        '11 L SHOULDER PITCH' \
-        '12 L SHOULDER ROLL' \
-        '13 L WRIST YAW' \
-        \
-        '14 R ANKLE PITCH' \
-        '15 R ANKLE ROLL' \
-        '16 R ELBOW ROLL' \
-        '17 R ELBOW YAW' \
-        '18 R HIP PITCH' \
-        '19 R HIP ROLL' \
-        '20 R KNEE PITCH' \
-        '21 R SHOULDER PITCH' \
-        '22 R SHOULDER ROLL' \
-        '23 R WRIST YAW'};
-
-        PlotSensors = {[3 14] [4 15] [7 18] [8 19] [10 20] [9]};
-
-        Limits = [
-        -2.085700,  2.085700;
-        -0.672000,  0.514900;
-        \
-        -1.189516,  0.922747;
-        -0.769001,  0.397880;
-        -1.562100, -0.008700;
-        -2.085600,  2.085600;
-        -1.773912,  0.484090;
-        -0.379472,  0.790477;
-        -1.145303,  0.740810;
-        -0.092346,  2.112528;
-        -2.085600,  2.085600;
-         0.008700,  1.649400;
-        -1.823800,  1.823800;
-        \
-        -1.186448,  0.932056;
-        -0.388676,  0.785875;
-         0.008700,  1.562100;
-        -2.085600,  2.085600;
-        -1.772308,  0.485624;
-        -0.738321,  0.414754;
-        -0.103083,  2.120198;
-        -2.085600,  2.085600;
-        -1.649400, -0.008700;
-        -1.823800,  1.823800;
-        ];
-
-        NumJoints = size(Names, 2);
 
         SensorValues = oru_joints(:,1:NumJoints);
         ActuatorValues = oru_joints(:,NumJoints+1:NumJoints*2);
@@ -85,14 +89,38 @@ try
                 hold off;
             end
         end
-
         % close all
     end
-catch
+%catch
+%end
+
+if (plot_velocities == 1)
+    try
+        load (strcat(dir, '/oru_joint_velocities.log'));
+
+        if exist('oru_joints')
+            Velocities = oru_joint_velocities(:,1:NumJoints);
+            for i = 1:size(PlotSensors, 2);
+                figure ('Position', get(0,'Screensize')*0.9);
+                for j = 1:length(PlotSensors{i});
+                    subplot (length(PlotSensors{i}), 1, j);
+                    hold on;
+                    jointId = PlotSensors{i}(j);
+                    title (Names{1,jointId});
+
+                    plot (Velocities(:,jointId), 'b');
+                    plot ([0 size(Velocities, 1)], [Limits(jointId,3) Limits(jointId,3)], 'r');
+                    legend ('Velocity', 'Limit')
+                    hold off;
+                end
+            end
+        end
+    catch
+    end
 end
 
+
 try
-    clear oru_com
     load (strcat(dir, '/oru_com.log'));
 
     if exist('oru_com')
@@ -120,7 +148,6 @@ end
 
 
 try
-    clear oru_swing_foot
     load (strcat(dir, '/oru_swing_foot.log'));
 
     if exist('oru_com')

@@ -27,6 +27,7 @@ walk_parameters::walk_parameters()
 
 
     control_sampling_time_ms = 10;
+    loop_time_limit_ms = 9000;
     preview_sampling_time_ms = 20;
     preview_window_size = 40;
 

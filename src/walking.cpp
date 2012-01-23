@@ -124,7 +124,7 @@ void oru_walk::callbackEveryCycle_walk()
 {
     readSensors (nao.state_sensor);
 
-    ORUW_TIMER(__FUNCTION__, 9000);
+    ORUW_TIMER(__FUNCTION__, wp.loop_time_limit_ms);
     ORUW_LOG_JOINTS(nao.state_sensor, nao.state);
     ORUW_LOG_COM(wmg, nao.state);
     ORUW_LOG_SWING_FOOT(nao.state_sensor, nao.state);
@@ -352,7 +352,7 @@ void oru_walk::initSteps_NaoModel()
  */
 bool oru_walk::solveMPCProblem ()
 {
-    ORUW_TIMER(__FUNCTION__, 9000);
+    ORUW_TIMER(__FUNCTION__, wp.loop_time_limit_ms);
 
     if (next_preview_len_ms == 0)
     {

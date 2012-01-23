@@ -87,6 +87,7 @@ class walk_parameters
         double step_height;
 
         int control_sampling_time_ms;
+        int loop_time_limit_ms;
         int preview_sampling_time_ms;
         int preview_window_size;
 

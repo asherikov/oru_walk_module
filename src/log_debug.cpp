@@ -79,59 +79,18 @@ void oruw_log::logJointValues(
         const modelState& state_sensor,
         const modelState& state_expected)
 {
-    fprintf (FJointsLog, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f    ",
-                        state_sensor.q[HEAD_PITCH],
-                        state_sensor.q[HEAD_YAW],
-                        //
-                        state_sensor.q[L_ANKLE_PITCH],
-                        state_sensor.q[L_ANKLE_ROLL],
-                        state_sensor.q[L_ELBOW_ROLL],
-                        state_sensor.q[L_ELBOW_YAW],
-                        state_sensor.q[L_HIP_PITCH],
-                        state_sensor.q[L_HIP_ROLL],
-                        state_sensor.q[L_HIP_YAW_PITCH],
-                        state_sensor.q[L_KNEE_PITCH],
-                        state_sensor.q[L_SHOULDER_PITCH],
-                        state_sensor.q[L_SHOULDER_ROLL],
-                        state_sensor.q[L_WRIST_YAW],
-                        //
-                        state_sensor.q[R_ANKLE_PITCH],
-                        state_sensor.q[R_ANKLE_ROLL],
-                        state_sensor.q[R_ELBOW_ROLL],
-                        state_sensor.q[R_ELBOW_YAW],
-                        state_sensor.q[R_HIP_PITCH],
-                        state_sensor.q[R_HIP_ROLL],
-                        state_sensor.q[R_KNEE_PITCH],
-                        state_sensor.q[R_SHOULDER_PITCH],
-                        state_sensor.q[R_SHOULDER_ROLL],
-                        state_sensor.q[R_WRIST_YAW]);
+    for (int i = 0; i < JOINTS_NUM; i++)
+    {
+        fprintf (FJointsLog, "%f ", state_sensor.q[i]);
+    }
+    fprintf (FJointsLog, "    ");
 
-    fprintf (FJointsLog, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
-                        state_expected.q[HEAD_PITCH],
-                        state_expected.q[HEAD_YAW],
-                        //
-                        state_expected.q[L_ANKLE_PITCH],
-                        state_expected.q[L_ANKLE_ROLL],
-                        state_expected.q[L_ELBOW_ROLL],
-                        state_expected.q[L_ELBOW_YAW],
-                        state_expected.q[L_HIP_PITCH],
-                        state_expected.q[L_HIP_ROLL],
-                        state_expected.q[L_HIP_YAW_PITCH],
-                        state_expected.q[L_KNEE_PITCH],
-                        state_expected.q[L_SHOULDER_PITCH],
-                        state_expected.q[L_SHOULDER_ROLL],
-                        state_expected.q[L_WRIST_YAW],
-                        //
-                        state_expected.q[R_ANKLE_PITCH],
-                        state_expected.q[R_ANKLE_ROLL],
-                        state_expected.q[R_ELBOW_ROLL],
-                        state_expected.q[R_ELBOW_YAW],
-                        state_expected.q[R_HIP_PITCH],
-                        state_expected.q[R_HIP_ROLL],
-                        state_expected.q[R_KNEE_PITCH],
-                        state_expected.q[R_SHOULDER_PITCH],
-                        state_expected.q[R_SHOULDER_ROLL],
-                        state_expected.q[R_WRIST_YAW]);
+
+    for (int i = 0; i < JOINTS_NUM; i++)
+    {
+        fprintf (FJointsLog, "%f ", state_expected.q[i]);
+    }
+    fprintf (FJointsLog, "\n");
 }
 
 

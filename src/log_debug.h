@@ -64,6 +64,7 @@ class oruw_timer
 
 #ifdef ORUW_LOG_ENABLE
 #include <cstdio>
+#include <cmath>
 #include <alcore/alptr.h>
 #include <almemoryfastaccess/almemoryfastaccess.h>
 #include <qi/log.hpp>
@@ -90,11 +91,14 @@ class oruw_log
 
         void logNumConstraints(const int);
 
+        void logJointVelocities (modelState&, modelState&, int);
+
 
     private:
         FILE *FJointsLog;
         FILE *FCoMLog;
         FILE *FSwingFootLog;
+        FILE *FJointVelocities;
         avgFilter *com_filter;
         vector<float> sensorValues;
 };
@@ -107,6 +111,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_COM(wmg,sensors) oruw_log_instance->logCoM(wmg,sensors)
 #define ORUW_LOG_SWING_FOOT(sensors,actuators) oruw_log_instance->logSwingFoot(sensors,actuators)
 #define ORUW_LOG_NUM_CONSTRAINTS(num) oruw_log_instance->logNumConstraints(num)
+#define ORUW_LOG_JOINT_VELOCITIES(current,target,time) oruw_log_instance->logJointVelocities(current,target,time);
 
 #else // ORUW_LOG_ENABLE
 
@@ -116,6 +121,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_COM(wmg,sensors)
 #define ORUW_LOG_SWING_FOOT(sensors,actuators)
 #define ORUW_LOG_NUM_CONSTRAINTS(num)
+#define ORUW_LOG_JOINT_VELOCITIES(current,target,time)
 
 #endif // ORUW_LOG_ENABLE
 

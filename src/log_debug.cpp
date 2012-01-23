@@ -60,6 +60,7 @@ oruw_log::oruw_log (unsigned int filter_window_len)
     FJointsLog = fopen ("./oru_joints.log", "w");
     FCoMLog = fopen ("./oru_com.log", "w");
     FSwingFootLog = fopen ("./oru_swing_foot.log", "w");
+    FJointVelocities = fopen ("./oru_joint_velocities.log", "w");
     com_filter = new avgFilter(filter_window_len);
 }
 
@@ -68,6 +69,7 @@ oruw_log::~oruw_log ()
     fclose (FJointsLog);
     fclose (FCoMLog);
     fclose (FSwingFootLog);
+    fclose (FJointVelocities);
     delete com_filter;
 }
 
@@ -161,6 +163,18 @@ void oruw_log::logSwingFoot(
 
     state_sensor.getSwingFoot(swing_foot);
     fprintf (FSwingFootLog, "%f %f %f\n", swing_foot[0], swing_foot[1], swing_foot[2]);
+}
+
+void oruw_log::logJointVelocities (
+        modelState& state_current,
+        modelState& state_target, 
+        int time)
+{
+    for (int i = 0; i < JOINTS_NUM; i++)
+    {
+        fprintf (FJointVelocities, "%f ", fabs(state_target.q[i] - state_current.q[i]) / time);
+    }
+    fprintf (FJointVelocities, "\n");
 }
 
 

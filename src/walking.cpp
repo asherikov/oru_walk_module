@@ -167,7 +167,7 @@ void oru_walk::callbackEveryCycle_walk()
         ORUW_HALT("Joint bounds are violated.\n");
     }
 
-    ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, nao.state, wp.control_sampling_time_ms);
+    ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, nao.state, (double) wp.control_sampling_time_ms/1000);
 
     for (int i = 0; i < LOWER_JOINTS_NUM; i++)
     {

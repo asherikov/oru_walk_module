@@ -91,7 +91,7 @@ class oruw_log
 
         void logNumConstraints(const int);
 
-        void logJointVelocities (modelState&, modelState&, int);
+        void logJointVelocities (modelState&, modelState&, double);
 
 
     private:

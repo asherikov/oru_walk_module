@@ -168,7 +168,7 @@ void oruw_log::logSwingFoot(
 void oruw_log::logJointVelocities (
         modelState& state_current,
         modelState& state_target, 
-        int time)
+        double time)
 {
     for (int i = 0; i < JOINTS_NUM; i++)
     {

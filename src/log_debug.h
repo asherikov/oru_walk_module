@@ -82,18 +82,11 @@ class oruw_log
         oruw_log (unsigned int);
         ~oruw_log ();
 
-        void logJointValues (
-                ALPtr<ALMemoryFastAccess>,
-                ALPtr<ALMemoryFastAccess>);
+        void logJointValues (const modelState&, const modelState&);
 
-        void logCoM (
-                WMG *,
-                modelState,
-                ALPtr<ALMemoryFastAccess>);
+        void logCoM (WMG *, modelState&);
 
-        void logSwingFoot (
-                modelState,
-                ALPtr<ALMemoryFastAccess>);
+        void logSwingFoot (modelState&, modelState&);
 
         void logNumConstraints(const int);
 
@@ -111,8 +104,8 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_OPEN(filter_len) oruw_log_instance = new oruw_log(filter_len)
 #define ORUW_LOG_CLOSE delete oruw_log_instance
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
-#define ORUW_LOG_COM(wmg,nao,sensors) oruw_log_instance->logCoM(wmg,nao,sensors)
-#define ORUW_LOG_SWING_FOOT(nao,sensors) oruw_log_instance->logSwingFoot(nao,sensors)
+#define ORUW_LOG_COM(wmg,sensors) oruw_log_instance->logCoM(wmg,sensors)
+#define ORUW_LOG_SWING_FOOT(sensors,actuators) oruw_log_instance->logSwingFoot(sensors,actuators)
 #define ORUW_LOG_NUM_CONSTRAINTS(num) oruw_log_instance->logNumConstraints(num)
 
 #else // ORUW_LOG_ENABLE
@@ -120,8 +113,8 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_OPEN(filter_len) 
 #define ORUW_LOG_CLOSE 
 #define ORUW_LOG_JOINTS(sensors,actuators)
-#define ORUW_LOG_COM(wmg,nao,sensors)
-#define ORUW_LOG_SWING_FOOT(nao,sensors)
+#define ORUW_LOG_COM(wmg,sensors)
+#define ORUW_LOG_SWING_FOOT(sensors,actuators)
 #define ORUW_LOG_NUM_CONSTRAINTS(num)
 
 #endif // ORUW_LOG_ENABLE

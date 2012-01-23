@@ -74,83 +74,75 @@ oruw_log::~oruw_log ()
 
 
 void oruw_log::logJointValues(
-        ALPtr<ALMemoryFastAccess> accessSensorValues,
-        ALPtr<ALMemoryFastAccess> accessActuatorValues)
+        const modelState& state_sensor,
+        const modelState& state_expected)
 {
-    accessSensorValues->GetValues (sensorValues);
     fprintf (FJointsLog, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f    ",
-                        sensorValues[HEAD_PITCH],
-                        sensorValues[HEAD_YAW],
+                        state_sensor.q[HEAD_PITCH],
+                        state_sensor.q[HEAD_YAW],
                         //
-                        sensorValues[L_ANKLE_PITCH],
-                        sensorValues[L_ANKLE_ROLL],
-                        sensorValues[L_ELBOW_ROLL],
-                        sensorValues[L_ELBOW_YAW],
-                        sensorValues[L_HIP_PITCH],
-                        sensorValues[L_HIP_ROLL],
-                        sensorValues[L_HIP_YAW_PITCH],
-                        sensorValues[L_KNEE_PITCH],
-                        sensorValues[L_SHOULDER_PITCH],
-                        sensorValues[L_SHOULDER_ROLL],
-                        sensorValues[L_WRIST_YAW],
+                        state_sensor.q[L_ANKLE_PITCH],
+                        state_sensor.q[L_ANKLE_ROLL],
+                        state_sensor.q[L_ELBOW_ROLL],
+                        state_sensor.q[L_ELBOW_YAW],
+                        state_sensor.q[L_HIP_PITCH],
+                        state_sensor.q[L_HIP_ROLL],
+                        state_sensor.q[L_HIP_YAW_PITCH],
+                        state_sensor.q[L_KNEE_PITCH],
+                        state_sensor.q[L_SHOULDER_PITCH],
+                        state_sensor.q[L_SHOULDER_ROLL],
+                        state_sensor.q[L_WRIST_YAW],
                         //
-                        sensorValues[R_ANKLE_PITCH],
-                        sensorValues[R_ANKLE_ROLL],
-                        sensorValues[R_ELBOW_ROLL],
-                        sensorValues[R_ELBOW_YAW],
-                        sensorValues[R_HIP_PITCH],
-                        sensorValues[R_HIP_ROLL],
-                        sensorValues[R_KNEE_PITCH],
-                        sensorValues[R_SHOULDER_PITCH],
-                        sensorValues[R_SHOULDER_ROLL],
-                        sensorValues[R_WRIST_YAW]);
+                        state_sensor.q[R_ANKLE_PITCH],
+                        state_sensor.q[R_ANKLE_ROLL],
+                        state_sensor.q[R_ELBOW_ROLL],
+                        state_sensor.q[R_ELBOW_YAW],
+                        state_sensor.q[R_HIP_PITCH],
+                        state_sensor.q[R_HIP_ROLL],
+                        state_sensor.q[R_KNEE_PITCH],
+                        state_sensor.q[R_SHOULDER_PITCH],
+                        state_sensor.q[R_SHOULDER_ROLL],
+                        state_sensor.q[R_WRIST_YAW]);
 
-    accessActuatorValues->GetValues (sensorValues);
     fprintf (FJointsLog, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
-                        sensorValues[HEAD_PITCH],
-                        sensorValues[HEAD_YAW],
+                        state_expected.q[HEAD_PITCH],
+                        state_expected.q[HEAD_YAW],
                         //
-                        sensorValues[L_ANKLE_PITCH],
-                        sensorValues[L_ANKLE_ROLL],
-                        sensorValues[L_ELBOW_ROLL],
-                        sensorValues[L_ELBOW_YAW],
-                        sensorValues[L_HIP_PITCH],
-                        sensorValues[L_HIP_ROLL],
-                        sensorValues[L_HIP_YAW_PITCH],
-                        sensorValues[L_KNEE_PITCH],
-                        sensorValues[L_SHOULDER_PITCH],
-                        sensorValues[L_SHOULDER_ROLL],
-                        sensorValues[L_WRIST_YAW],
+                        state_expected.q[L_ANKLE_PITCH],
+                        state_expected.q[L_ANKLE_ROLL],
+                        state_expected.q[L_ELBOW_ROLL],
+                        state_expected.q[L_ELBOW_YAW],
+                        state_expected.q[L_HIP_PITCH],
+                        state_expected.q[L_HIP_ROLL],
+                        state_expected.q[L_HIP_YAW_PITCH],
+                        state_expected.q[L_KNEE_PITCH],
+                        state_expected.q[L_SHOULDER_PITCH],
+                        state_expected.q[L_SHOULDER_ROLL],
+                        state_expected.q[L_WRIST_YAW],
                         //
-                        sensorValues[R_ANKLE_PITCH],
-                        sensorValues[R_ANKLE_ROLL],
-                        sensorValues[R_ELBOW_ROLL],
-                        sensorValues[R_ELBOW_YAW],
-                        sensorValues[R_HIP_PITCH],
-                        sensorValues[R_HIP_ROLL],
-                        sensorValues[R_KNEE_PITCH],
-                        sensorValues[R_SHOULDER_PITCH],
-                        sensorValues[R_SHOULDER_ROLL],
-                        sensorValues[R_WRIST_YAW]);
+                        state_expected.q[R_ANKLE_PITCH],
+                        state_expected.q[R_ANKLE_ROLL],
+                        state_expected.q[R_ELBOW_ROLL],
+                        state_expected.q[R_ELBOW_YAW],
+                        state_expected.q[R_HIP_PITCH],
+                        state_expected.q[R_HIP_ROLL],
+                        state_expected.q[R_KNEE_PITCH],
+                        state_expected.q[R_SHOULDER_PITCH],
+                        state_expected.q[R_SHOULDER_ROLL],
+                        state_expected.q[R_WRIST_YAW]);
 }
 
 
 
 void oruw_log::logCoM(
         WMG *wmg,
-        modelState nao_state,
-        ALPtr<ALMemoryFastAccess> accessSensorValues)
+        modelState& state_sensor)
 {
     fprintf (FCoMLog, "%f %f %f    ", wmg->init_state.x(), wmg->init_state.y(), wmg->hCoM);
 
 
-    accessSensorValues->GetValues (sensorValues);
-    for (int i = 0; i < JOINTS_NUM; i++)
-    {
-        nao_state.q[i] = sensorValues[i];
-    }
     double CoM[3];
-    nao_state.getCoM(CoM);
+    state_sensor.getCoM(CoM);
     //com_filter->addValue(CoM[0], CoM[1], CoM[0], CoM[1]);
 
     fprintf (FCoMLog, "%f %f %f\n", CoM[0], CoM[1], CoM[2]);
@@ -158,22 +150,16 @@ void oruw_log::logCoM(
 
 
 void oruw_log::logSwingFoot(
-        modelState nao_state,
-        ALPtr<ALMemoryFastAccess> accessSensorValues)
+        modelState& state_sensor,
+        modelState& state_expected)
 {
     double swing_foot[3];
 
 
-    nao_state.getSwingFoot(swing_foot);
+    state_expected.getSwingFoot(swing_foot);
     fprintf (FSwingFootLog, "%f %f %f    ", swing_foot[0], swing_foot[1], swing_foot[2]);
 
-
-    accessSensorValues->GetValues (sensorValues);
-    for (int i = 0; i < JOINTS_NUM; i++)
-    {
-        nao_state.q[i] = sensorValues[i];
-    }
-    nao_state.getSwingFoot(swing_foot);
+    state_sensor.getSwingFoot(swing_foot);
     fprintf (FSwingFootLog, "%f %f %f\n", swing_foot[0], swing_foot[1], swing_foot[2]);
 }
 

@@ -122,10 +122,12 @@ void oru_walk::stopWalking(const string& message)
  */
 void oru_walk::callbackEveryCycle_walk()
 {
+    readSensors (nao.state_sensor);
+
     ORUW_TIMER(__FUNCTION__, 9000);
-    ORUW_LOG_JOINTS(accessSensorValues, accessActuatorValues);
-    ORUW_LOG_COM(wmg, nao.state, accessSensorValues);
-    ORUW_LOG_SWING_FOOT(nao.state, accessSensorValues);
+    ORUW_LOG_JOINTS(nao.state_sensor, nao.state);
+    ORUW_LOG_COM(wmg, nao.state);
+    ORUW_LOG_SWING_FOOT(nao.state_sensor, nao.state);
 
     feedbackError ();
 
@@ -194,11 +196,8 @@ void oru_walk::callbackEveryCycle_walk()
  */
 void oru_walk::feedbackError ()
 {
-    modelState nao_state = nao.state;
-    updateModelJoints(nao_state);
-
     double CoM_pos[POSITION_VECTOR_SIZE];
-    nao_state.getCoM (CoM_pos);
+    nao.state_sensor.getCoM (CoM_pos);
 
     smpc::state_orig state_sensor;
     //com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
@@ -248,7 +247,7 @@ void oru_walk::feedbackError ()
 /**
  * @brief Update joint angles in the NAO model.
  */
-void oru_walk::updateModelJoints(modelState& nao_state)
+void oru_walk::readSensors(modelState& nao_state)
 {
     accessSensorValues->GetValues (sensorValues);
     for (int i = 0; i < JOINTS_NUM; i++)
@@ -335,7 +334,8 @@ void oru_walk::initSteps_NaoModel()
 
 
 // Nao
-    updateModelJoints(nao.state);
+    readSensors(nao.state);
+    readSensors(nao.state_sensor);
 
     // support foot position and orientation
     nao.init (

@@ -54,11 +54,14 @@ class oruw_timer
         double limit;
 };
 
-#define ORUW_TIMER(id,limit) oruw_timer timer(id,limit)
+#define ORUW_TIMER(limit) oruw_timer timer(__FUNCTION__,limit)
 #define ORUW_TIMER_CHECK if(!timer.isLimitSatisfied()){ORUW_HALT("Timer protection!\n");}
+
 #else // ORUW_TIMER_ENABLE
-#define ORUW_TIMER(id,limit)
+
+#define ORUW_TIMER(limit)
 #define ORUW_TIMER_CHECK
+
 #endif // ORUW_TIMER_ENABLE
 
 
@@ -80,7 +83,7 @@ using namespace std;
 class oruw_log
 {
     public:
-        oruw_log (unsigned int);
+        oruw_log (const modelState&, const unsigned int);
         ~oruw_log ();
 
         void logJointValues (const modelState&, const modelState&);
@@ -91,7 +94,7 @@ class oruw_log
 
         void logNumConstraints(const int);
 
-        void logJointVelocities (modelState&, modelState&, double);
+        void logJointVelocities (const modelState&, const double);
 
 
     private:
@@ -100,28 +103,28 @@ class oruw_log
         FILE *FSwingFootLog;
         FILE *FJointVelocities;
         avgFilter *com_filter;
-        vector<float> sensorValues;
+        modelState state_old;
 };
 
 extern oruw_log *oruw_log_instance;
 
-#define ORUW_LOG_OPEN(filter_len) oruw_log_instance = new oruw_log(filter_len)
+#define ORUW_LOG_OPEN(state,filter_len) oruw_log_instance = new oruw_log(state,filter_len)
 #define ORUW_LOG_CLOSE delete oruw_log_instance
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
 #define ORUW_LOG_COM(wmg,sensors) oruw_log_instance->logCoM(wmg,sensors)
 #define ORUW_LOG_SWING_FOOT(sensors,actuators) oruw_log_instance->logSwingFoot(sensors,actuators)
 #define ORUW_LOG_NUM_CONSTRAINTS(num) oruw_log_instance->logNumConstraints(num)
-#define ORUW_LOG_JOINT_VELOCITIES(current,target,time) oruw_log_instance->logJointVelocities(current,target,time);
+#define ORUW_LOG_JOINT_VELOCITIES(current,time) oruw_log_instance->logJointVelocities(current,time);
 
 #else // ORUW_LOG_ENABLE
 
-#define ORUW_LOG_OPEN(filter_len) 
+#define ORUW_LOG_OPEN(state,filter_len) 
 #define ORUW_LOG_CLOSE 
 #define ORUW_LOG_JOINTS(sensors,actuators)
 #define ORUW_LOG_COM(wmg,sensors)
 #define ORUW_LOG_SWING_FOOT(sensors,actuators)
 #define ORUW_LOG_NUM_CONSTRAINTS(num)
-#define ORUW_LOG_JOINT_VELOCITIES(current,target,time)
+#define ORUW_LOG_JOINT_VELOCITIES(current,time)
 
 #endif // ORUW_LOG_ENABLE
 

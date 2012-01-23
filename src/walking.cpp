@@ -73,18 +73,9 @@ void oru_walk::walk()
     com_filter = new avgFilter(wp.filter_window_length);
 
 // models
-    initSteps_NaoModel();
-    wmg->init_param (     
-            (double) wp.preview_sampling_time_ms / 1000, // sampling time in seconds
-            nao.CoM_position[2],                      // height of the center of mass
-            wp.step_height);                // step height (for interpolation of feet movements)
+    initWMG_NaoModel();
 
-    wmg->initABMatrices ((double) wp.control_sampling_time_ms / 1000);
-    wmg->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
-    old_state = wmg->init_state;
-
-
-    ORUW_LOG_OPEN(wp.filter_window_length);
+    ORUW_LOG_OPEN(nao.state_sensor, wp.filter_window_length);
 
 // Connect callback to the DCM post proccess
     try
@@ -124,10 +115,11 @@ void oru_walk::callbackEveryCycle_walk()
 {
     readSensors (nao.state_sensor);
 
-    ORUW_TIMER(__FUNCTION__, wp.loop_time_limit_ms);
+    ORUW_TIMER(wp.loop_time_limit_ms);
     ORUW_LOG_JOINTS(nao.state_sensor, nao.state);
     ORUW_LOG_COM(wmg, nao.state);
     ORUW_LOG_SWING_FOOT(nao.state_sensor, nao.state);
+    ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, (double) wp.control_sampling_time_ms/1000);
 
     feedbackError ();
 
@@ -167,7 +159,6 @@ void oru_walk::callbackEveryCycle_walk()
         ORUW_HALT("Joint bounds are violated.\n");
     }
 
-    ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, nao.state, (double) wp.control_sampling_time_ms/1000);
 
     for (int i = 0; i < LOWER_JOINTS_NUM; i++)
     {
@@ -263,7 +254,7 @@ void oru_walk::readSensors(modelState& nao_state)
  * @brief 
  * @attention Hardcoded parameters.
  */
-void oru_walk::initSteps_NaoModel()
+void oru_walk::initWMG_NaoModel()
 {
     wmg = new WMG();
     wmg->init(wp.preview_window_size);     // size of the preview window
@@ -343,6 +334,15 @@ void oru_walk::initSteps_NaoModel()
             IGM_SUPPORT_RIGHT,
             0.0, -0.05, 0.0, // position
             0.0, 0.0, 0.0);  // orientation
+    
+    wmg->init_param (     
+            (double) wp.preview_sampling_time_ms / 1000, // sampling time in seconds
+            nao.CoM_position[2],                      // height of the center of mass
+            wp.step_height);                // step height (for interpolation of feet movements)
+
+    wmg->initABMatrices ((double) wp.control_sampling_time_ms / 1000);
+    wmg->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
+    old_state = wmg->init_state;
 }
 
 
@@ -352,7 +352,7 @@ void oru_walk::initSteps_NaoModel()
  */
 bool oru_walk::solveMPCProblem ()
 {
-    ORUW_TIMER(__FUNCTION__, wp.loop_time_limit_ms);
+    ORUW_TIMER(wp.loop_time_limit_ms);
 
     if (next_preview_len_ms == 0)
     {

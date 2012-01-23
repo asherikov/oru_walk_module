@@ -29,7 +29,7 @@ Names = {
 '21 R ELBOW ROLL' \
 '22 R WRIST YAW' \
 '23 HEAD PITCH' \
-'24 HEAD YAW'}
+'24 HEAD YAW'};
 
 
 PlotSensors = {[5 11] [6 12] [3 9] [2 8] [4 10] [1]};

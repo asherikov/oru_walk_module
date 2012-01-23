@@ -55,8 +55,9 @@ oruw_timer::~oruw_timer()
 oruw_log *oruw_log_instance;
 
 
-oruw_log::oruw_log (unsigned int filter_window_len)
+oruw_log::oruw_log (const modelState& state_init, const unsigned int filter_window_len)
 {
+    state_old = state_init;
     FJointsLog = fopen ("./oru_joints.log", "w");
     FCoMLog = fopen ("./oru_com.log", "w");
     FSwingFootLog = fopen ("./oru_swing_foot.log", "w");
@@ -124,14 +125,13 @@ void oruw_log::logSwingFoot(
     fprintf (FSwingFootLog, "%f %f %f\n", swing_foot[0], swing_foot[1], swing_foot[2]);
 }
 
-void oruw_log::logJointVelocities (
-        modelState& state_current,
-        modelState& state_target, 
-        double time)
+
+void oruw_log::logJointVelocities (const modelState& state_current, const double time)
 {
     for (int i = 0; i < JOINTS_NUM; i++)
     {
-        fprintf (FJointVelocities, "%f ", fabs(state_target.q[i] - state_current.q[i]) / time);
+        fprintf (FJointVelocities, "%f ", fabs(state_old.q[i] - state_current.q[i]) / time);
+        state_old.q[i] = state_current.q[i];
     }
     fprintf (FJointVelocities, "\n");
 }

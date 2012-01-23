@@ -133,7 +133,7 @@ private:
 
 
     // walking
-    void initSteps_NaoModel ();
+    void initWMG_NaoModel ();
     void readSensors (modelState&);
     bool solveMPCProblem ();
     void feedbackError ();

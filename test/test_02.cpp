@@ -16,7 +16,6 @@
 #include "smpc_solver.h"
 
 #include "nao_igm.h"
-#include "public_maple_functions.h"
 #include "leg2joints.h"
 #include "joints_sensors_id.h"
 
@@ -106,17 +105,15 @@ int main(int argc, char **argv)
 
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
-        double LegPos[POSITION_VECTOR_SIZE + 1];
-        wmg.getSwingFootPosition (
-            preview_sampling_time_ms/control_sampling_time_ms,
-            (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms+1,
-            LegPos);
+        double left_foot_pos[POSITION_VECTOR_SIZE + 1];
+        double right_foot_pos[POSITION_VECTOR_SIZE + 1];
+        wmg.getFeetPositions (
+                preview_sampling_time_ms/control_sampling_time_ms,
+                (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms+1,
+                left_foot_pos,
+                right_foot_pos);
 
-        nao.setSwingFootPosture (
-            LegPos,
-            0.0,    // roll angle
-            0.0,    // pitch angle
-            LegPos[3]); // yaw angle
+        nao.setFeetPostures (left_foot_pos, right_foot_pos);
 
         // position of CoM
         nao.setCoM(wmg.init_state.x(), wmg.init_state.y(), wmg.hCoM); 

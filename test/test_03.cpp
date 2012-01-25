@@ -85,9 +85,12 @@ int main(int argc, char **argv)
     vector<double> CoM_x;
     vector<double> CoM_y;
 
-    vector<double> swing_foot_x;
-    vector<double> swing_foot_y;
-    vector<double> swing_foot_z;
+    vector<double> left_foot_x;
+    vector<double> left_foot_y;
+    vector<double> left_foot_z;
+    vector<double> right_foot_x;
+    vector<double> right_foot_y;
+    vector<double> right_foot_z;
     //-----------------------------------------------------------
 
 
@@ -151,17 +154,15 @@ int main(int argc, char **argv)
 
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
-        double LegPos[POSITION_VECTOR_SIZE];
-        wmg.getSwingFootPosition (
+        double left_foot_pos[POSITION_VECTOR_SIZE + 1];
+        double right_foot_pos[POSITION_VECTOR_SIZE + 1];
+        wmg.getFeetPositions (
                 preview_sampling_time_ms/control_sampling_time_ms,
                 (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms+1,
-                LegPos);
+                left_foot_pos,
+                right_foot_pos);
 
-        nao.setSwingFootPosture (
-                LegPos,
-                0.0,    // roll angle 
-                0.0,    // pitch angle
-                LegPos[3]); // yaw angle
+        nao.setFeetPostures (left_foot_pos, right_foot_pos);
 
         // position of CoM
         nao.setCoM(wmg.init_state.x(), wmg.init_state.y(), wmg.hCoM); 
@@ -184,9 +185,12 @@ int main(int argc, char **argv)
 
         //-----------------------------------------------------------
         // output
-        swing_foot_x.push_back(LegPos[0]);
-        swing_foot_y.push_back(LegPos[1]);
-        swing_foot_z.push_back(LegPos[2]);
+        left_foot_x.push_back(left_foot_pos[0]);
+        left_foot_y.push_back(left_foot_pos[1]);
+        left_foot_z.push_back(left_foot_pos[2]);
+        right_foot_x.push_back(right_foot_pos[0]);
+        right_foot_y.push_back(right_foot_pos[1]);
+        right_foot_z.push_back(right_foot_pos[2]);
         //-----------------------------------------------------------
         
 
@@ -198,7 +202,8 @@ int main(int argc, char **argv)
 
     //-----------------------------------------------------------
     // output
-    //printVectors (file_op, swing_foot_x, swing_foot_y, swing_foot_z, "SFP", "r");
+    //printVectors (file_op, left_foot_x, left_foot_y, left_foot_z, "LFP", "r");
+    //printVectors (file_op, right_foot_x, right_foot_y, right_foot_z, "RFP", "r");
     printVectors (file_op, ZMP_x, ZMP_y, "ZMP", "k");
     printVectors (file_op, ZMPref_x, ZMPref_y, "ZMPref", "x");
     printVectors (file_op, CoM_x, CoM_y, "CoM", "b");

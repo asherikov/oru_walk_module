@@ -117,7 +117,7 @@ void oru_walk::callbackEveryCycle_walk()
 
     ORUW_TIMER(wp.loop_time_limit_ms);
     ORUW_LOG_JOINTS(nao.state_sensor, nao.state);
-    ORUW_LOG_COM(wmg, nao.state);
+    ORUW_LOG_COM(wmg, nao.state_sensor);
     ORUW_LOG_SWING_FOOT(nao.state_sensor, nao.state);
     ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, (double) wp.control_sampling_time_ms/1000);
 

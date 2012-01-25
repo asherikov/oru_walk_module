@@ -66,8 +66,7 @@ Limits = [
 NumJoints = size(Names, 2);
 
 
-
-%try
+try
     load (strcat(dir, '/oru_joints.log'));
 
     if exist('oru_joints')
@@ -91,8 +90,8 @@ NumJoints = size(Names, 2);
         end
         % close all
     end
-%catch
-%end
+catch
+end
 
 if (plot_velocities == 1)
     try

@@ -346,8 +346,14 @@ bool oru_walk::solveMPCProblem ()
 
     if (next_preview_len_ms == 0)
     {
-        bool switch_foot = false;
-        WMGret wmg_retval = wmg->FormPreviewWindow(&switch_foot);
+        if (wmg.isSupportSwitchNeeded())
+        {
+            double pos_error[POSITION_VECTOR_SIZE];
+            nao.switchSupportFoot(pos_error);
+        }
+
+        WMGret wmg_retval = wmg.formPreviewWindow();
+
 
         if (wmg_retval == WMG_HALT)
         {
@@ -355,11 +361,6 @@ bool oru_walk::solveMPCProblem ()
             return (false);
         }
 
-        if (switch_foot)
-        {
-            double pos_error[POSITION_VECTOR_SIZE];
-            nao.switchSupportFoot(pos_error);
-        }
 
         next_preview_len_ms = wp.preview_sampling_time_ms;
     }

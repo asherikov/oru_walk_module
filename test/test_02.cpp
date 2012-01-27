@@ -75,19 +75,18 @@ int main(int argc, char **argv)
     {
         if (next_preview_len_ms == 0)
         {
-            bool switch_foot = false;
-            WMGret wmg_retval = wmg.FormPreviewWindow(&switch_foot);
+            if (wmg.isSupportSwitchNeeded())
+            {
+                double pos_error[POSITION_VECTOR_SIZE];
+                nao.switchSupportFoot(pos_error);
+            }
+
+            WMGret wmg_retval = wmg.formPreviewWindow();
 
             if (wmg_retval == WMG_HALT)
             {
                 cout << "EXIT (halt = 1)" << endl;
                 break;
-            }
-
-            if (switch_foot)
-            {
-                double pos_error[POSITION_VECTOR_SIZE];
-                nao.switchSupportFoot(pos_error);
             }
 
             next_preview_len_ms = preview_sampling_time_ms;

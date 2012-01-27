@@ -158,16 +158,14 @@ void oru_walk::callbackEveryCycle_walk()
     }
 
 
-    for (int i = 0; i < LOWER_JOINTS_NUM; i++)
-    {
-        walkCommands[5][i][0] = nao.state.q[i];
-    }
-
-
-    // Get time
+    // Set commands
     try
     {
         walkCommands[4][0] = dcmProxy->getTime(wp.control_sampling_time_ms);
+        for (int i = 0; i < LOWER_JOINTS_NUM; i++)
+        {
+            walkCommands[5][i][0] = nao.state.q[i];
+        }
         dcmProxy->setAlias(walkCommands);
     }
     catch (const AL::ALError &e)
@@ -189,15 +187,12 @@ void oru_walk::feedbackError ()
     double CoM_pos[POSITION_VECTOR_SIZE];
     nao.state_sensor.getCoM (CoM_pos);
 
-    smpc::state_orig state_sensor;
     //com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
-    state_sensor.x() = CoM_pos[0];
-    state_sensor.y() = CoM_pos[1];
 
     smpc::state_orig state_error;
     state_error.set (
-            wmg->init_state.x()  - state_sensor.x(),
-            wmg->init_state.y()  - state_sensor.y());
+            wmg->init_state.x() - CoM_pos[0],
+            wmg->init_state.y() - CoM_pos[1]);
 
     if (state_error.x() > wp.feedback_threshold)
     {
@@ -225,10 +220,8 @@ void oru_walk::feedbackError ()
         state_error.y() = 0.0;
     }
 
-    wmg->init_state.x()  -= wp.feedback_gain * state_error.x();
-    wmg->init_state.y()  -= wp.feedback_gain * state_error.y();
-
-    old_state = wmg->init_state;
+    wmg->init_state.x() -= wp.feedback_gain * state_error.x();
+    wmg->init_state.y() -= wp.feedback_gain * state_error.y();
 }
 
 
@@ -340,7 +333,6 @@ void oru_walk::initWMG_NaoModel()
 
     wmg->initABMatrices ((double) wp.control_sampling_time_ms / 1000);
     wmg->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
-    old_state = wmg->init_state;
 }
 
 
@@ -365,7 +357,8 @@ bool oru_walk::solveMPCProblem ()
 
         if (switch_foot)
         {
-            nao.switchSupportFoot();
+            double pos_error[POSITION_VECTOR_SIZE];
+            nao.switchSupportFoot(pos_error);
         }
 
         next_preview_len_ms = wp.preview_sampling_time_ms;

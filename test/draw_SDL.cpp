@@ -430,11 +430,11 @@ void HomogGL(double *T, GLfloat *M, double scale)
  */
 void HomogGL(double x, double y , double z, double alpha, double beta, double gamma, GLfloat *M, double scale)
 {
-    double T[POSTURE_MATRIX_SIZE];
-    initPosture(x, y, z, alpha, beta, gamma, T);
+    posture T;
+    T.init(x, y, z, alpha, beta, gamma);
 
     for (int i=0; i<POSTURE_MATRIX_SIZE; i++)
-        M[i] = T[i];
+        M[i] = T.data[i];
 
     M[12] *= scale;
     M[13] *= scale;

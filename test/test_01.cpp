@@ -117,7 +117,8 @@ int main(int argc, char **argv)
 
             if (switch_foot)
             {
-                nao.switchSupportFoot();
+                double pos_error[POSITION_VECTOR_SIZE];
+                nao.switchSupportFoot(pos_error);
             }
 
             next_preview_len_ms = preview_sampling_time_ms;

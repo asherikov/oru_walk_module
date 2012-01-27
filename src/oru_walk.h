@@ -166,8 +166,6 @@ private:
     avgFilter *com_filter;
     nao_igm nao;
 
-    smpc::state_orig old_state;
-
     walk_parameters wp;
     int next_preview_len_ms;
 

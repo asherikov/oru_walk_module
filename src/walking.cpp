@@ -346,13 +346,14 @@ bool oru_walk::solveMPCProblem ()
 
     if (next_preview_len_ms == 0)
     {
-        if (wmg.isSupportSwitchNeeded())
+        if (wmg->isSupportSwitchNeeded())
         {
             double pos_error[POSITION_VECTOR_SIZE];
             nao.switchSupportFoot(pos_error);
+            wmg->correctNextSSPosition(pos_error);
         }
 
-        WMGret wmg_retval = wmg.formPreviewWindow();
+        WMGret wmg_retval = wmg->formPreviewWindow();
 
 
         if (wmg_retval == WMG_HALT)

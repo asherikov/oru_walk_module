@@ -117,7 +117,6 @@ void oruw_log::logSwingFoot(
 {
     double swing_foot[3];
 
-
     state_expected.getSwingFootPosition(swing_foot);
     fprintf (FSwingFootLog, "%f %f %f    ", swing_foot[0], swing_foot[1], swing_foot[2]);
 

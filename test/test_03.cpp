@@ -101,6 +101,7 @@ int main(int argc, char **argv)
     {
         if (next_preview_len_ms == 0)
         {
+            cout << wmg.isSupportSwitchNeeded() << endl;
             if (wmg.isSupportSwitchNeeded())
             {
                 double pos_error[POSITION_VECTOR_SIZE];
@@ -202,8 +203,8 @@ int main(int argc, char **argv)
 
     //-----------------------------------------------------------
     // output
-    //printVectors (file_op, left_foot_x, left_foot_y, left_foot_z, "LFP", "r");
-    //printVectors (file_op, right_foot_x, right_foot_y, right_foot_z, "RFP", "r");
+    printVectors (file_op, left_foot_x, left_foot_y, left_foot_z, "LFP", "r");
+    printVectors (file_op, right_foot_x, right_foot_y, right_foot_z, "RFP", "r");
     printVectors (file_op, ZMP_x, ZMP_y, "ZMP", "k");
     printVectors (file_op, ZMPref_x, ZMPref_y, "ZMPref", "x");
     printVectors (file_op, CoM_x, CoM_y, "CoM", "b");

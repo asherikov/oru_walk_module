@@ -90,7 +90,7 @@ class oruw_log
 
         void logCoM (WMG *, modelState&);
 
-        void logSwingFoot (modelState&, modelState&);
+        void logFeet (nao_igm& nao);
 
         void logNumConstraints(const int);
 
@@ -100,7 +100,7 @@ class oruw_log
     private:
         FILE *FJointsLog;
         FILE *FCoMLog;
-        FILE *FSwingFootLog;
+        FILE *FFeetLog;
         FILE *FJointVelocities;
         avgFilter *com_filter;
         modelState state_old;
@@ -112,7 +112,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_CLOSE delete oruw_log_instance
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
 #define ORUW_LOG_COM(wmg,sensors) oruw_log_instance->logCoM(wmg,sensors)
-#define ORUW_LOG_SWING_FOOT(sensors,actuators) oruw_log_instance->logSwingFoot(sensors,actuators)
+#define ORUW_LOG_FEET(nao) oruw_log_instance->logFeet(nao)
 #define ORUW_LOG_NUM_CONSTRAINTS(num) oruw_log_instance->logNumConstraints(num)
 #define ORUW_LOG_JOINT_VELOCITIES(current,time) oruw_log_instance->logJointVelocities(current,time);
 
@@ -122,7 +122,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_CLOSE 
 #define ORUW_LOG_JOINTS(sensors,actuators)
 #define ORUW_LOG_COM(wmg,sensors)
-#define ORUW_LOG_SWING_FOOT(sensors,actuators)
+#define ORUW_LOG_FEET(nao)
 #define ORUW_LOG_NUM_CONSTRAINTS(num)
 #define ORUW_LOG_JOINT_VELOCITIES(current,time)
 

@@ -147,17 +147,20 @@ end
 
 
 try
-    load (strcat(dir, '/oru_swing_foot.log'));
+    load (strcat(dir, '/oru_feet.log'));
 
-    if exist('oru_com')
-        sf_expected = oru_swing_foot(:, 1:3);
-        sf_sensor = oru_swing_foot(:, 4:6);
+    if exist('oru_feet')
+        l_expected = oru_feet(:, 1:3);
+        r_expected = oru_feet(:, 4:6);
+        l_real = oru_feet(:, 7:9);
+        r_real = oru_feet(:, 10:12);
         figure ('Position', get(0,'Screensize')*0.9);
         hold on;
-        title ('Swing foot position');
-        plot3 (sf_expected(:,1), sf_expected(:,2), sf_expected(:,3), 'b');
-        plot3 (sf_sensor(:,1), sf_sensor(:,2), sf_sensor(:,3), 'r');
-        legend ('Expected', 'Computed from sensor data')
+        title ('Feet positions');
+        plot3 (l_expected(:,1), l_expected(:,2), l_expected(:,3), 'b');
+        plot3 (l_real(:,1), l_real(:,2), l_real(:,3), 'r');
+        plot3 (r_expected(:,1), r_expected(:,2), r_expected(:,3), 'b');
+        plot3 (r_real(:,1), r_real(:,2), r_real(:,3), 'r');
         hold off;
     end
 catch

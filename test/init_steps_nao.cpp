@@ -185,42 +185,45 @@ void init_08 (WMG *wmg)
 void initNaoModel (nao_igm* nao)
 {
     // joint angles
-    nao->state.q[L_HIP_YAW_PITCH]  =  0.0;
-    nao->state.q[R_HIP_YAW_PITCH]  =  0.0;
+    nao->state_sensor.q[L_HIP_YAW_PITCH]  =  0.0;
+    nao->state_sensor.q[R_HIP_YAW_PITCH]  =  0.0;
 
-    nao->state.q[L_HIP_ROLL]       = -0.000384;
-    nao->state.q[L_HIP_PITCH]      = -0.598291;
-    nao->state.q[L_KNEE_PITCH]     =  1.009413;
-    nao->state.q[L_ANKLE_PITCH]    = -0.492352;
-    nao->state.q[L_ANKLE_ROLL]     =  0.000469;
+    nao->state_sensor.q[L_HIP_ROLL]       = -0.000384;
+    nao->state_sensor.q[L_HIP_PITCH]      = -0.598291;
+    nao->state_sensor.q[L_KNEE_PITCH]     =  1.009413;
+    nao->state_sensor.q[L_ANKLE_PITCH]    = -0.492352;
+    nao->state_sensor.q[L_ANKLE_ROLL]     =  0.000469;
 
-    nao->state.q[R_HIP_ROLL]       = -0.000384;
-    nao->state.q[R_HIP_PITCH]      = -0.598219;
-    nao->state.q[R_KNEE_PITCH]     =  1.009237;
-    nao->state.q[R_ANKLE_PITCH]    = -0.492248;
-    nao->state.q[R_ANKLE_ROLL]     =  0.000469;
+    nao->state_sensor.q[R_HIP_ROLL]       = -0.000384;
+    nao->state_sensor.q[R_HIP_PITCH]      = -0.598219;
+    nao->state_sensor.q[R_KNEE_PITCH]     =  1.009237;
+    nao->state_sensor.q[R_ANKLE_PITCH]    = -0.492248;
+    nao->state_sensor.q[R_ANKLE_ROLL]     =  0.000469;
 
-    nao->state.q[L_SHOULDER_PITCH] =  1.418908;
-    nao->state.q[L_SHOULDER_ROLL]  =  0.332836;
-    nao->state.q[L_ELBOW_YAW]      = -1.379108;
-    nao->state.q[L_ELBOW_ROLL]     = -1.021602;
-    nao->state.q[L_WRIST_YAW]      = -0.013848;
+    nao->state_sensor.q[L_SHOULDER_PITCH] =  1.418908;
+    nao->state_sensor.q[L_SHOULDER_ROLL]  =  0.332836;
+    nao->state_sensor.q[L_ELBOW_YAW]      = -1.379108;
+    nao->state_sensor.q[L_ELBOW_ROLL]     = -1.021602;
+    nao->state_sensor.q[L_WRIST_YAW]      = -0.013848;
 
-    nao->state.q[R_SHOULDER_PITCH] =  1.425128;
-    nao->state.q[R_SHOULDER_ROLL]  = -0.331386;
-    nao->state.q[R_ELBOW_YAW]      =  1.383626;
-    nao->state.q[R_ELBOW_ROLL]     =  1.029356;
-    nao->state.q[R_WRIST_YAW]      = -0.01078;
+    nao->state_sensor.q[R_SHOULDER_PITCH] =  1.425128;
+    nao->state_sensor.q[R_SHOULDER_ROLL]  = -0.331386;
+    nao->state_sensor.q[R_ELBOW_YAW]      =  1.383626;
+    nao->state_sensor.q[R_ELBOW_ROLL]     =  1.029356;
+    nao->state_sensor.q[R_WRIST_YAW]      = -0.01078;
 
-    nao->state.q[HEAD_PITCH]       =  0.0;
-    nao->state.q[HEAD_YAW]         =  0.0;
+    nao->state_sensor.q[HEAD_PITCH]       =  0.0;
+    nao->state_sensor.q[HEAD_YAW]         =  0.0;
 
 
 
     // support foot position and orientation
     /// @attention Hardcoded parameters.
     nao->init (
-            IGM_SUPPORT_RIGHT,
-            0.0, -0.05, 0.0,
+            IGM_SUPPORT_LEFT,
+            0.0, 0.05, 0.0,
             0.0, 0.0, 0.0);
+
+    double pos_error[POSITION_VECTOR_SIZE];
+    nao->state_sensor.getSwingFootPosition (pos_error); 
 }

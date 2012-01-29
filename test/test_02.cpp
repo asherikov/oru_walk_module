@@ -134,13 +134,13 @@ int main(int argc, char **argv)
         next_preview_len_ms -= control_sampling_time_ms;
 
 
-        drawSDL(50, x_coord, y_coord, angle_rot, nao.state.support_foot, nao.state.q);
+        drawSDL(50, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
     }
 
     // keep the visualization active (until ESC is pressed)
     while (isRunning)
     {
-        drawSDL(0, x_coord, y_coord, angle_rot, nao.state.support_foot, nao.state.q);
+        drawSDL(0, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
     }
 
     return 0;

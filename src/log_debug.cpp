@@ -60,7 +60,7 @@ oruw_log::oruw_log (const modelState& state_init, const unsigned int filter_wind
     state_old = state_init;
     FJointsLog = fopen ("./oru_joints.log", "w");
     FCoMLog = fopen ("./oru_com.log", "w");
-    FSwingFootLog = fopen ("./oru_swing_foot.log", "w");
+    FFeetLog = fopen ("./oru_feet.log", "w");
     FJointVelocities = fopen ("./oru_joint_velocities.log", "w");
     com_filter = new avgFilter(filter_window_len);
 }
@@ -69,7 +69,7 @@ oruw_log::~oruw_log ()
 {
     fclose (FJointsLog);
     fclose (FCoMLog);
-    fclose (FSwingFootLog);
+    fclose (FFeetLog);
     fclose (FJointVelocities);
     delete com_filter;
 }
@@ -111,17 +111,25 @@ void oruw_log::logCoM(
 }
 
 
-void oruw_log::logSwingFoot(
-        modelState& state_sensor,
-        modelState& state_expected)
+void oruw_log::logFeet(nao_igm& nao)
 {
-    double swing_foot[3];
+    double l_expected[POSITION_VECTOR_SIZE];
+    double l_real[POSITION_VECTOR_SIZE];
+    double r_expected[POSITION_VECTOR_SIZE];
+    double r_real[POSITION_VECTOR_SIZE];
 
-    state_expected.getSwingFootPosition(swing_foot);
-    fprintf (FSwingFootLog, "%f %f %f    ", swing_foot[0], swing_foot[1], swing_foot[2]);
+    nao.getFeetPositions (
+            l_expected,
+            r_expected,
+            l_real,
+            r_real);
 
-    state_sensor.getSwingFootPosition(swing_foot);
-    fprintf (FSwingFootLog, "%f %f %f\n", swing_foot[0], swing_foot[1], swing_foot[2]);
+    fprintf (FFeetLog, "%f %f %f    %f %f %f", 
+            l_expected[0], l_expected[1], l_expected[2], 
+            l_real[0], l_real[1], l_real[2]);
+    fprintf (FFeetLog, "     %f %f %f    %f %f %f\n", 
+            r_expected[0], r_expected[1], r_expected[2],
+            r_real[0], r_real[1], r_real[2]);
 }
 
 

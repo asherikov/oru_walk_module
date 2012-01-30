@@ -84,7 +84,7 @@ try
                 plot (ActuatorValues(:,jointId), 'b');
                 plot (SensorValues(:,jointId), 'r');
                 axis ([0, size(SensorValues,1), Limits(jointId,1), Limits(jointId,2)]);
-                legend ('ActuatorValues', 'SensorValues')
+                legend ('Expected values', 'Sensor data')
                 hold off;
             end
         end

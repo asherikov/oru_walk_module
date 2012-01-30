@@ -113,9 +113,9 @@ void oru_walk::stopWalking(const string& message)
  */
 void oru_walk::callbackEveryCycle_walk()
 {
+    ORUW_TIMER(wp.loop_time_limit_ms);
     readSensors (nao.state_sensor);
 
-    ORUW_TIMER(wp.loop_time_limit_ms);
     ORUW_LOG_JOINTS(nao.state_sensor, nao.state_model);
     ORUW_LOG_COM(wmg, nao.state_sensor);
     ORUW_LOG_FEET(nao);
@@ -134,7 +134,7 @@ void oru_walk::callbackEveryCycle_walk()
     double right_foot_pos[POSITION_VECTOR_SIZE + 1];
     wmg->getFeetPositions (
             wp.preview_sampling_time_ms/wp.control_sampling_time_ms,
-            (wp.preview_sampling_time_ms - next_preview_len_ms)/wp.control_sampling_time_ms + 1,
+            (wp.preview_sampling_time_ms - next_preview_len_ms)/wp.control_sampling_time_ms,
             left_foot_pos,
             right_foot_pos);
     nao.setFeetPostures (left_foot_pos, right_foot_pos);
@@ -334,7 +334,7 @@ void oru_walk::initWMG_NaoModel()
     nao.state_sensor.getSwingFootPosition (pos_error);
     pos_error[0] =  0.0  - pos_error[0];
     pos_error[1] = -0.05 - pos_error[1];
-    pos_error[2] =  0.0  - pos_error[2];
+    //pos_error[2] =  0.0  - pos_error[2];
     wmg->correctNextSSPosition (pos_error);
 
     wmg->initABMatrices ((double) wp.control_sampling_time_ms / 1000);

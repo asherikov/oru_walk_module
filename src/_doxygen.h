@@ -46,6 +46,11 @@
  * \n\n
  *
  *
+ * @section MainAbout Description of the module
+ *  - @ref pNotes
+ * \n\n
+ *
+ *
  * @section MainLinks Useful resources
  * Documentation and software from Aldebaran Robotics are available on their
  * website:\n
@@ -63,6 +68,34 @@
  * \n\n
  */
 
+/**
+ * @page pNotes Notes
+ *
+ * @section NotesDoc Exerpts from the documentation
+ * - init() method of the module is called automatically when a library 
+ *   is loaded.
+ *
+ * - LHipYawPitch and RHipYawPitch share the same motor so they move 
+ *   simultaneously and symmetrically. In case of conflicting orders
+ *   LHipYawPitch always takes the priority.
+ *
+ *
+ * @section NotesGen General
+ * - A robot cannot execute the desired foot trajectories precisely. 
+ *   The errors may be very different for the right and left foot.
+ *
+ * - If the sensor input from a joint is used as a command for this joint
+ *   in a callback function, the joint becomes compliant. 
+ *
+ *
+ * @section NotesOur Our module
+ * - In the current version we switch between the left and the right 
+ *   foot. We need to choose one foot as a reference to find a position 
+ *   of CoM. In theory, it is possible to use the same foot, but when 
+ *   this foot is lifted it's real position can be found only using the 
+ *   other foot as a reference due to errors. A big error in foot position 
+ *   will lead to a big error in CoM position.
+ */
 
 #endif /*DOXYGEN_H*/
  

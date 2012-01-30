@@ -151,8 +151,8 @@ try
 
     if exist('oru_feet')
         l_expected = oru_feet(:, 1:3);
-        r_expected = oru_feet(:, 4:6);
-        l_real = oru_feet(:, 7:9);
+        l_real = oru_feet(:, 4:6);
+        r_expected = oru_feet(:, 7:9);
         r_real = oru_feet(:, 10:12);
         figure ('Position', get(0,'Screensize')*0.9);
         hold on;

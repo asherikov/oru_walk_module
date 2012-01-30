@@ -5,6 +5,8 @@
  * @author Alexander Sherikov
  */
 
+#include <qi/os.hpp>
+
 #include "oru_walk.h"
 
 
@@ -150,7 +152,7 @@ void oru_walk::setStiffness(const float &stiffnessValue)
 
 
     /// @attention Hardcoded parameter!
-    int stiffness_change_time = 1000;
+    unsigned int stiffness_change_time = 1000;
     try
     {
         stiffnessCommands[2][0][1] = dcmProxy->getTime(stiffness_change_time);
@@ -169,6 +171,9 @@ void oru_walk::setStiffness(const float &stiffnessValue)
     {
         throw ALERROR (getName(), __FUNCTION__, "Error when sending stiffness to DCM : " + e.toString());
     }
+
+    qi::os::msleep(stiffness_change_time);
+    qiLogInfo ("module.oru_walk", "Execution of setStiffness() is finished.");
 }
 
 
@@ -178,6 +183,10 @@ void oru_walk::setStiffness(const float &stiffnessValue)
  */
 void oru_walk::initPosition()
 {
+    /// @attention Hardcoded parameter!
+    unsigned int init_time = 1200;
+
+
     ALValue initPositionCommands;
 
     initPositionCommands.arraySetSize(6);
@@ -196,8 +205,7 @@ void oru_walk::initPosition()
     // set time
     try
     {
-        /// @attention Hardcoded parameter!
-        initPositionCommands[4][0] = dcmProxy->getTime(1200);
+        initPositionCommands[4][0] = dcmProxy->getTime(init_time);
     }
     catch (const ALError &e)
     {
@@ -214,4 +222,7 @@ void oru_walk::initPosition()
     {
         throw ALERROR(getName(), __FUNCTION__, "Error with DCM setAlias : " + e.toString());
     }
+
+    qi::os::msleep(init_time);
+    qiLogInfo ("module.oru_walk", "Execution of initPosition() is finished.");
 }

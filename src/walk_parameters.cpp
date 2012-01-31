@@ -12,6 +12,7 @@ walk_parameters::walk_parameters()
     feedback_gain = 0.3;
     feedback_threshold = 0.006;
 
+    joint_feedback_gain = 0.2;
 
     mpc_alpha = 400.0;
     mpc_beta = 8000.0;

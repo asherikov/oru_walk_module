@@ -78,6 +78,8 @@ class walk_parameters
         double feedback_gain;
         double feedback_threshold;
 
+        double joint_feedback_gain;
+
         double mpc_alpha;
         double mpc_beta;
         double mpc_gamma;

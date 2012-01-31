@@ -122,6 +122,11 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, (double) wp.control_sampling_time_ms/1000);
 
     feedbackError ();
+    double joint_error_feedback[LOWER_JOINTS_NUM];
+    for (int i = 0; i < LOWER_JOINTS_NUM; i++)
+    {
+        joint_error_feedback[i] = wp.joint_feedback_gain * (nao.state_model.q[i] - nao.state_sensor.q[i]);
+    }
 
     if (! solveMPCProblem ())
     {
@@ -164,7 +169,7 @@ void oru_walk::callbackEveryCycle_walk()
         walkCommands[4][0] = dcmProxy->getTime(wp.control_sampling_time_ms);
         for (int i = 0; i < LOWER_JOINTS_NUM; i++)
         {
-            walkCommands[5][i][0] = nao.state_model.q[i];
+            walkCommands[5][i][0] = nao.state_model.q[i] + joint_error_feedback[i];
         }
         dcmProxy->setAlias(walkCommands);
     }

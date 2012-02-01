@@ -320,7 +320,7 @@ void oru_walk::initWMG_NaoModel()
     nao.state_sensor.getSwingFootPosition (pos_error);
     pos_error[0] =  0.0  - pos_error[0];
     pos_error[1] = -0.05 - pos_error[1];
-    //pos_error[2] =  0.0  - pos_error[2];
+    pos_error[2] =  0.0;//  - pos_error[2];
     wmg->correctNextSSPosition (pos_error);
 
     wmg->initABMatrices ((double) wp.control_sampling_time_ms / 1000);

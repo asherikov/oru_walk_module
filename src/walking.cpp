@@ -58,9 +58,9 @@ void oru_walk::walk()
             getParentBroker()->getProxy("DCM")->getModule()->atPostProcess
             (boost::bind(&oru_walk::callbackEveryCycle_walk, this));
     }
-    catch (const AL::ALError &e)
+    catch (const ALError &e)
     {
-        ORUW_HALT("Error when connecting to DCM postProccess: " + e.toString());
+        ORUW_HALT("Error when connecting to DCM postProccess: " + string(e.what()));
     }
 }
 
@@ -68,17 +68,24 @@ void oru_walk::walk()
 void oru_walk::halt(const string &message, const char* function)
 {
     stopWalking(message);
-    throw ALERROR(getName(), function, message);
+    setStiffness(0.0);
+    ORUW_THROW(message);
 }
 
 
 void oru_walk::stopWalking(const string& message)
 {
-    qiLogInfo ("module.oru_walk", message.c_str());
+    qiLogInfo ("module.oru_walk") << message;
     fDCMPostProcessConnection.disconnect();
     ORUW_LOG_CLOSE;
 }
 
+void oru_walk::stopWalkingRemote()
+{
+    qiLogInfo ("module.oru_walk", "Stopped by user's request.\n");
+    fDCMPostProcessConnection.disconnect();
+    ORUW_LOG_CLOSE;
+}
 
 
 /**
@@ -149,7 +156,7 @@ void oru_walk::callbackEveryCycle_walk()
     }
     catch (const AL::ALError &e)
     {
-        ORUW_HALT("Cannot set joint angles: " + e.toString());
+        ORUW_HALT("Cannot set joint angles: " + string(e.what()));
     }
 
     next_preview_len_ms -= wp.control_sampling_time_ms;

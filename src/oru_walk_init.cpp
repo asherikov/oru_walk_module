@@ -136,7 +136,7 @@ void oru_walk::initFastWrite()
     }
     catch (const ALError &e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error when creating Alias : " + e.toString());
+        ORUW_THROW_ERROR("Error when creating Alias: ", e);
     }
 
 
@@ -177,7 +177,7 @@ void oru_walk::initFastWrite()
     }
     catch (const ALError &e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error when creating Alias : " + e.toString());
+        ORUW_THROW_ERROR("Error when creating Alias: ", e);
     }
 
 
@@ -211,7 +211,7 @@ void oru_walk::initFastWrite()
     }
     catch (const ALError &e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error when creating Alias : " + e.toString());
+        ORUW_THROW_ERROR("Error when creating Alias: ", e);
     }
 }
 

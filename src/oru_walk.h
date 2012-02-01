@@ -58,6 +58,8 @@ using namespace AL;
 using namespace std;
 
 #define ORUW_HALT(message) halt(message, __FUNCTION__)
+#define ORUW_THROW(message) throw ALERROR(getName(), __FUNCTION__, message)
+#define ORUW_THROW_ERROR(message,error) throw ALERROR(getName(), __FUNCTION__, message + string (error.what()))
 
 
 
@@ -77,7 +79,8 @@ public:
 
 
 // These methods will be advertised to other modules.
-    void stopWalking(const string& message = "Stopped by request.");
+    void stopWalkingRemote();
+    void stopWalking(const string& message);
     void initPosition();
     void setStiffness(const float &);
     void walk();

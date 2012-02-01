@@ -36,7 +36,7 @@ oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) :
     BIND_METHOD( oru_walk::walk );
 
     functionName( "stopWalking", getName() , "stopWalking");
-    BIND_METHOD( oru_walk::stopWalking );
+    BIND_METHOD( oru_walk::stopWalkingRemote );
 
 
     wmg = NULL;
@@ -90,12 +90,12 @@ void oru_walk::init()
     }
     catch (ALError& e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error when connecting to DCM : " + e.toString());
+        ORUW_THROW_ERROR("Error when connecting to DCM: ", e);
     }
 
     if (!isDCMRunning)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error no DCM running ");
+        ORUW_THROW("Error no DCM running");
     }
 
     try
@@ -105,7 +105,7 @@ void oru_walk::init()
     }
     catch (ALError& e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Impossible to create DCM Proxy : " + e.toString());
+        ORUW_THROW_ERROR("Impossible to create DCM Proxy: ", e);
     }
 
 // Initialisation of ALmemory fast access, DCM commands, Alias, stiffness, ...
@@ -128,7 +128,7 @@ void oru_walk::setStiffness(const float &stiffnessValue)
 
     if ((stiffnessValue < 0) || (stiffnessValue > 1))
     {
-        throw ALERROR(getName(), __FUNCTION__, "Wrong parameters");
+        ORUW_THROW("Wrong parameters");
     }
 
 
@@ -151,7 +151,7 @@ void oru_walk::setStiffness(const float &stiffnessValue)
     }
     catch (const ALError &e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error on DCM getTime : " + e.toString());
+        ORUW_THROW_ERROR("Error on DCM getTime : ", e);
     }
 
 
@@ -161,7 +161,7 @@ void oru_walk::setStiffness(const float &stiffnessValue)
     }
     catch (const ALError &e)
     {
-        throw ALERROR (getName(), __FUNCTION__, "Error when sending stiffness to DCM : " + e.toString());
+        ORUW_THROW_ERROR("Error when sending stiffness to DCM : ", e);
     }
 
     qi::os::msleep(stiffness_change_time);
@@ -201,7 +201,7 @@ void oru_walk::initPosition()
     }
     catch (const ALError &e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error on DCM getTime : " + e.toString());
+        ORUW_THROW_ERROR("Error on DCM getTime : ", e);
     }
 
 
@@ -212,7 +212,7 @@ void oru_walk::initPosition()
     }
     catch (const AL::ALError &e)
     {
-        throw ALERROR(getName(), __FUNCTION__, "Error with DCM setAlias : " + e.toString());
+        ORUW_THROW_ERROR("Error with DCM setAlias : ", e);
     }
 
     qi::os::msleep(init_time);

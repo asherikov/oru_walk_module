@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ModulePreference name="aldebaran-robotics.com@oru_walk" xmlns="http://www.aldebaran-robotics.com/ns/ALPreference" schemaLocation="ModulePreference.xsd">
+    <Preference name="feedback_gain" description="" value="0.3" type="float" />
+    <Preference name="feedback_threshold" description="" value="0.006" type="float" />
+    <Preference name="joint_feedback_gain" description="" value="0.2" type="float" />
+    <Preference name="mpc_alpha" description="" value="400" type="float" />
+    <Preference name="mpc_beta" description="" value="8000" type="float" />
+    <Preference name="mpc_gamma" description="" value="1" type="float" />
+    <Preference name="mpc_regularization" description="" value="0.01" type="float" />
+    <Preference name="mpc_tolerance" description="" value="1e-07" type="float" />
+    <Preference name="step_height" description="" value="0.013" type="float" />
+    <Preference name="loop_time_limit_ms" description="" value="9000" type="int" />
+    <Preference name="preview_sampling_time_ms" description="" value="20" type="int" />
+    <Preference name="preview_window_size" description="" value="40" type="int" />
+</ModulePreference>

@@ -18,7 +18,8 @@
 oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) : 
     ALModule(broker, name),
     accessSensorValues (ALPtr<ALMemoryFastAccess>(new ALMemoryFastAccess())),
-    accessActuatorValues (ALPtr<ALMemoryFastAccess>(new ALMemoryFastAccess()))
+    accessActuatorValues (ALPtr<ALMemoryFastAccess>(new ALMemoryFastAccess())),
+    wp (broker)
 {
     setModuleDescription("Orebro University: NAO walking module");
 
@@ -36,15 +37,6 @@ oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) :
 
     functionName( "stopWalking", getName() , "stopWalking");
     BIND_METHOD( oru_walk::stopWalking );
-
-    functionName( "setWalkParameters" , getName(), "change parameters of the walk");
-    addParam( "feedback_gain_", "Feedback gain");
-    addParam( "feedback_threshold_", "Feedback threshold");
-    addParam( "mpc_alpha_", "Alpha gain");
-    addParam( "mpc_beta_", "Beta gain");
-    addParam( "mpc_gamma_", "Gamma gain");
-    addParam( "step_height_", "Step height");
-    BIND_METHOD( oru_walk::setWalkParameters );
 
 
     wmg = NULL;

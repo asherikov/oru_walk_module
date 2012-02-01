@@ -3,11 +3,12 @@
  * @author Alexander Sherikov
  */
 
-#include "oru_walk.h"
+#include "walk_parameters.h"
 
 
 
-walk_parameters::walk_parameters()
+walkParameters::walkParameters(ALPtr<ALBroker> broker) :
+    pref_proxy(broker)
 {
     feedback_gain = 0.3;
     feedback_threshold = 0.006;
@@ -27,41 +28,239 @@ walk_parameters::walk_parameters()
     /// 0.02 is used in the built-in module
 
 
-    control_sampling_time_ms = 10;
-    loop_time_limit_ms = 9000;
+    control_sampling_time_ms = 10; // constant
+    loop_time_limit_ms = 9000; 
     preview_sampling_time_ms = 20;
     preview_window_size = 40;
 
 
     filter_window_length = 1;
+
+
+    param_names.resize(NUM_PARAMETERS);
+    param_names[FEEDBACK_GAIN]            = "feedback_gain";
+    param_names[FEEDBACK_THRESHOLD]       = "feedback_threshold";
+    param_names[JOINT_FEEDBACK_GAIN]      = "joint_feedback_gain";
+    param_names[MPC_ALPHA]                = "mpc_alpha";
+    param_names[MPC_BETA]                 = "mpc_beta";
+    param_names[MPC_GAMMA]                = "mpc_gamma";
+    param_names[MPC_REGULARIZATION]       = "mpc_regularization";
+    param_names[MPC_TOLERANCE]            = "mpc_tolerance";
+    param_names[STEP_HEIGHT]              = "step_height";
+    param_names[LOOP_TIME_LIMIT_MS]       = "loop_time_limit_ms";
+    param_names[PREVIEW_SAMPLING_TIME_MS] = "preview_sampling_time_ms";
+    param_names[PREVIEW_WINDOW_SIZE]      = "preview_window_size";     
 }
 
 
 
-/**
- * @brief Changes specified parameters.
- *
- * @param[in] feedback_gain_ feedback gain
- * @param[in] feedback_threshold_ feedback threshold
- * @param[in] mpc_alpha_ alpha gain for the QP objective
- * @param[in] mpc_beta_ beta gain for the QP objective
- * @param[in] mpc_gamma_ gamma gain for the QP objective
- * @param[in] step_height_ height of a step
- */
-void walk_parameters::set (
-        const double feedback_gain_,
-        const double feedback_threshold_,
-        const double mpc_alpha_,
-        const double mpc_beta_,
-        const double mpc_gamma_,
-        const double step_height_)
+void walkParameters::readParameters()
 {
-    feedback_gain = feedback_gain_;
-    feedback_threshold = feedback_threshold_;
+    ALValue preferences;
 
-    mpc_alpha = mpc_alpha_;
-    mpc_beta = mpc_beta_;
-    mpc_gamma = mpc_gamma_;
+    try
+    {
+        preferences = pref_proxy.readPrefFile ("oru_walk", false);
+    }
+    catch (const ALError &e)
+    {
+        qiLogInfo ("module.oru_walk") << e.what();
+        writeParameters ();
+        return;
+    }
 
-    step_height = step_height_;
+
+    for (int i = 0; i < preferences.getSize(); i++)
+    {
+        if (!preferences[i][0].isString())
+        {
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[FEEDBACK_GAIN])
+        {
+            if (preferences[i][2].isFloat())
+            {
+                feedback_gain = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[FEEDBACK_THRESHOLD])
+        {
+            if (preferences[i][2].isFloat())
+            {
+                feedback_threshold = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[JOINT_FEEDBACK_GAIN])
+        {
+            if (preferences[i][2].isFloat())
+            {
+                joint_feedback_gain = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[MPC_ALPHA])
+        {
+            if (preferences[i][2].isFloat())
+            {
+                mpc_alpha = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[MPC_BETA])
+        {
+            if (preferences[i][2].isFloat())
+            {
+                mpc_beta = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[MPC_GAMMA])
+        {
+            if (preferences[i][2].isFloat())
+            {
+                mpc_gamma = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[MPC_REGULARIZATION])
+        {
+            if (preferences[i][2].isFloat())
+            {
+                mpc_regularization = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[MPC_TOLERANCE])
+        {
+            if (preferences[i][2].isFloat())
+            {
+                mpc_tolerance = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[STEP_HEIGHT])
+        {
+            if (preferences[i][2].isFloat())
+            {
+                step_height = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[LOOP_TIME_LIMIT_MS])
+        {
+            if (preferences[i][2].isInt())
+            {
+                loop_time_limit_ms = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[PREVIEW_SAMPLING_TIME_MS])
+        {
+            if (preferences[i][2].isInt())
+            {
+                preview_sampling_time_ms = preferences[i][2];
+            }
+            continue;
+        }
+
+        if (string(preferences[i][0]) == param_names[PREVIEW_WINDOW_SIZE])
+        {
+            if (preferences[i][2].isInt())
+            {
+                preview_window_size = preferences[i][2];
+            }
+            continue;
+        }
+    }
+}
+
+
+void walkParameters::writeParameters()
+{
+    ALValue preferences;
+
+    preferences.arraySetSize(NUM_PARAMETERS);
+    for (int i = 0; i < NUM_PARAMETERS; i++)
+    {
+        preferences[i].arraySetSize(3);
+        preferences[i][0] = param_names[i];
+        switch (i)
+        {
+            case FEEDBACK_GAIN:          
+                preferences[i][1] = string("");
+                preferences[i][2] = feedback_gain;
+                break;
+            case FEEDBACK_THRESHOLD:     
+                preferences[i][1] = string("");
+                preferences[i][2] = feedback_threshold;
+                break;
+            case JOINT_FEEDBACK_GAIN:    
+                preferences[i][1] = string("");
+                preferences[i][2] = joint_feedback_gain;
+                break;
+            case MPC_ALPHA:              
+                preferences[i][1] = string("");
+                preferences[i][2] = mpc_alpha;
+                break;
+            case MPC_BETA:               
+                preferences[i][1] = string("");
+                preferences[i][2] = mpc_beta;
+                break;
+            case MPC_GAMMA:              
+                preferences[i][1] = string("");
+                preferences[i][2] = mpc_gamma;
+                break;
+            case MPC_REGULARIZATION:     
+                preferences[i][1] = string("");
+                preferences[i][2] = mpc_regularization;
+                break;
+            case MPC_TOLERANCE:          
+                preferences[i][1] = string("");
+                preferences[i][2] = mpc_tolerance;
+                break;
+            case STEP_HEIGHT:            
+                preferences[i][1] = string("");
+                preferences[i][2] = step_height;
+                break;
+            case LOOP_TIME_LIMIT_MS:     
+                preferences[i][1] = string("");
+                preferences[i][2] = loop_time_limit_ms;
+                break;
+            case PREVIEW_SAMPLING_TIME_MS:
+                preferences[i][1] = string("");
+                preferences[i][2] = preview_sampling_time_ms;
+                break;
+            case PREVIEW_WINDOW_SIZE:    
+                preferences[i][1] = string("");
+                preferences[i][2] = preview_window_size;
+                break;
+            default:
+                preferences[i][1] = string("");
+                preferences[i][2] = 0;
+                break;
+        }
+    }
+
+
+    try
+    {
+        pref_proxy.writePrefFile("oru_walk", preferences, true); 
+    }
+    catch (const ALError &e)
+    {
+        qiLogInfo ("module.oru_walk") << e.what();
+    }
 }

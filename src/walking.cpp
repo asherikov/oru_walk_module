@@ -8,38 +8,12 @@
 #include "oru_walk.h"
 #include "log_debug.h"
 
-/**
- * @brief Changes specified parameters.
- *
- * @param[in] feedback_gain_ feedback gain
- * @param[in] feedback_threshold_ feedback threshold
- * @param[in] mpc_alpha_ alpha gain for the QP objective
- * @param[in] mpc_beta_ beta gain for the QP objective
- * @param[in] mpc_gamma_ gamma gain for the QP objective
- * @param[in] step_height_ height of a step
- */
-void oru_walk::setWalkParameters (
-        const float &feedback_gain_,
-        const float &feedback_threshold_,
-        const float &mpc_alpha_,
-        const float &mpc_beta_,
-        const float &mpc_gamma_,
-        const float &step_height_)
-{
-    wp.set (
-        feedback_gain_,
-        feedback_threshold_,
-        mpc_alpha_,
-        mpc_beta_,
-        mpc_gamma_,
-        step_height_);
-}
-
-
 
 
 void oru_walk::walk()
 {
+    wp.readParameters();
+
     if (solver != NULL)
     {
         delete solver;

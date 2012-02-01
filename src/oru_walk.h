@@ -45,6 +45,7 @@
 #include "joints_sensors_id.h"
 #include "nao_igm.h"
 #include "avg_filter.h"
+#include "walk_parameters.h"
 
 
 
@@ -58,43 +59,6 @@ using namespace std;
 
 #define ORUW_HALT(message) halt(message, __FUNCTION__)
 
-
-/**
- * @brief A container for constant parameters.
- */
-class walk_parameters
-{
-    public:
-        walk_parameters();
-
-        void set(const double,
-            const double,
-            const double,
-            const double,
-            const double,
-            const double);
-
-
-        double feedback_gain;
-        double feedback_threshold;
-
-        double joint_feedback_gain;
-
-        double mpc_alpha;
-        double mpc_beta;
-        double mpc_gamma;
-        double mpc_regularization;
-        double mpc_tolerance;
-
-        double step_height;
-
-        int control_sampling_time_ms;
-        int loop_time_limit_ms;
-        int preview_sampling_time_ms;
-        int preview_window_size;
-
-        unsigned int filter_window_length;
-};
 
 
 /**
@@ -117,13 +81,6 @@ public:
     void initPosition();
     void setStiffness(const float &);
     void walk();
-    void setWalkParameters (
-            const float&,
-            const float&,
-            const float&,
-            const float&,
-            const float&,
-            const float&);
 
 
 private:
@@ -168,7 +125,7 @@ private:
     avgFilter *com_filter;
     nao_igm nao;
 
-    walk_parameters wp;
+    walkParameters wp;
     int next_preview_len_ms;
 
     double init_joint_angles[JOINTS_NUM];

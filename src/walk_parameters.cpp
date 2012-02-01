@@ -37,7 +37,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     filter_window_length = 1;
 
 
-    param_names.resize(NUM_PARAMETERS);
+    param_names.arraySetSize(NUM_PARAMETERS);
     param_names[FEEDBACK_GAIN]            = "feedback_gain";
     param_names[FEEDBACK_THRESHOLD]       = "feedback_threshold";
     param_names[JOINT_FEEDBACK_GAIN]      = "joint_feedback_gain";
@@ -70,14 +70,15 @@ void walkParameters::readParameters()
     }
 
 
+    if (!preferences.isArray())
+    {
+        return;
+    }
+
+
     for (int i = 0; i < preferences.getSize(); i++)
     {
-        if (!preferences[i][0].isString())
-        {
-            continue;
-        }
-
-        if (string(preferences[i][0]) == param_names[FEEDBACK_GAIN])
+        if (preferences[i][0] == param_names[FEEDBACK_GAIN])
         {
             if (preferences[i][2].isFloat())
             {
@@ -86,7 +87,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[FEEDBACK_THRESHOLD])
+        if (preferences[i][0] == param_names[FEEDBACK_THRESHOLD])
         {
             if (preferences[i][2].isFloat())
             {
@@ -95,7 +96,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[JOINT_FEEDBACK_GAIN])
+        if (preferences[i][0] == param_names[JOINT_FEEDBACK_GAIN])
         {
             if (preferences[i][2].isFloat())
             {
@@ -104,7 +105,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[MPC_ALPHA])
+        if (preferences[i][0] == param_names[MPC_ALPHA])
         {
             if (preferences[i][2].isFloat())
             {
@@ -113,7 +114,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[MPC_BETA])
+        if (preferences[i][0] == param_names[MPC_BETA])
         {
             if (preferences[i][2].isFloat())
             {
@@ -122,7 +123,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[MPC_GAMMA])
+        if (preferences[i][0] == param_names[MPC_GAMMA])
         {
             if (preferences[i][2].isFloat())
             {
@@ -131,7 +132,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[MPC_REGULARIZATION])
+        if (preferences[i][0] == param_names[MPC_REGULARIZATION])
         {
             if (preferences[i][2].isFloat())
             {
@@ -140,7 +141,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[MPC_TOLERANCE])
+        if (preferences[i][0] == param_names[MPC_TOLERANCE])
         {
             if (preferences[i][2].isFloat())
             {
@@ -149,7 +150,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[STEP_HEIGHT])
+        if (preferences[i][0] == param_names[STEP_HEIGHT])
         {
             if (preferences[i][2].isFloat())
             {
@@ -158,7 +159,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[LOOP_TIME_LIMIT_MS])
+        if (preferences[i][0] == param_names[LOOP_TIME_LIMIT_MS])
         {
             if (preferences[i][2].isInt())
             {
@@ -167,7 +168,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[PREVIEW_SAMPLING_TIME_MS])
+        if (preferences[i][0] == param_names[PREVIEW_SAMPLING_TIME_MS])
         {
             if (preferences[i][2].isInt())
             {
@@ -176,7 +177,7 @@ void walkParameters::readParameters()
             continue;
         }
 
-        if (string(preferences[i][0]) == param_names[PREVIEW_WINDOW_SIZE])
+        if (preferences[i][0] == param_names[PREVIEW_WINDOW_SIZE])
         {
             if (preferences[i][2].isInt())
             {

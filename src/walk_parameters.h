@@ -15,7 +15,6 @@
 //----------------------------------------
 
 #include <string>
-#include <vector>
 
 
 #include <qi/log.hpp>
@@ -86,7 +85,7 @@ class walkParameters
         unsigned int filter_window_length;
 
 
-        vector<string> param_names;
+        ALValue param_names;
         ALPreferencesProxy pref_proxy;
 };
 

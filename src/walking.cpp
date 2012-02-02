@@ -43,6 +43,7 @@ void oru_walk::walk()
             wp.mpc_gamma,
             wp.mpc_regularization,
             wp.mpc_tolerance);
+    solver->enable_fexceptions();
 
     com_filter = new avgFilter(wp.filter_window_length);
 

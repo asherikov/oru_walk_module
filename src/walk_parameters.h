@@ -48,8 +48,11 @@ enum parametersNames
     LOOP_TIME_LIMIT_MS          = 9,
     PREVIEW_SAMPLING_TIME_MS    = 10,
     PREVIEW_WINDOW_SIZE         = 11,
+    SS_NUMBER                   = 12,
+    DS_NUMBER                   = 13,
+    STEP_PAIRS_NUMBER           = 14,
 
-    NUM_PARAMETERS              = 12
+    NUM_PARAMETERS              = 15
 };
 
 
@@ -84,6 +87,9 @@ class walkParameters
 
         unsigned int filter_window_length;
 
+        int ss_number;
+        int ds_number;
+        int step_pairs_number;
 
         ALValue param_names;
         ALPreferencesProxy pref_proxy;

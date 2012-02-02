@@ -7,13 +7,18 @@
 
 
 
+/**
+ * @brief Initialize parameters to default values.
+ *
+ * @param[in] broker parent broker.
+ */
 walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     pref_proxy(broker)
 {
     feedback_gain = 0.3;
     feedback_threshold = 0.006;
 
-    joint_feedback_gain = 0.2;
+    joint_feedback_gain = 0.0;
 
     mpc_alpha = 400.0;
     mpc_beta = 8000.0;
@@ -34,7 +39,12 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     preview_window_size = 40;
 
 
-    filter_window_length = 1;
+    filter_window_length = 1; // not used
+
+
+    ss_number = 20;
+    ds_number = 5;
+    step_pairs_number = 8;
 
 
     param_names.arraySetSize(NUM_PARAMETERS);
@@ -50,10 +60,17 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     param_names[LOOP_TIME_LIMIT_MS]       = "loop_time_limit_ms";
     param_names[PREVIEW_SAMPLING_TIME_MS] = "preview_sampling_time_ms";
     param_names[PREVIEW_WINDOW_SIZE]      = "preview_window_size";     
+    param_names[SS_NUMBER]                = "ss_number";     
+    param_names[DS_NUMBER]                = "ds_number";     
+    param_names[STEP_PAIRS_NUMBER]        = "step_pairs_number";     
 }
 
 
 
+/**
+ * @brief Read parameters from configuration file; if the file does
+ *  not exist, write the default values to it.
+ */
 void walkParameters::readParameters()
 {
     ALValue preferences;
@@ -78,117 +95,84 @@ void walkParameters::readParameters()
 
     for (int i = 0; i < preferences.getSize(); i++)
     {
-        if (preferences[i][0] == param_names[FEEDBACK_GAIN])
+        for (int j = 0; j < NUM_PARAMETERS; j++)
         {
+            if (preferences[i][0] != param_names[j])
+            {
+                continue;
+            }
+
             if (preferences[i][2].isFloat())
             {
-                feedback_gain = preferences[i][2];
+                switch (j)
+                {
+                    case FEEDBACK_GAIN:
+                        feedback_gain = preferences[i][2];
+                        break;
+                    case FEEDBACK_THRESHOLD:
+                        feedback_threshold = preferences[i][2];
+                        break;
+                    case JOINT_FEEDBACK_GAIN:
+                        joint_feedback_gain = preferences[i][2];
+                        break;
+                    case MPC_ALPHA:
+                        mpc_alpha = preferences[i][2];
+                        break;
+                    case MPC_BETA:
+                        mpc_beta = preferences[i][2];
+                        break;
+                    case MPC_GAMMA:
+                        mpc_gamma = preferences[i][2];
+                        break;
+                    case MPC_REGULARIZATION:
+                        mpc_regularization = preferences[i][2];
+                        break;
+                    case MPC_TOLERANCE:
+                        mpc_tolerance = preferences[i][2];
+                        break;
+                    case STEP_HEIGHT:
+                        step_height = preferences[i][2];
+                        break;
+                    default:
+                        break;
+                }
             }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[FEEDBACK_THRESHOLD])
-        {
-            if (preferences[i][2].isFloat())
-            {
-                feedback_threshold = preferences[i][2];
-            }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[JOINT_FEEDBACK_GAIN])
-        {
-            if (preferences[i][2].isFloat())
-            {
-                joint_feedback_gain = preferences[i][2];
-            }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[MPC_ALPHA])
-        {
-            if (preferences[i][2].isFloat())
-            {
-                mpc_alpha = preferences[i][2];
-            }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[MPC_BETA])
-        {
-            if (preferences[i][2].isFloat())
-            {
-                mpc_beta = preferences[i][2];
-            }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[MPC_GAMMA])
-        {
-            if (preferences[i][2].isFloat())
-            {
-                mpc_gamma = preferences[i][2];
-            }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[MPC_REGULARIZATION])
-        {
-            if (preferences[i][2].isFloat())
-            {
-                mpc_regularization = preferences[i][2];
-            }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[MPC_TOLERANCE])
-        {
-            if (preferences[i][2].isFloat())
-            {
-                mpc_tolerance = preferences[i][2];
-            }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[STEP_HEIGHT])
-        {
-            if (preferences[i][2].isFloat())
-            {
-                step_height = preferences[i][2];
-            }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[LOOP_TIME_LIMIT_MS])
-        {
             if (preferences[i][2].isInt())
             {
-                loop_time_limit_ms = preferences[i][2];
+                switch (j)
+                {
+                    case LOOP_TIME_LIMIT_MS:
+                        loop_time_limit_ms = preferences[i][2];
+                        break;
+                    case PREVIEW_SAMPLING_TIME_MS:
+                        preview_sampling_time_ms = preferences[i][2];
+                        break;
+                    case PREVIEW_WINDOW_SIZE:
+                        preview_window_size = preferences[i][2];
+                        break;
+                    case SS_NUMBER:
+                        ss_number = preferences[i][2];
+                        break;
+                    case DS_NUMBER:
+                        ds_number = preferences[i][2];     
+                        break;
+                    case STEP_PAIRS_NUMBER:
+                        step_pairs_number = preferences[i][2];     
+                        break;
+                    default:
+                        break;
+                }
             }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[PREVIEW_SAMPLING_TIME_MS])
-        {
-            if (preferences[i][2].isInt())
-            {
-                preview_sampling_time_ms = preferences[i][2];
-            }
-            continue;
-        }
-
-        if (preferences[i][0] == param_names[PREVIEW_WINDOW_SIZE])
-        {
-            if (preferences[i][2].isInt())
-            {
-                preview_window_size = preferences[i][2];
-            }
-            continue;
+            break;
         }
     }
 }
 
 
+
+/**
+ * @brief Write the values of parameters to the config file.
+ */
 void walkParameters::writeParameters()
 {
     ALValue preferences;
@@ -247,6 +231,18 @@ void walkParameters::writeParameters()
             case PREVIEW_WINDOW_SIZE:    
                 preferences[i][1] = string("");
                 preferences[i][2] = preview_window_size;
+                break;
+            case SS_NUMBER:
+                preferences[i][1] = string("");
+                preferences[i][2] = ss_number;
+                break;
+            case DS_NUMBER:
+                preferences[i][1] = string("");
+                preferences[i][2] = ds_number;
+                break;
+            case STEP_PAIRS_NUMBER:
+                preferences[i][1] = string("");
+                preferences[i][2] = step_pairs_number;
                 break;
             default:
                 preferences[i][1] = string("");

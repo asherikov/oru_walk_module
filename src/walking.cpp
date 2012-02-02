@@ -267,26 +267,14 @@ void oru_walk::initWMG_NaoModel()
     // 2 reference ZMP positions in single support 
     // 1 in double support
     // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 20,  25, d);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , wp.ss_number,  wp.ss_number + wp.ds_number, d);
     wmg->AddFootstep(step_x,  step_y, 0.0);
-    wmg->AddFootstep(step_x, -step_y, 0.0);
-    wmg->AddFootstep(step_x,  step_y, 0.0);
-    wmg->AddFootstep(step_x, -step_y, 0.0);
-    wmg->AddFootstep(step_x,  step_y, 0.0);
-    wmg->AddFootstep(step_x, -step_y, 0.0);
-    wmg->AddFootstep(step_x,  step_y, 0.0);
-    wmg->AddFootstep(step_x, -step_y, 0.0);
-    wmg->AddFootstep(step_x,  step_y, 0.0);
-    wmg->AddFootstep(step_x, -step_y, 0.0);
-    wmg->AddFootstep(step_x,  step_y, 0.0);
-    wmg->AddFootstep(step_x, -step_y, 0.0);
-    wmg->AddFootstep(step_x,  step_y, 0.0);
-    wmg->AddFootstep(step_x, -step_y, 0.0);
-    wmg->AddFootstep(step_x,  step_y, 0.0);
-    wmg->AddFootstep(step_x, -step_y, 0.0);
-    wmg->AddFootstep(step_x,  step_y, 0.0);
-    wmg->AddFootstep(step_x, -step_y, 0.0);
-    wmg->AddFootstep(step_x,  step_y, 0.0);
+
+    for (int i = 0; i < wp.step_pairs_number; i++)
+    {
+        wmg->AddFootstep(step_x, -step_y, 0.0);
+        wmg->AddFootstep(step_x,  step_y, 0.0);
+    }
 
     // here we give many reference points, since otherwise we 
     // would not have enough steps in preview window to reach 

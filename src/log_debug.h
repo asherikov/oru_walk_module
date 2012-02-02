@@ -92,16 +92,14 @@ class oruw_log
 
         void logFeet (nao_igm& nao);
 
-        void logNumConstraints(const int);
-
         void logJointVelocities (const modelState&, const double);
 
 
-    private:
         FILE *FJointsLog;
         FILE *FCoMLog;
         FILE *FFeetLog;
         FILE *FJointVelocities;
+        FILE *FMessages;
         avgFilter *com_filter;
         modelState state_old;
 };
@@ -109,12 +107,12 @@ class oruw_log
 extern oruw_log *oruw_log_instance;
 
 #define ORUW_LOG_OPEN(state,filter_len) oruw_log_instance = new oruw_log(state,filter_len)
-#define ORUW_LOG_CLOSE delete oruw_log_instance
+#define ORUW_LOG_CLOSE delete oruw_log_instance; oruw_log_instance = NULL
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
 #define ORUW_LOG_COM(wmg,sensors) oruw_log_instance->logCoM(wmg,sensors)
 #define ORUW_LOG_FEET(nao) oruw_log_instance->logFeet(nao)
-#define ORUW_LOG_NUM_CONSTRAINTS(num) oruw_log_instance->logNumConstraints(num)
-#define ORUW_LOG_JOINT_VELOCITIES(current,time) oruw_log_instance->logJointVelocities(current,time);
+#define ORUW_LOG_JOINT_VELOCITIES(current,time) oruw_log_instance->logJointVelocities(current,time)
+#define ORUW_LOG_MESSAGE(...) if(oruw_log_instance != NULL) {fprintf(oruw_log_instance->FMessages, __VA_ARGS__);}
 
 #else // ORUW_LOG_ENABLE
 
@@ -123,8 +121,8 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_JOINTS(sensors,actuators)
 #define ORUW_LOG_COM(wmg,sensors)
 #define ORUW_LOG_FEET(nao)
-#define ORUW_LOG_NUM_CONSTRAINTS(num)
 #define ORUW_LOG_JOINT_VELOCITIES(current,time)
+#define ORUW_LOG_MESSAGE(...)
 
 #endif // ORUW_LOG_ENABLE
 

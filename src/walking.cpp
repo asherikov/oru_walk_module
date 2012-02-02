@@ -70,12 +70,12 @@ void oru_walk::halt(const string &message, const char* function)
 {
     stopWalking(message);
     setStiffness(0.0);
-    ORUW_THROW(message);
 }
 
 
 void oru_walk::stopWalking(const string& message)
 {
+    ORUW_LOG_MESSAGE(message.c_str());
     qiLogInfo ("module.oru_walk") << message;
     fDCMPostProcessConnection.disconnect();
     ORUW_LOG_CLOSE;
@@ -140,7 +140,7 @@ void oru_walk::callbackEveryCycle_walk()
     int failed_joint = nao.checkJointBounds();
     if (failed_joint >= 0)
     {
-        qiLogInfo ("module.oru_walk", "Failed joint: %d\n", failed_joint);
+        ORUW_LOG_MESSAGE("Failed joint: %d\n", failed_joint);
         ORUW_HALT("Joint bounds are violated.\n");
     }
 
@@ -352,7 +352,7 @@ bool oru_walk::solveMPCProblem ()
     solver->set_parameters (wmg->T, wmg->h, wmg->h[0], wmg->angle, wmg->zref_x, wmg->zref_y, wmg->lb, wmg->ub);
     solver->form_init_fp (wmg->fp_x, wmg->fp_y, wmg->init_state, wmg->X);
     int num_iq_constr = solver->solve();
-    ORUW_LOG_NUM_CONSTRAINTS(num_iq_constr);
+    ORUW_LOG_MESSAGE("Num of active constraints: %d\n", num_iq_constr);
     //------------------------------------------------------
     // update state
     wmg->next_control.get_first_controls (*solver);

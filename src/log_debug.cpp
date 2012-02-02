@@ -28,7 +28,7 @@ bool oruw_timer::isLimitSatisfied ()
     double timediff = (double) end_time.tv_sec - start_time.tv_sec + 0.000001* (end_time.tv_usec - start_time.tv_usec);
     if (timediff > limit)
     {
-        qiLogInfo ("module.oru_walk", "Timer '%s' (sec): %f > %f (limit)\n", id.c_str(), timediff, limit);
+        ORUW_LOG_MESSAGE("Timer '%s' (sec): %f > %f (limit)\n", id.c_str(), timediff, limit);
         return (false);
     }
 
@@ -44,7 +44,7 @@ oruw_timer::~oruw_timer()
     qi::os::gettimeofday (&end_time);
     double timediff = (double) end_time.tv_sec - start_time.tv_sec + 0.000001* (end_time.tv_usec - start_time.tv_usec);
 
-    qiLogInfo ("module.oru_walk", "Timer '%s' (sec): %f\n", id.c_str(), timediff);
+    ORUW_LOG_MESSAGE("Timer '%s' (sec): %f\n", id.c_str(), timediff);
 }
 #endif // ORUW_TIMER_ENABLE
 
@@ -52,7 +52,7 @@ oruw_timer::~oruw_timer()
 
 
 #ifdef ORUW_LOG_ENABLE
-oruw_log *oruw_log_instance;
+oruw_log *oruw_log_instance = NULL;
 
 
 oruw_log::oruw_log (const modelState& state_init, const unsigned int filter_window_len)
@@ -62,6 +62,7 @@ oruw_log::oruw_log (const modelState& state_init, const unsigned int filter_wind
     FCoMLog = fopen ("./oru_com.log", "w");
     FFeetLog = fopen ("./oru_feet.log", "w");
     FJointVelocities = fopen ("./oru_joint_velocities.log", "w");
+    FMessages = fopen ("./oru_messages.log", "w");
     com_filter = new avgFilter(filter_window_len);
 }
 
@@ -71,6 +72,7 @@ oruw_log::~oruw_log ()
     fclose (FCoMLog);
     fclose (FFeetLog);
     fclose (FJointVelocities);
+    fclose (FMessages);
     delete com_filter;
 }
 
@@ -141,11 +143,5 @@ void oruw_log::logJointVelocities (const modelState& state_current, const double
         state_old.q[i] = state_current.q[i];
     }
     fprintf (FJointVelocities, "\n");
-}
-
-
-void oruw_log::logNumConstraints(const int num)
-{
-    qiLogInfo ("module.oru_walk", "Num of active constraints: %d\n", num);
 }
 #endif // ORUW_LOG_ENABLE

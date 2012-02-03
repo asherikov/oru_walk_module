@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
     // sampling
     int control_sampling_time_ms = 10;
-    int preview_sampling_time_ms = 100;
+    int preview_sampling_time_ms = 40;
     int next_preview_len_ms = 0;
     //-----------------------------------------------------------
 
@@ -134,7 +134,7 @@ int main(int argc, char **argv)
         next_preview_len_ms -= control_sampling_time_ms;
 
 
-        drawSDL(50, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
+        drawSDL(200, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
     }
 
     // keep the visualization active (until ESC is pressed)

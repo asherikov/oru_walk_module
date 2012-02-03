@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
     // sampling
     int control_sampling_time_ms = 10;
-    int preview_sampling_time_ms = 20;
+    int preview_sampling_time_ms = 40;
     int next_preview_len_ms = 0;
     //-----------------------------------------------------------
 

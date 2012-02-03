@@ -27,11 +27,11 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     mpc_tolerance = 1e-7;
 
 
-    step_height = 0.013;
     /// 0.0135 in the old version of our module
     /// @ref AldNaoPaper "0.015 in the paper"
     /// 0.02 is used in the built-in module
-
+    step_height = 0.013;
+    step_length = 0.035;
 
     control_sampling_time_ms = 10; // constant
     loop_time_limit_ms = 9000; 
@@ -57,6 +57,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     param_names[MPC_REGULARIZATION]       = "mpc_regularization";
     param_names[MPC_TOLERANCE]            = "mpc_tolerance";
     param_names[STEP_HEIGHT]              = "step_height";
+    param_names[STEP_LENGTH]              = "step_length";
     param_names[LOOP_TIME_LIMIT_MS]       = "loop_time_limit_ms";
     param_names[PREVIEW_SAMPLING_TIME_MS] = "preview_sampling_time_ms";
     param_names[PREVIEW_WINDOW_SIZE]      = "preview_window_size";     
@@ -132,6 +133,9 @@ void walkParameters::readParameters()
                         break;
                     case STEP_HEIGHT:
                         step_height = preferences[i][2];
+                        break;
+                    case STEP_LENGTH:
+                        step_length = preferences[i][2];
                         break;
                     default:
                         break;
@@ -219,6 +223,10 @@ void walkParameters::writeParameters()
             case STEP_HEIGHT:            
                 preferences[i][1] = string("");
                 preferences[i][2] = step_height;
+                break;
+            case STEP_LENGTH:            
+                preferences[i][1] = string("");
+                preferences[i][2] = step_length;
                 break;
             case LOOP_TIME_LIMIT_MS:     
                 preferences[i][1] = string("");

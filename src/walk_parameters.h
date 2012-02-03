@@ -45,14 +45,15 @@ enum parametersNames
     MPC_REGULARIZATION          = 6,
     MPC_TOLERANCE               = 7,
     STEP_HEIGHT                 = 8,
-    LOOP_TIME_LIMIT_MS          = 9,
-    PREVIEW_SAMPLING_TIME_MS    = 10,
-    PREVIEW_WINDOW_SIZE         = 11,
-    SS_NUMBER                   = 12,
-    DS_NUMBER                   = 13,
-    STEP_PAIRS_NUMBER           = 14,
+    STEP_LENGTH                 = 9,
+    LOOP_TIME_LIMIT_MS          = 10,
+    PREVIEW_SAMPLING_TIME_MS    = 11,
+    PREVIEW_WINDOW_SIZE         = 12,
+    SS_NUMBER                   = 13,
+    DS_NUMBER                   = 14,
+    STEP_PAIRS_NUMBER           = 15,
 
-    NUM_PARAMETERS              = 15
+    NUM_PARAMETERS              = 16
 };
 
 
@@ -79,6 +80,7 @@ class walkParameters
         double mpc_tolerance;
 
         double step_height;
+        double step_length;
 
         int control_sampling_time_ms;
         int loop_time_limit_ms;

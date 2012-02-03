@@ -3,7 +3,6 @@
  */
 void init_04 (WMG *wmg)
 {
-    double d[4];
     wmg->init(15);
 
     // each step is defined relatively to the previous step
@@ -11,30 +10,23 @@ void init_04 (WMG *wmg)
     double step_y = 0.1;       // relative Y position
 
 
-    d[0] = 0.09;
-    d[1] = 0.025;
-    d[2] = 0.03;
-    d[3] = 0.025;
-    wmg->AddFootstep(0.0, step_y/2, 0.0, 0, 0, d, FS_TYPE_SS_L);
+    double ds_constraint[4] = {
+        wmg->def_ss_constraint[0],
+        wmg->def_ss_constraint[1] + 0.5*step_y,
+        wmg->def_ss_constraint[2],
+        wmg->def_ss_constraint[3] + 0.5*step_y};
+
+
+    wmg->AddFootstep(0.0, step_y/2, 0.0, 0, 0, wmg->def_ss_constraint, FS_TYPE_SS_L);
 
     // Initial double support
-    d[0] = 0.09;
-    d[1] = 0.075;
-    d[2] = 0.03;
-    d[3] = 0.075;
-    wmg->AddFootstep(0.0, -step_y/2, 0.0, 2, 2, d, FS_TYPE_DS);
-    // ZMP, CoM are at [0;0]
+    wmg->AddFootstep(0.0, -step_y/2, 0.0, 10, 10, ds_constraint, FS_TYPE_DS);
 
 
-    // all subsequent steps have normal feet size
-    d[0] = 0.09;
-    d[1] = 0.025;
-    d[2] = 0.03;
-    d[3] = 0.025;
     // 2 reference ZMP positions in single support 
     // 1 in double support
     // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 5,  6, d);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 5,  6, wmg->def_ss_constraint);
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);
@@ -44,16 +36,8 @@ void init_04 (WMG *wmg)
     // here we give many reference points, since otherwise we 
     // would not have enough steps in preview window to reach 
     // the last footsteps
-    d[0] = 0.09;
-    d[1] = 0.075;
-    d[2] = 0.03;
-    d[3] = 0.075;
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 30, 30, d, FS_TYPE_DS);
-    d[0] = 0.09;
-    d[1] = 0.025;
-    d[2] = 0.03;
-    d[3] = 0.025;
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 0,  0, d, FS_TYPE_SS_R);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 120, 120, ds_constraint, FS_TYPE_DS);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 0,  0, wmg->def_ss_constraint, FS_TYPE_SS_R);
 }
 
 

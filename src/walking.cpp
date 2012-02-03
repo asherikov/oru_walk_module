@@ -75,6 +75,7 @@ void oru_walk::halt(const string &message, const char* function)
 
 void oru_walk::stopWalking(const string& message)
 {
+    ORUW_LOG_STEPS;
     ORUW_LOG_MESSAGE("%s", message.c_str());
     qiLogInfo ("module.oru_walk") << message;
     fDCMPostProcessConnection.disconnect();

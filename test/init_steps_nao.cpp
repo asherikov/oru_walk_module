@@ -71,7 +71,7 @@ void init_07 (WMG *wmg)
     // 2 reference ZMP positions in single support 
     // 1 in double support
     // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 9,  4, wmg->def_ss_constraint);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 10,  13, wmg->def_ss_constraint);
     wmg->AddFootstep(step_x,  step_y, 0.0);
     wmg->AddFootstep(step_x, -step_y, 0.0);
     wmg->AddFootstep(step_x,  step_y, 0.0);
@@ -85,7 +85,7 @@ void init_07 (WMG *wmg)
     // here we give many reference points, since otherwise we 
     // would not have enough steps in preview window to reach 
     // the last footsteps
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 120, 120, ds_constraint, FS_TYPE_DS);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 60, 60, ds_constraint, FS_TYPE_DS);
     wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 0,  0, wmg->def_ss_constraint, FS_TYPE_SS_R);
 }
 
@@ -132,7 +132,4 @@ void initNaoModel (nao_igm* nao)
             IGM_SUPPORT_LEFT,
             0.0, 0.05, 0.0,
             0.0, 0.0, 0.0);
-
-    double pos_error[POSITION_VECTOR_SIZE];
-    nao->state_sensor.getSwingFootPosition (pos_error); 
 }

@@ -39,7 +39,7 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
     // initialize classes
     WMG wmg;
-    init_04 (&wmg);
+    init_07 (&wmg);
     vector<double> x_coord;
     vector<double> y_coord;
     vector<double> angle_rot;
@@ -75,6 +75,8 @@ int main(int argc, char **argv)
     {
         if (next_preview_len_ms == 0)
         {
+                        cout << wmg.isSupportSwitchNeeded() << endl;
+
             if (wmg.isSupportSwitchNeeded())
             {
                 double pos_error[POSITION_VECTOR_SIZE];

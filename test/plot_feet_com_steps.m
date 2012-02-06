@@ -3,7 +3,7 @@ function plot_feet_com_steps(dir)
 % dir - path to the directory containing logs.
 %
 figure ('Position', get(0,'Screensize')*0.9);
-run (strcat(dir, '/oru_steps.m'))
+run (strcat(dir, '/oru_steps_m.log'))
 
 try
     load (strcat(dir, '/oru_com.log'));

@@ -253,7 +253,7 @@ void oru_walk::initWMG_NaoModel()
     wmg->AddFootstep(0.0, step_y/2, 0.0, 0, 0, wmg->def_ss_constraint, FS_TYPE_SS_L);
 
     // Initial double support
-    wmg->AddFootstep(0.0, -step_y/2, 0.0, 10, 10, ds_constraint, FS_TYPE_DS);
+    wmg->AddFootstep(0.0, -step_y/2, 0.0, wp.ss_number/2, wp.ss_number/2, ds_constraint, FS_TYPE_DS);
 
 
     // all subsequent steps have normal feet size
@@ -272,7 +272,7 @@ void oru_walk::initWMG_NaoModel()
     // here we give many reference points, since otherwise we 
     // would not have enough steps in preview window to reach 
     // the last footsteps
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 120, 120, ds_constraint, FS_TYPE_DS);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 5*wp.ss_number, 5*wp.ss_number, ds_constraint, FS_TYPE_DS);
     wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 0,  0, wmg->def_ss_constraint, FS_TYPE_SS_R);
 
 

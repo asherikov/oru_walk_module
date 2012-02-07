@@ -21,7 +21,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     joint_feedback_gain = 0.0;
 
     mpc_alpha = 400.0;
-    mpc_beta = 8000.0;
+    mpc_beta = 4000.0;
     mpc_gamma = 1.0;
     mpc_regularization = 0.01;
     mpc_tolerance = 1e-7;
@@ -30,20 +30,20 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     /// 0.0135 in the old version of our module
     /// @ref AldNaoPaper "0.015 in the paper"
     /// 0.02 is used in the built-in module
-    step_height = 0.013;
-    step_length = 0.035;
+    step_height = 0.02;
+    step_length = 0.04;
 
-    control_sampling_time_ms = 10; // constant
-    loop_time_limit_ms = 9000; 
-    preview_sampling_time_ms = 20;
+    control_sampling_time_ms = 20; // constant
+    loop_time_limit_ms = 18000; 
+    preview_sampling_time_ms = 40;
     preview_window_size = 40;
 
 
     filter_window_length = 1; // not used
 
 
-    ss_number = 20;
-    ds_number = 5;
+    ss_number = 11;
+    ds_number = 3;
     step_pairs_number = 8;
 
 

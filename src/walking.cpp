@@ -56,7 +56,7 @@ void oru_walk::walk()
     try
     {
         fDCMPostProcessConnection =
-            getParentBroker()->getProxy("DCM")->getModule()->atPostProcess
+            getParentBroker()->getProxy("ALMotion")->getModule()->atPreProcess
             (boost::bind(&oru_walk::callbackEveryCycle_walk, this));
     }
     catch (const ALError &e)

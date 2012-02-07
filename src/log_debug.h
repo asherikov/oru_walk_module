@@ -55,7 +55,7 @@ class oruw_timer
 };
 
 #define ORUW_TIMER(limit) oruw_timer timer(__FUNCTION__,limit)
-#define ORUW_TIMER_CHECK if(!timer.isLimitSatisfied()) {ORUW_HALT("Time limit is violated!\n");}
+#define ORUW_TIMER_CHECK if(!timer.isLimitSatisfied()) {halt("Time limit is violated!\n", __FUNCTION__);}
 
 #else // ORUW_TIMER_ENABLE
 

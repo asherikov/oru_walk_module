@@ -15,27 +15,42 @@
 walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     pref_proxy(broker)
 {
+    /**
+     * @ref AldNaoPaper "0.5 in the publication by Aldebaran-Robotics"
+     */
     feedback_gain = 0.3;
+    /**
+     * @ref AldNaoPaper "0.003 in the publication by Aldebaran-Robotics"
+     * Note, that even though they derive the value of this parameter in 
+     * the paper, we simply tuned it.
+     */
     feedback_threshold = 0.006;
 
     joint_feedback_gain = 0.0;
 
-    mpc_alpha = 400.0;
-    mpc_beta = 4000.0;
-    mpc_gamma = 1.0;
+    mpc_alpha = 400.0;  // penalty for the velocity
+    mpc_beta = 4000.0;  // closeness to the reference ZMP points 
+    mpc_gamma = 1.0;    // penalty for the jerk
     mpc_regularization = 0.01;
     mpc_tolerance = 1e-7;
 
 
-    /// 0.0135 in the old version of our module
-    /// @ref AldNaoPaper "0.015 in the paper"
-    /// 0.02 is used in the built-in module
+    /**
+     * 0.0135 in the old version of our module.
+     * @ref AldNaoPaper "0.015 in the publication by Aldebaran-Robotics"
+     * 0.02 is used in the built-in module, but is is slightly higher when 
+     * executed on the robot.
+     */
     step_height = 0.02;
+    // The longest step in the built-in module.
     step_length = 0.04;
 
     control_sampling_time_ms = 20; // constant
-    loop_time_limit_ms = 18000; 
+    control_sampling_time_sec = (double) control_sampling_time_ms / 1000;
+    loop_time_limit_ms = 18000; // less than 20ms
     preview_sampling_time_ms = 40;
+    preview_sampling_time_sec = (double) preview_sampling_time_ms / 1000;
+
     preview_window_size = 40;
 
 
@@ -150,6 +165,7 @@ void walkParameters::readParameters()
                         break;
                     case PREVIEW_SAMPLING_TIME_MS:
                         preview_sampling_time_ms = preferences[i][2];
+                        control_sampling_time_sec = (double) control_sampling_time_ms / 1000;
                         break;
                     case PREVIEW_WINDOW_SIZE:
                         preview_window_size = preferences[i][2];

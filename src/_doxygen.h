@@ -71,6 +71,10 @@
 /**
  * @page pNotes Notes
  *
+ * Some notes are obvious, but sometimes they weren't taken into account, when 
+ * it was necessary.
+ *
+ *
  * @section NotesDoc Exerpts from the documentation
  * - init() method of the module is called automatically when a library 
  *   is loaded.
@@ -87,6 +91,13 @@
  * - If the sensor input from a joint is used as a command for this joint
  *   in a callback function, the joint becomes compliant. 
  *
+ * - It seems that, controllers of the joints work better, when the commands
+ *   are sent more than 10ms in future.
+ *
+ * - The callback function that controls the robot, can be hooked to DCM
+ *   module or ALMotion module, in the first case it would be called each 
+ *   10ms, in the second - 20 ms.
+ *
  *
  * @section NotesOur Our module
  * - In the current version we switch between the left and the right 
@@ -95,6 +106,28 @@
  *   this foot is lifted it's real position can be found only using the 
  *   other foot as a reference due to errors. A big error in foot position 
  *   will lead to a big error in CoM position.
+ *
+ * - When the orientaion of the torso is fixed (x and y axes), the hip roll
+ *   joints are highly loaded and may hit their limits depending on the MPC
+ *   gains.
+ *
+ * - The length of the preview window affects the ability of the robot to
+ *   compensate for disturbances. 
+ *
+ * - The long preview window increases the number of constraints in the MPC 
+ *   problem thus increasing the time requred to solve it.
+ *
+ * - Under strong disturbances the number of activated constraints in the 
+ *   MPC makes it impossible to solve the problem in the available time.
+ *
+ * @todo It might be helpful to use interior point method instead of active
+ * set method, since in the former case we may implement a mechanism to limit 
+ * the time available for solution.
+ *
+ * - Since we cannot follow the desired feet trajectories precisely (the real
+ *   positions are lower), there is a significant error in CoM position along
+ *   Z and Y axes, which doesn't allow to use lower error threshold and higher 
+ *   feedback gain.
  */
 
 #endif /*DOXYGEN_H*/

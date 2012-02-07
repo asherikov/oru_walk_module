@@ -10,6 +10,10 @@
 
 
 
+/**
+ * @brief Construct and initialize all necessary classes and register 
+ * callback function.
+ */
 void oru_walk::walk()
 {
     wp.readParameters();
@@ -61,19 +65,32 @@ void oru_walk::walk()
     }
     catch (const ALError &e)
     {
-        ORUW_HALT("Error when connecting to DCM postProccess: " + string(e.what()));
+        halt("Error when connecting to DCM postProccess: " + string(e.what()), __FUNCTION__);
     }
 }
 
 
+
+/**
+ * @brief Log a message, remove stiffness and die.
+ *
+ * @param[in] message a message
+ * @param[in] function name of the calling function.
+ */
 void oru_walk::halt(const string &message, const char* function)
 {
     stopWalking(message);
     setStiffness(0.0);
-    ORUW_THROW(message);
+    throw ALERROR(getName(), function, message);
 }
 
 
+
+/**
+ * @brief Unregister callback and log a message.
+ *
+ * @param[in] message a message
+ */
 void oru_walk::stopWalking(const string& message)
 {
     ORUW_LOG_STEPS;
@@ -83,6 +100,12 @@ void oru_walk::stopWalking(const string& message)
     ORUW_LOG_CLOSE;
 }
 
+
+
+/**
+ * @brief An interface function that is called remotely to stop
+ * the execution.
+ */
 void oru_walk::stopWalkingRemote()
 {
     qiLogInfo ("module.oru_walk", "Stopped by user's request.\n");
@@ -91,8 +114,10 @@ void oru_walk::stopWalkingRemote()
 }
 
 
+
 /**
- * @brief 
+ * @brief A periodically called function, that determines and sends 
+ * appropriate commands to the joints.
  * @attention REAL-TIME!
  */
 void oru_walk::callbackEveryCycle_walk()
@@ -103,7 +128,7 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_JOINTS(nao.state_sensor, nao.state_model);
     ORUW_LOG_COM(wmg, nao.state_sensor);
     ORUW_LOG_FEET(nao);
-    ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, (double) wp.control_sampling_time_ms/1000);
+    ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, wp.control_sampling_time_sec);
 
     feedbackError ();
     double joint_error_feedback[LOWER_JOINTS_NUM];
@@ -136,14 +161,14 @@ void oru_walk::callbackEveryCycle_walk()
 
     if (nao.igm () < 0)
     {
-        ORUW_HALT("IK does not converge.\n");
+        halt("IK does not converge.\n", __FUNCTION__);
     }
 
     int failed_joint = nao.checkJointBounds();
     if (failed_joint >= 0)
     {
         ORUW_LOG_MESSAGE("Failed joint: %d\n", failed_joint);
-        ORUW_HALT("Joint bounds are violated.\n");
+        halt("Joint bounds are violated.\n", __FUNCTION__);
     }
 
 
@@ -159,7 +184,7 @@ void oru_walk::callbackEveryCycle_walk()
     }
     catch (const AL::ALError &e)
     {
-        ORUW_HALT("Cannot set joint angles: " + string(e.what()));
+        halt("Cannot set joint angles: " + string(e.what()), __FUNCTION__);
     }
 
     next_preview_len_ms -= wp.control_sampling_time_ms;
@@ -231,7 +256,7 @@ void oru_walk::readSensors(modelState& nao_state)
 
 
 /**
- * @brief 
+ * @brief Initialize footsteps and NAO model.
  * @attention Hardcoded parameters.
  */
 void oru_walk::initWMG_NaoModel()
@@ -286,25 +311,25 @@ void oru_walk::initWMG_NaoModel()
             0.0, 0.0, 0.0);  // orientation
     
     wmg->init_param (     
-            (double) wp.preview_sampling_time_ms / 1000, // sampling time in seconds
-            nao.CoM_position[2],                      // height of the center of mass
-            wp.step_height);                // step height (for interpolation of feet movements)
+            wp.preview_sampling_time_sec, // sampling time in seconds
+            nao.CoM_position[2],          // height of the center of mass
+            wp.step_height);              // step height (for interpolation of feet movements)
 
     double pos_error[POSITION_VECTOR_SIZE];
     nao.state_sensor.getSwingFootPosition (pos_error);
     pos_error[0] =  0.0  - pos_error[0];
-    pos_error[1] = -0.05 - pos_error[1];
+    pos_error[1] = -step_y/2 - pos_error[1];
     pos_error[2] =  0.0;//  - pos_error[2];
     wmg->correctNextSSPosition (pos_error);
 
-    wmg->initABMatrices ((double) wp.control_sampling_time_ms / 1000);
+    wmg->initABMatrices (wp.control_sampling_time_sec);
     wmg->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
 }
 
 
 
 /**
- * @brief 
+ * @brief Solve the MPC problem.
  */
 bool oru_walk::solveMPCProblem ()
 {

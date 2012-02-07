@@ -58,7 +58,7 @@ enum parametersNames
 
 
 /**
- * @brief A container for constant parameters.
+ * @brief A container for parameters.
  */
 class walkParameters
 {
@@ -83,8 +83,10 @@ class walkParameters
         double step_length;
 
         int control_sampling_time_ms;
+        double control_sampling_time_sec;
         int loop_time_limit_ms;
         int preview_sampling_time_ms;
+        double preview_sampling_time_sec;
         int preview_window_size;
 
         unsigned int filter_window_length;

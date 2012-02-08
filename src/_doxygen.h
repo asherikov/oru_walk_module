@@ -91,9 +91,6 @@
  * - If the sensor input from a joint is used as a command for this joint
  *   in a callback function, the joint becomes compliant. 
  *
- * - It seems that, controllers of the joints work better, when the commands
- *   are sent more than 10ms in future.
- *
  * - The callback function that controls the robot, can be hooked to DCM
  *   module or ALMotion module, in the first case it would be called each 
  *   10ms, in the second - 20 ms.

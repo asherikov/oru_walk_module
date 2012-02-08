@@ -122,6 +122,10 @@ void oru_walk::stopWalkingRemote()
  */
 void oru_walk::callbackEveryCycle_walk()
 {
+    // execution of the commands must finish when the next call to the
+    // callback is made
+    walkCommands[4][0] = dcmProxy->getTime(wp.control_sampling_time_ms);
+
     ORUW_TIMER(wp.loop_time_limit_ms);
     readSensors (nao.state_sensor);
 
@@ -175,7 +179,6 @@ void oru_walk::callbackEveryCycle_walk()
     // Set commands
     try
     {
-        walkCommands[4][0] = dcmProxy->getTime(wp.control_sampling_time_ms);
         for (int i = 0; i < LOWER_JOINTS_NUM; i++)
         {
             walkCommands[5][i][0] = nao.state_model.q[i] + joint_error_feedback[i];

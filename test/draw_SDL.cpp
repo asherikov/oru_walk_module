@@ -430,11 +430,18 @@ void HomogGL(double *T, GLfloat *M, double scale)
  */
 void HomogGL(double x, double y , double z, double alpha, double beta, double gamma, GLfloat *M, double scale)
 {
-    posture T;
-    T.init(x, y, z, alpha, beta, gamma);
+    Transform<double, 3> T = Translation<double,3>(x, y, z)
+                           * AngleAxisd(alpha, Vector3d::UnitX())
+                           * AngleAxisd(beta, Vector3d::UnitY())
+                           * AngleAxisd(gamma, Vector3d::UnitZ());
 
-    for (int i=0; i<POSTURE_MATRIX_SIZE; i++)
-        M[i] = T.data[i];
+    for (int i = 0; i < 4; ++i)
+    {
+        for(int j = 0; j < 4; ++j)
+        {
+            M[j*4+i] = T(j,i);
+        }
+    }
 
     M[12] *= scale;
     M[13] *= scale;

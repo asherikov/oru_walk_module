@@ -2,13 +2,9 @@
  * @file
  * @author Alexander Sherikov
  */
-
 #include <iostream>
 #include <fstream>
 #include <cstdio>
-#include <limits>
-#include <cmath> // abs, M_PI
-#include <cstring> //strcmp
 
 
 #include "WMG.h"
@@ -99,6 +95,7 @@ int main(int argc, char **argv)
 
     for(int i=0 ;; i++)
     {
+        nao.state_sensor = nao.state_model;
         if (next_preview_len_ms == 0)
         {
             if (wmg.isSupportSwitchNeeded())

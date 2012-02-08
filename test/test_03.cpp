@@ -99,6 +99,7 @@ int main(int argc, char **argv)
 
     for(int i=0 ;; i++)
     {
+        nao.state_sensor = nao.state_model;
         if (next_preview_len_ms == 0)
         {
             cout << wmg.isSupportSwitchNeeded() << endl;

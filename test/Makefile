@@ -1,6 +1,8 @@
 include ../common.mk
 
 
+CXXFLAGS += -I/usr/local/include/eigen2/ -I/usr/include/eigen2/
+
 
 TESTS=\
 	test_01 \

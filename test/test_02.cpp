@@ -73,9 +73,10 @@ int main(int argc, char **argv)
     isRunning=1;
     while (isRunning)
     {
+        nao.state_sensor = nao.state_model;
         if (next_preview_len_ms == 0)
         {
-                        cout << wmg.isSupportSwitchNeeded() << endl;
+            cout << wmg.isSupportSwitchNeeded() << endl;
 
             if (wmg.isSupportSwitchNeeded())
             {
@@ -136,7 +137,7 @@ int main(int argc, char **argv)
         next_preview_len_ms -= control_sampling_time_ms;
 
 
-        drawSDL(200, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
+        drawSDL(50, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
     }
 
     // keep the visualization active (until ESC is pressed)

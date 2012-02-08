@@ -1,8 +1,7 @@
 Requirements:
     - GNU make
     - SDK or crosscompilation toolkit for NAO, version >= 1.12
-    - nao_igm also depends on Eigen, but it is provided by SDK
-      or toolkit.
+    - Eigen (it is provided by SDK or toolkit)
 
 
 Downloading:

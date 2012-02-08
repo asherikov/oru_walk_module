@@ -17,12 +17,6 @@ set (CMAKE_RULE_MESSAGES OFF CACHE BOOL "")
 # Other parameters
 ####################################
 
-find_path(EIGEN_INCLUDE_DIRS "Eigen/Core" PATHS "${SDK_DIR}/include" PATH_SUFFIXES "eigen2")
-if (EIGEN_INCLUDE_DIRS)
-    include_directories ("${EIGEN_INCLUDE_DIRS}")
-endif (EIGEN_INCLUDE_DIRS)
-
-
 project ( oru_walk )
 file (GLOB ORU_WALK_SRC "${PROJECT_SOURCE_DIR}/src/*.cpp")
 qi_create_lib(oru_walk ${ORU_WALK_SRC})
@@ -36,6 +30,11 @@ target_link_libraries(oru_walk
 
 
 # set path to directories containing headers
+find_path(EIGEN_INCLUDE_DIRS "Eigen/Core" PATHS "${SDK_DIR}/include" PATH_SUFFIXES "eigen2")
+if (EIGEN_INCLUDE_DIRS)
+    include_directories ("${EIGEN_INCLUDE_DIRS}")
+endif (EIGEN_INCLUDE_DIRS)
+
 include_directories(oru_walk "${PROJECT_SOURCE_DIR}/smpc_solver/include")
 include_directories(oru_walk "${PROJECT_SOURCE_DIR}/nao_igm/include")
 

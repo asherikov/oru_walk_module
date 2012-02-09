@@ -154,6 +154,7 @@ int main(int argc, char **argv)
         double left_foot_pos[POSITION_VECTOR_SIZE + 1];
         double right_foot_pos[POSITION_VECTOR_SIZE + 1];
         wmg.getFeetPositions (
+                0,
                 preview_sampling_time_ms/control_sampling_time_ms,
                 (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms,
                 left_foot_pos,

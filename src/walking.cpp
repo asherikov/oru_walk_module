@@ -151,6 +151,7 @@ void oru_walk::callbackEveryCycle_walk()
     double left_foot_pos[POSITION_VECTOR_SIZE + 1];
     double right_foot_pos[POSITION_VECTOR_SIZE + 1];
     wmg->getFeetPositions (
+            0,
             wp.preview_sampling_time_ms/wp.control_sampling_time_ms,
             (wp.preview_sampling_time_ms - next_preview_len_ms)/wp.control_sampling_time_ms,
             left_foot_pos,

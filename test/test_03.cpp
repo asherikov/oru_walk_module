@@ -159,15 +159,18 @@ int main(int argc, char **argv)
         double left_foot_pos[POSITION_VECTOR_SIZE + 1];
         double right_foot_pos[POSITION_VECTOR_SIZE + 1];
         wmg.getFeetPositions (
-                preview_sampling_time_ms/control_sampling_time_ms,
-                (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms,
+                0,
+                1,
+                1,
                 left_foot_pos,
                 right_foot_pos);
 
         nao.setFeetPostures (left_foot_pos, right_foot_pos);
 
         // position of CoM
-        nao.setCoM(wmg.init_state.x(), wmg.init_state.y(), wmg.hCoM); 
+        smpc::state_orig next_CoM;
+        next_CoM.get_state(solver, 0);
+        nao.setCoM(next_CoM.x(), next_CoM.y(), wmg.hCoM); 
 
 
         if (nao.igm () < 0)
@@ -184,7 +187,6 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
 
 
-
         //-----------------------------------------------------------
         // output
         left_foot_x.push_back(left_foot_pos[0]);
@@ -194,7 +196,35 @@ int main(int argc, char **argv)
         right_foot_y.push_back(right_foot_pos[1]);
         right_foot_z.push_back(right_foot_pos[2]);
         //-----------------------------------------------------------
-        
+       
+
+        //-----------------------------------------------------------
+        wmg.getFeetPositions (
+                1,
+                1,
+                1,
+                left_foot_pos,
+                right_foot_pos);
+
+        nao.setFeetPostures (left_foot_pos, right_foot_pos);
+
+        // position of CoM
+        next_CoM.get_state(solver, 1);
+        nao.setCoM(next_CoM.x(), next_CoM.y(), wmg.hCoM); 
+
+
+        if (nao.igm () < 0)
+        {
+            cout << "IGM failed!" << endl;
+            break;
+        }
+        failed_joint = nao.checkJointBounds();
+        if (failed_joint >= 0)
+        {
+            cout << "MAX or MIN joint limit is violated! Number of the joint: " << failed_joint << endl;
+            break;
+        }
+        //-----------------------------------------------------------
 
 
         next_preview_len_ms -= control_sampling_time_ms;

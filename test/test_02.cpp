@@ -106,20 +106,24 @@ int main(int argc, char **argv)
         wmg.calculateNextState(wmg.next_control, wmg.init_state);
         //-----------------------------------------------------------
 
+
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
         double left_foot_pos[POSITION_VECTOR_SIZE + 1];
         double right_foot_pos[POSITION_VECTOR_SIZE + 1];
         wmg.getFeetPositions (
-                preview_sampling_time_ms/control_sampling_time_ms,
-                (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms,
+                0,
+                1,
+                1,
                 left_foot_pos,
                 right_foot_pos);
 
         nao.setFeetPostures (left_foot_pos, right_foot_pos);
 
         // position of CoM
-        nao.setCoM(wmg.init_state.x(), wmg.init_state.y(), wmg.hCoM); 
+        smpc::state_orig next_CoM;
+        next_CoM.get_state(solver, 0);
+        nao.setCoM(next_CoM.x(), next_CoM.y(), wmg.hCoM); 
 
 
         if (nao.igm () < 0)
@@ -127,17 +131,47 @@ int main(int argc, char **argv)
             cout << "IGM failed!" << endl;
             break;
         }
-        if (nao.checkJointBounds() >= 0)
+        int failed_joint = nao.checkJointBounds();
+        if (failed_joint >= 0)
         {
-            cout << "MAX or MIN joint limit is violated!" << endl;
+            cout << "MAX or MIN joint limit is violated! Number of the joint: " << failed_joint << endl;
+            break;
+        }
+        //-----------------------------------------------------------
+
+
+        drawSDL(50, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
+
+
+        //-----------------------------------------------------------
+        wmg.getFeetPositions (
+                1,
+                1,
+                1,
+                left_foot_pos,
+                right_foot_pos);
+
+        nao.setFeetPostures (left_foot_pos, right_foot_pos);
+
+        // position of CoM
+        next_CoM.get_state(solver, 1);
+        nao.setCoM(next_CoM.x(), next_CoM.y(), wmg.hCoM); 
+
+
+        if (nao.igm () < 0)
+        {
+            cout << "IGM failed!" << endl;
+            break;
+        }
+        failed_joint = nao.checkJointBounds();
+        if (failed_joint >= 0)
+        {
+            cout << "MAX or MIN joint limit is violated! Number of the joint: " << failed_joint << endl;
             break;
         }
         //-----------------------------------------------------------
 
         next_preview_len_ms -= control_sampling_time_ms;
-
-
-        drawSDL(50, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
     }
 
     // keep the visualization active (until ESC is pressed)

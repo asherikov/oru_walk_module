@@ -122,29 +122,37 @@ void oru_walk::stopWalkingRemote()
  */
 void oru_walk::callbackEveryCycle_walk()
 {
+    ORUW_TIMER(wp.loop_time_limit_ms);
+
+
     // execution of the commands must finish when the next call to the
     // callback is made
     walkCommands[4][0] = dcmProxy->getTime(wp.control_sampling_time_ms);
 
-    ORUW_TIMER(wp.loop_time_limit_ms);
     readSensors (nao.state_sensor);
+
 
     ORUW_LOG_JOINTS(nao.state_sensor, nao.state_model);
     ORUW_LOG_COM(wmg, nao.state_sensor);
     ORUW_LOG_FEET(nao);
     ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, wp.control_sampling_time_sec);
 
-    feedbackError ();
+
     double joint_error_feedback[LOWER_JOINTS_NUM];
     for (int i = 0; i < LOWER_JOINTS_NUM; i++)
     {
         joint_error_feedback[i] = wp.joint_feedback_gain * (nao.state_model.q[i] - nao.state_sensor.q[i]);
     }
 
+
+    // position of CoM
+    feedbackError ();
     if (! solveMPCProblem ())
     {
         return;
     }
+    /// @attention hCoM is constant!
+    nao.setCoM(wmg->init_state.x(), wmg->init_state.y(), wmg->hCoM);
 
 
     // support foot and swing foot position/orientation
@@ -157,11 +165,6 @@ void oru_walk::callbackEveryCycle_walk()
             left_foot_pos,
             right_foot_pos);
     nao.setFeetPostures (left_foot_pos, right_foot_pos);
-
-
-    // position of CoM
-    /// @attention hCoM is constant!
-    nao.setCoM(wmg->init_state.x(), wmg->init_state.y(), wmg->hCoM);
 
 
     if (nao.igm () < 0)

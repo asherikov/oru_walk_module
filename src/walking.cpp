@@ -128,6 +128,7 @@ void oru_walk::callbackEveryCycle_walk()
     // execution of the commands must finish when the next call to the
     // callback is made
     walkCommands[4][0] = dcmProxy->getTime(wp.control_sampling_time_ms);
+    walkCommands[4][1] = dcmProxy->getTime(2*wp.preview_sampling_time_ms - next_preview_len_ms);
 
     readSensors (nao.state_sensor);
 
@@ -138,11 +139,10 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, wp.control_sampling_time_sec);
 
 
-    double joint_error_feedback[LOWER_JOINTS_NUM];
-    for (int i = 0; i < LOWER_JOINTS_NUM; i++)
-    {
-        joint_error_feedback[i] = wp.joint_feedback_gain * (nao.state_model.q[i] - nao.state_sensor.q[i]);
-    }
+    double left_foot_pos[POSITION_VECTOR_SIZE + 1];
+    double right_foot_pos[POSITION_VECTOR_SIZE + 1];
+    int failed_joint;
+
 
 
     // position of CoM
@@ -154,10 +154,7 @@ void oru_walk::callbackEveryCycle_walk()
     /// @attention hCoM is constant!
     nao.setCoM(wmg->init_state.x(), wmg->init_state.y(), wmg->hCoM);
 
-
     // support foot and swing foot position/orientation
-    double left_foot_pos[POSITION_VECTOR_SIZE + 1];
-    double right_foot_pos[POSITION_VECTOR_SIZE + 1];
     wmg->getFeetPositions (
             0,
             wp.preview_sampling_time_ms/wp.control_sampling_time_ms,
@@ -166,13 +163,38 @@ void oru_walk::callbackEveryCycle_walk()
             right_foot_pos);
     nao.setFeetPostures (left_foot_pos, right_foot_pos);
 
-
-    if (nao.igm () < 0)
+    if (nao.igm (nao.state_model) < 0)
     {
         halt("IK does not converge.\n", __FUNCTION__);
     }
 
-    int failed_joint = nao.checkJointBounds();
+    failed_joint = nao.state_model.checkJointBounds();
+    if (failed_joint >= 0)
+    {
+        ORUW_LOG_MESSAGE("Failed joint: %d\n", failed_joint);
+        halt("Joint bounds are violated.\n", __FUNCTION__);
+    }
+
+
+
+    /// @attention hCoM is constant!
+    smpc::state_orig CoM;
+    CoM.get_state(*solver, 1);
+    nao.setCoM(CoM.x(), CoM.y(), wmg->hCoM);
+
+
+    // support foot and swing foot position/orientation
+    wmg->getFeetPositions (1, 1, 0, left_foot_pos, right_foot_pos);
+    nao.setFeetPostures (left_foot_pos, right_foot_pos);
+
+
+    // inverse kinematics    
+    modelState state_copy = nao.state_model;
+    if (nao.igm (state_copy) < 0)
+    {
+        halt("IK does not converge.\n", __FUNCTION__);
+    }
+    failed_joint = state_copy.checkJointBounds();
     if (failed_joint >= 0)
     {
         ORUW_LOG_MESSAGE("Failed joint: %d\n", failed_joint);
@@ -185,7 +207,8 @@ void oru_walk::callbackEveryCycle_walk()
     {
         for (int i = 0; i < LOWER_JOINTS_NUM; i++)
         {
-            walkCommands[5][i][0] = nao.state_model.q[i] + joint_error_feedback[i];
+            walkCommands[5][i][0] = nao.state_model.q[i];
+            walkCommands[5][i][1] = state_copy.q[i];
         }
         dcmProxy->setAlias(walkCommands);
     }

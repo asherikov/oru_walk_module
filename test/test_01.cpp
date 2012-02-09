@@ -166,12 +166,12 @@ int main(int argc, char **argv)
         nao.setCoM(wmg.init_state.x(), wmg.init_state.y(), wmg.hCoM); 
 
 
-        if (nao.igm() < 0)
+        if (nao.igm(nao.state_model) < 0)
         {
             cout << "IGM failed!" << endl;
             break;
         }
-        int failed_joint = nao.checkJointBounds();
+        int failed_joint = nao.state_model.checkJointBounds();
         if (failed_joint >= 0)
         {
             cout << "MAX or MIN joint limit is violated! Number of the joint: " << failed_joint << endl;

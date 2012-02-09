@@ -229,12 +229,12 @@ void oru_walk::initWalkCommands()
     walkCommands[2] = string("time-separate");
     walkCommands[3] = 0;
 
-    walkCommands[4].arraySetSize(1);
+    walkCommands[4].arraySetSize(2);
 
     walkCommands[5].arraySetSize(LOWER_JOINTS_NUM); // For all joints
     for (int i=0; i < LOWER_JOINTS_NUM; i++)
     {
-        walkCommands[5][i].arraySetSize(1);
+        walkCommands[5][i].arraySetSize(2);
     }
 }
 

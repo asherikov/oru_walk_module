@@ -128,7 +128,7 @@ void oru_walk::callbackEveryCycle_walk()
     // execution of the commands must finish when the next call to the
     // callback is made
     walkCommands[4][0] = dcmProxy->getTime(wp.control_sampling_time_ms);
-    walkCommands[4][1] = dcmProxy->getTime(2*wp.control_sampling_time_ms);
+    walkCommands[4][1] = dcmProxy->getTime(2*wp.preview_sampling_time_ms - next_preview_len_ms);
 
     readSensors (nao.state_sensor);
 

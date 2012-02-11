@@ -128,7 +128,7 @@ void oru_walk::callbackEveryCycle_walk()
     // execution of the commands must finish when the next call to the
     // callback is made
     walkCommands[4][0] = dcmProxy->getTime(wp.control_sampling_time_ms);
-    walkCommands[4][1] = dcmProxy->getTime(2*wp.preview_sampling_time_ms - next_preview_len_ms);
+    walkCommands[4][1] = dcmProxy->getTime(2*wp.control_sampling_time_ms);
 
     readSensors (nao.state_sensor);
 
@@ -374,10 +374,7 @@ bool oru_walk::solveMPCProblem ()
             wmg->correctNextSSPosition(pos_error);
         }
 
-        WMGret wmg_retval = wmg->formPreviewWindow();
-
-
-        if (wmg_retval == WMG_HALT)
+        if (wmg->formPreviewWindow() == WMG_HALT)
         {
             stopWalking("Not enough steps to form preview window. Stopping.");
             return (false);

@@ -109,8 +109,38 @@ void oru_walk::init()
     }
 
 // Initialisation of ALmemory fast access, DCM commands, Alias, stiffness, ...
-    initFastRead();
-    initFastWrite();
+
+    vector <string> joint_names(JOINTS_NUM, "Device/SubDeviceList/");
+    joint_names[HEAD_PITCH]       += "HeadPitch";
+    joint_names[HEAD_YAW]         += "HeadYaw";
+
+    joint_names[L_ANKLE_PITCH]    += "LAnklePitch";
+    joint_names[L_ANKLE_ROLL]     += "LAnkleRoll";
+    joint_names[L_ELBOW_ROLL]     += "LElbowRoll";
+    joint_names[L_ELBOW_YAW]      += "LElbowYaw";
+    joint_names[L_HIP_PITCH]      += "LHipPitch";
+    joint_names[L_HIP_ROLL]       += "LHipRoll";
+    joint_names[L_HIP_YAW_PITCH]  += "LHipYawPitch";
+    joint_names[L_KNEE_PITCH]     += "LKneePitch";
+    joint_names[L_SHOULDER_PITCH] += "LShoulderPitch";
+    joint_names[L_SHOULDER_ROLL]  += "LShoulderRoll";
+    joint_names[L_WRIST_YAW]      += "LWristYaw";
+
+    joint_names[R_ANKLE_PITCH]    += "RAnklePitch";
+    joint_names[R_ANKLE_ROLL]     += "RAnkleRoll";
+    joint_names[R_ELBOW_ROLL]     += "RElbowRoll";
+    joint_names[R_ELBOW_YAW]      += "RElbowYaw";
+    joint_names[R_HIP_PITCH]      += "RHipPitch";
+    joint_names[R_HIP_ROLL]       += "RHipRoll";
+    joint_names[R_HIP_YAW_PITCH]  += "RHipYawPitch";
+    joint_names[R_KNEE_PITCH]     += "RKneePitch";
+    joint_names[R_SHOULDER_PITCH] += "RShoulderPitch";
+    joint_names[R_SHOULDER_ROLL]  += "RShoulderRoll";
+    joint_names[R_WRIST_YAW]      += "RWristYaw";
+
+
+    initFastRead(joint_names);
+    initFastWrite(joint_names);
     initWalkCommands();
     initJointAngles();
 }

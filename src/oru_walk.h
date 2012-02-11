@@ -86,8 +86,8 @@ public:
 
 private:
     // initialization
-    void initFastRead ();
-    void initFastWrite ();
+    void initFastRead (const vector<string>&);
+    void initFastWrite (const vector<string>&);
     void initWalkCommands ();
     void initJointAngles ();
 

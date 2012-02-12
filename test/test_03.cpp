@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 {
     //-----------------------------------------------------------
     // sampling
-    int control_sampling_time_ms = 10;
+    int control_sampling_time_ms = 20;
     int preview_sampling_time_ms = 40;
     int next_preview_len_ms = 0;
     //-----------------------------------------------------------
@@ -38,23 +38,15 @@ int main(int argc, char **argv)
 
     //-----------------------------------------------------------
     // initialize classes
-    WMG wmg;
-    init_07 (&wmg);
-
-
     nao_igm nao;
     initNaoModel (&nao);
-    wmg.init_param(
-            (double) preview_sampling_time_ms / 1000, // sampling time in seconds
-            nao.CoM_position[2],                      // height of the center of mass
-            0.015);
+    init_07 test_03("test_03", preview_sampling_time_ms, nao.CoM_position[2], false);
+    IPM ipm ((double) control_sampling_time_ms / 1000);
 
-    std::string fs_out_filename("test_03_fs.m");
-    wmg.FS2file(fs_out_filename, false); // output results for later use in Matlab/Octave
 
 
     smpc::solver solver(
-            wmg.N, // size of the preview window
+            test_03.wmg->N, // size of the preview window
             400.0,  // Alpha
             4000.0,  // Beta
             1.0,    // Gamma
@@ -65,17 +57,15 @@ int main(int argc, char **argv)
 
 
     //-----------------------------------------------------------
-    // initialize control & state matrices
-    wmg.initABMatrices ((double) control_sampling_time_ms / 1000);
-    wmg.init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
-    wmg.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
+    test_03.par->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
+    test_03.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
     //-----------------------------------------------------------
 
 
 
     //-----------------------------------------------------------
     // output
-    FILE *file_op = fopen(fs_out_filename.c_str(), "a");
+    FILE *file_op = fopen(test_03.fs_out_filename.c_str(), "a");
     fprintf(file_op,"hold on\n");
 
     vector<double> ZMP_x;
@@ -102,24 +92,22 @@ int main(int argc, char **argv)
         nao.state_sensor = nao.state_model;
         if (next_preview_len_ms == 0)
         {
-            cout << wmg.isSupportSwitchNeeded() << endl;
-            if (wmg.isSupportSwitchNeeded())
+            cout << test_03.wmg->isSupportSwitchNeeded() << endl;
+            if (test_03.wmg->isSupportSwitchNeeded())
             {
                 double pos_error[POSITION_VECTOR_SIZE];
                 nao.switchSupportFoot(pos_error);
             }
 
-            WMGret wmg_retval = wmg.formPreviewWindow();
-
-            if (wmg_retval == WMG_HALT)
+            if (test_03.wmg->formPreviewWindow(*test_03.par) == WMG_HALT)
             {
                 cout << "EXIT (halt = 1)" << endl;
                 break;
             }
-            for (int j = 0; j < wmg.N; j++)
+            for (unsigned int j = 0; j < test_03.wmg->N; j++)
             {
-                ZMPref_x.push_back(wmg.zref_x[j]);
-                ZMPref_y.push_back(wmg.zref_y[j]);
+                ZMPref_x.push_back(test_03.par->zref_x[j]);
+                ZMPref_y.push_back(test_03.par->zref_y[j]);
             }
 
             next_preview_len_ms = preview_sampling_time_ms;
@@ -128,14 +116,14 @@ int main(int argc, char **argv)
        
         
         //------------------------------------------------------
-        wmg.T[0] = (double) next_preview_len_ms / 1000; // get seconds
-        solver.set_parameters (wmg.T, wmg.h, wmg.h[0], wmg.angle, wmg.zref_x, wmg.zref_y, wmg.lb, wmg.ub);
-        solver.form_init_fp (wmg.fp_x, wmg.fp_y, wmg.init_state, wmg.X);
+        test_03.par->T[0] = (double) next_preview_len_ms / 1000; // get seconds
+        solver.set_parameters (test_03.par->T, test_03.par->h, test_03.par->h[0], test_03.par->angle, test_03.par->zref_x, test_03.par->zref_y, test_03.par->lb, test_03.par->ub);
+        solver.form_init_fp (test_03.par->fp_x, test_03.par->fp_y, test_03.par->init_state, test_03.par->X);
         solver.solve();
         //-----------------------------------------------------------
         // update state
-        wmg.next_control.get_first_controls (solver);
-        wmg.calculateNextState(wmg.next_control, wmg.init_state);
+        ipm.control_vector.get_first_controls (solver);
+        ipm.calculateNextState(ipm.control_vector, test_03.par->init_state);
         //-----------------------------------------------------------
 
 
@@ -144,12 +132,12 @@ int main(int argc, char **argv)
         // output
         if (next_preview_len_ms == preview_sampling_time_ms)
         {
-            ZMP_x.push_back(wmg.X_tilde.x());
-            ZMP_y.push_back(wmg.X_tilde.y());
-            wmg.X_tilde.get_next_state (solver);
+            ZMP_x.push_back(test_03.X_tilde.x());
+            ZMP_y.push_back(test_03.X_tilde.y());
+            test_03.X_tilde.get_next_state (solver);
         }
-        CoM_x.push_back(wmg.init_state.x());
-        CoM_y.push_back(wmg.init_state.y());
+        CoM_x.push_back(test_03.par->init_state.x());
+        CoM_y.push_back(test_03.par->init_state.y());
         //-----------------------------------------------------------
     
 
@@ -158,10 +146,8 @@ int main(int argc, char **argv)
         // support foot and swing foot position/orientation
         double left_foot_pos[POSITION_VECTOR_SIZE + 1];
         double right_foot_pos[POSITION_VECTOR_SIZE + 1];
-        wmg.getFeetPositions (
-                0,
-                1,
-                0,
+        test_03.wmg->getFeetPositions (
+                preview_sampling_time_ms,
                 left_foot_pos,
                 right_foot_pos);
 
@@ -170,7 +156,7 @@ int main(int argc, char **argv)
         // position of CoM
         smpc::state_orig next_CoM;
         next_CoM.get_state(solver, 0);
-        nao.setCoM(next_CoM.x(), next_CoM.y(), wmg.hCoM); 
+        nao.setCoM(next_CoM.x(), next_CoM.y(), test_03.par->hCoM); 
 
 
         if (nao.igm (nao.state_model) < 0)
@@ -199,10 +185,8 @@ int main(int argc, char **argv)
        
 
         //-----------------------------------------------------------
-        wmg.getFeetPositions (
-                1,
-                1,
-                0,
+        test_03.wmg->getFeetPositions (
+                2*preview_sampling_time_ms,
                 left_foot_pos,
                 right_foot_pos);
 
@@ -210,7 +194,7 @@ int main(int argc, char **argv)
 
         // position of CoM
         next_CoM.get_state(solver, 1);
-        nao.setCoM(next_CoM.x(), next_CoM.y(), wmg.hCoM); 
+        nao.setCoM(next_CoM.x(), next_CoM.y(), test_03.par->hCoM); 
 
 
         if (nao.igm (nao.state_model) < 0)

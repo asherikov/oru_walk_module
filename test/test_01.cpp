@@ -34,23 +34,14 @@ int main(int argc, char **argv)
 
     //-----------------------------------------------------------
     // initialize classes
-    WMG wmg;
-    init_04 (&wmg);
-
-
     nao_igm nao;
     initNaoModel (&nao);
-    wmg.init_param(
-            (double) preview_sampling_time_ms / 1000, // sampling time in seconds
-            nao.CoM_position[2],                      // height of the center of mass
-            0.0135);
-
-    std::string fs_out_filename("test_01_fs.m");
-    wmg.FS2file(fs_out_filename); // output results for later use in Matlab/Octave
+    init_04 test_01 ("test_01", preview_sampling_time_ms, nao.CoM_position[2]);
+    IPM ipm ((double) control_sampling_time_ms / 1000);
 
 
     smpc::solver solver(
-            wmg.N, // size of the preview window
+            test_01.wmg->N, // size of the preview window
             300.0,  // Alpha
             800.0,  // Beta
             1.0,    // Gamma
@@ -61,17 +52,15 @@ int main(int argc, char **argv)
 
 
     //-----------------------------------------------------------
-    // initialize control & state matrices
-    wmg.initABMatrices ((double) control_sampling_time_ms / 1000);
-    wmg.init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
-    wmg.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
+    test_01.par->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
+    test_01.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
     //-----------------------------------------------------------
 
 
 
     //-----------------------------------------------------------
     // output
-    FILE *file_op = fopen(fs_out_filename.c_str(), "a");
+    FILE *file_op = fopen(test_01.fs_out_filename.c_str(), "a");
     fprintf(file_op,"hold on\n");
 
     vector<double> ZMP_x;
@@ -98,23 +87,23 @@ int main(int argc, char **argv)
         nao.state_sensor = nao.state_model;
         if (next_preview_len_ms == 0)
         {
-            if (wmg.isSupportSwitchNeeded())
+            if (test_01.wmg->isSupportSwitchNeeded())
             {
                 double pos_error[POSITION_VECTOR_SIZE];
                 nao.switchSupportFoot(pos_error);
             }
 
-            WMGret wmg_retval = wmg.formPreviewWindow();
+            WMGret wmg_retval = test_01.wmg->formPreviewWindow(*test_01.par);
 
             if (wmg_retval == WMG_HALT)
             {
                 cout << "EXIT (halt = 1)" << endl;
                 break;
             }
-            for (int j = 0; j < wmg.N; j++)
+            for (unsigned int j = 0; j < test_01.wmg->N; j++)
             {
-                ZMPref_x.push_back(wmg.zref_x[j]);
-                ZMPref_y.push_back(wmg.zref_y[j]);
+                ZMPref_x.push_back(test_01.par->zref_x[j]);
+                ZMPref_y.push_back(test_01.par->zref_y[j]);
             }
 
             next_preview_len_ms = preview_sampling_time_ms;
@@ -123,14 +112,14 @@ int main(int argc, char **argv)
        
         
         //------------------------------------------------------
-        wmg.T[0] = (double) next_preview_len_ms / 1000; // get seconds
-        solver.set_parameters (wmg.T, wmg.h, wmg.h[0], wmg.angle, wmg.zref_x, wmg.zref_y, wmg.lb, wmg.ub);
-        solver.form_init_fp (wmg.fp_x, wmg.fp_y, wmg.init_state, wmg.X);
+        test_01.par->T[0] = (double) next_preview_len_ms / 1000; // get seconds
+        solver.set_parameters (test_01.par->T, test_01.par->h, test_01.par->h[0], test_01.par->angle, test_01.par->zref_x, test_01.par->zref_y, test_01.par->lb, test_01.par->ub);
+        solver.form_init_fp (test_01.par->fp_x, test_01.par->fp_y, test_01.par->init_state, test_01.par->X);
         solver.solve();
         //-----------------------------------------------------------
         // update state
-        wmg.next_control.get_first_controls (solver);
-        wmg.calculateNextState(wmg.next_control, wmg.init_state);
+        ipm.control_vector.get_first_controls (solver);
+        ipm.calculateNextState(ipm.control_vector, test_01.par->init_state);
         //-----------------------------------------------------------
 
 
@@ -139,12 +128,12 @@ int main(int argc, char **argv)
         // output
         if (next_preview_len_ms == preview_sampling_time_ms)
         {
-            ZMP_x.push_back(wmg.X_tilde.x());
-            ZMP_y.push_back(wmg.X_tilde.y());
-            wmg.X_tilde.get_next_state (solver);
+            ZMP_x.push_back(test_01.X_tilde.x());
+            ZMP_y.push_back(test_01.X_tilde.y());
+            test_01.X_tilde.get_next_state (solver);
         }
-        CoM_x.push_back(wmg.init_state.x());
-        CoM_y.push_back(wmg.init_state.y());
+        CoM_x.push_back(test_01.par->init_state.x());
+        CoM_y.push_back(test_01.par->init_state.y());
         //-----------------------------------------------------------
     
 
@@ -153,17 +142,15 @@ int main(int argc, char **argv)
         // support foot and swing foot position/orientation
         double left_foot_pos[POSITION_VECTOR_SIZE + 1];
         double right_foot_pos[POSITION_VECTOR_SIZE + 1];
-        wmg.getFeetPositions (
-                0,
-                preview_sampling_time_ms/control_sampling_time_ms,
-                (preview_sampling_time_ms - next_preview_len_ms)/control_sampling_time_ms,
+        test_01.wmg->getFeetPositions (
+                preview_sampling_time_ms - next_preview_len_ms + control_sampling_time_ms,
                 left_foot_pos,
                 right_foot_pos);
 
         nao.setFeetPostures (left_foot_pos, right_foot_pos);
 
         // position of CoM
-        nao.setCoM(wmg.init_state.x(), wmg.init_state.y(), wmg.hCoM); 
+        nao.setCoM(test_01.par->init_state.x(), test_01.par->init_state.y(), test_01.par->hCoM); 
 
 
         if (nao.igm(nao.state_model) < 0)

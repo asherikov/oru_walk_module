@@ -6,7 +6,12 @@ CXXFLAGS += -I/usr/local/include/eigen2/ -I/usr/include/eigen2/
 
 TESTS=\
 	test_01 \
-	test_03 
+	test_03 \
+	test_04 
+
+TESTS_GL=\
+	test_02 \
+	test_05 
 
 
 all: ${TESTS}
@@ -16,8 +21,7 @@ ${TESTS}:
 	${CXX} -o $@.a $@.o ${LDFLAGS}
 
 
-
-test_02: glflags
+${TESTS_GL}: glflags
 	${CXX} ${CXXFLAGS_GL} -c $@.cpp
 	${CXX} -o $@.a $@.o ${LDFLAGS_GL}
 

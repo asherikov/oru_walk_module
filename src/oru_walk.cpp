@@ -40,6 +40,7 @@ oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) :
 
 
     wmg = NULL;
+    mpc = NULL;
     solver = NULL;
     com_filter = NULL;
 }

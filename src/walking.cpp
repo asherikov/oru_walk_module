@@ -30,6 +30,12 @@ void oru_walk::walk()
         wmg = NULL;
     }
 
+    if (mpc != NULL)
+    {
+        delete mpc;
+        mpc = NULL;
+    }
+
     if (com_filter != NULL)
     {
         delete com_filter;
@@ -127,16 +133,26 @@ void oru_walk::callbackEveryCycle_walk()
 
     // execution of the commands must finish when the next call to the
     // callback is made
-    walkCommands[4][0] = dcmProxy->getTime(wp.control_sampling_time_ms);
-    walkCommands[4][1] = dcmProxy->getTime(2*wp.preview_sampling_time_ms - next_preview_len_ms);
+    int current_time_ms = dcmProxy->getTime(0);
+    walkCommands[4][0] = current_time_ms + wp.control_sampling_time_ms;
+    walkCommands[4][1] = current_time_ms + 2*wp.control_sampling_time_ms;
 
     readSensors (nao.state_sensor);
 
 
     ORUW_LOG_JOINTS(nao.state_sensor, nao.state_model);
-    ORUW_LOG_COM(wmg, nao.state_sensor);
+    ORUW_LOG_COM(mpc, nao.state_sensor);
     ORUW_LOG_FEET(nao);
     ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, wp.control_sampling_time_sec);
+
+
+
+    // solve MPC
+    feedbackError ();
+    if (! solveMPCProblem ())
+    {
+        return;
+    }
 
 
     double left_foot_pos[POSITION_VECTOR_SIZE + 1];
@@ -144,30 +160,20 @@ void oru_walk::callbackEveryCycle_walk()
     int failed_joint;
 
 
-
-    // position of CoM
-    feedbackError ();
-    if (! solveMPCProblem ())
-    {
-        return;
-    }
     /// @attention hCoM is constant!
-    nao.setCoM(wmg->init_state.x(), wmg->init_state.y(), wmg->hCoM);
+    nao.setCoM(mpc->init_state.x(), mpc->init_state.y(), mpc->hCoM);
+
 
     // support foot and swing foot position/orientation
-    wmg->getFeetPositions (
-            0,
-            wp.preview_sampling_time_ms/wp.control_sampling_time_ms,
-            (wp.preview_sampling_time_ms - next_preview_len_ms)/wp.control_sampling_time_ms,
-            left_foot_pos,
-            right_foot_pos);
+    wmg->getFeetPositions (wp.control_sampling_time_ms, left_foot_pos, right_foot_pos);
     nao.setFeetPostures (left_foot_pos, right_foot_pos);
 
+
+    // inverse kinematics    
     if (nao.igm (nao.state_model) < 0)
     {
         halt("IK does not converge.\n", __FUNCTION__);
     }
-
     failed_joint = nao.state_model.checkJointBounds();
     if (failed_joint >= 0)
     {
@@ -180,11 +186,11 @@ void oru_walk::callbackEveryCycle_walk()
     /// @attention hCoM is constant!
     smpc::state_orig CoM;
     CoM.get_state(*solver, 1);
-    nao.setCoM(CoM.x(), CoM.y(), wmg->hCoM);
+    nao.setCoM(CoM.x(), CoM.y(), mpc->hCoM);
 
 
     // support foot and swing foot position/orientation
-    wmg->getFeetPositions (1, 1, 0, left_foot_pos, right_foot_pos);
+    wmg->getFeetPositions (2*wp.control_sampling_time_ms, left_foot_pos, right_foot_pos);
     nao.setFeetPostures (left_foot_pos, right_foot_pos);
 
 
@@ -235,8 +241,8 @@ void oru_walk::feedbackError ()
 
     smpc::state_orig state_error;
     state_error.set (
-            wmg->init_state.x() - CoM_pos[0],
-            wmg->init_state.y() - CoM_pos[1]);
+            mpc->init_state.x() - CoM_pos[0],
+            mpc->init_state.y() - CoM_pos[1]);
 
     if (state_error.x() > wp.feedback_threshold)
     {
@@ -264,8 +270,8 @@ void oru_walk::feedbackError ()
         state_error.y() = 0.0;
     }
 
-    wmg->init_state.x() -= wp.feedback_gain * state_error.x();
-    wmg->init_state.y() -= wp.feedback_gain * state_error.y();
+    mpc->init_state.x() -= wp.feedback_gain * state_error.x();
+    mpc->init_state.y() -= wp.feedback_gain * state_error.y();
 }
 
 
@@ -291,13 +297,38 @@ void oru_walk::readSensors(modelState& nao_state)
  */
 void oru_walk::initWMG_NaoModel()
 {
-    wmg = new WMG();
-    wmg->init(wp.preview_window_size);     // size of the preview window
-
     // each step is defined relatively to the previous step
     double step_x = wp.step_length; // relative X position
     double step_y = 0.1;            // relative Y position
 
+
+// NAO
+    readSensors(nao.state_sensor);
+
+    // support foot position and orientation
+    nao.init (
+            IGM_SUPPORT_LEFT,
+            0.0, 0.05, 0.0, // position
+            0.0, 0.0, 0.0);  // orientation
+    
+
+//  WMG & smpc_parameters  
+    wmg = new WMG(
+            wp.preview_window_size,
+            wp.preview_sampling_time_ms,  // sampling time in ms
+            wp.step_height);              // step height (for interpolation of feet movements)
+    wmg->T_ms[0] = wp.control_sampling_time_ms;
+    wmg->T_ms[1] = wp.control_sampling_time_ms;
+    
+
+    mpc = new smpc_parameters (
+            wmg->N,
+            nao.CoM_position[2]);         // height of the center of mass
+    mpc->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
+
+
+
+// steps
     double ds_constraint[4] = {
         wmg->def_ss_constraint[0],
         wmg->def_ss_constraint[1] + 0.5*step_y,
@@ -331,29 +362,13 @@ void oru_walk::initWMG_NaoModel()
     wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 0,  0, wmg->def_ss_constraint, FS_TYPE_SS_R);
 
 
-// Nao
-    readSensors(nao.state_sensor);
-
-    // support foot position and orientation
-    nao.init (
-            IGM_SUPPORT_LEFT,
-            0.0, 0.05, 0.0, // position
-            0.0, 0.0, 0.0);  // orientation
-    
-    wmg->init_param (     
-            wp.preview_sampling_time_sec, // sampling time in seconds
-            nao.CoM_position[2],          // height of the center of mass
-            wp.step_height);              // step height (for interpolation of feet movements)
-
+// error in position of the swing foot    
     double pos_error[POSITION_VECTOR_SIZE];
     nao.state_sensor.getSwingFootPosition (pos_error);
     pos_error[0] =  0.0  - pos_error[0];
     pos_error[1] = -step_y/2 - pos_error[1];
     pos_error[2] =  0.0;//  - pos_error[2];
     wmg->correctNextSSPosition (pos_error);
-
-    wmg->initABMatrices (wp.control_sampling_time_sec);
-    wmg->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
 }
 
 
@@ -367,33 +382,34 @@ bool oru_walk::solveMPCProblem ()
 
     if (next_preview_len_ms == 0)
     {
-        if (wmg->isSupportSwitchNeeded())
-        {
-            double pos_error[POSITION_VECTOR_SIZE];
-            nao.switchSupportFoot(pos_error);
-            wmg->correctNextSSPosition(pos_error);
-        }
-
-        if (wmg->formPreviewWindow() == WMG_HALT)
-        {
-            stopWalking("Not enough steps to form preview window. Stopping.");
-            return (false);
-        }
-
-
         next_preview_len_ms = wp.preview_sampling_time_ms;
     }
 
-    wmg->T[0] = (double) next_preview_len_ms / 1000; // get seconds
+    /// @todo Works only for 20/40!
+    wmg->T_ms[2] = next_preview_len_ms;
+
+    if (wmg->isSupportSwitchNeeded())
+    {
+        double pos_error[POSITION_VECTOR_SIZE];
+        nao.switchSupportFoot(pos_error);
+        wmg->correctNextSSPosition(pos_error);
+    }
+
+
+    if (wmg->formPreviewWindow(*mpc) == WMG_HALT)
+    {
+        stopWalking("Not enough steps to form preview window. Stopping.");
+        return (false);
+    }
+
+
+
     //------------------------------------------------------
-    solver->set_parameters (wmg->T, wmg->h, wmg->h[0], wmg->angle, wmg->zref_x, wmg->zref_y, wmg->lb, wmg->ub);
-    solver->form_init_fp (wmg->fp_x, wmg->fp_y, wmg->init_state, wmg->X);
+    solver->set_parameters (mpc->T, mpc->h, mpc->h[0], mpc->angle, mpc->zref_x, mpc->zref_y, mpc->lb, mpc->ub);
+    solver->form_init_fp (mpc->fp_x, mpc->fp_y, mpc->init_state, mpc->X);
     int num_iq_constr = solver->solve();
     ORUW_LOG_MESSAGE("Num of active constraints: %d\n", num_iq_constr);
-    //------------------------------------------------------
-    // update state
-    wmg->next_control.get_first_controls (*solver);
-    wmg->calculateNextState(wmg->next_control, wmg->init_state);
+    mpc->init_state.get_next_state(*solver);
     //------------------------------------------------------
     
     ORUW_TIMER_CHECK;

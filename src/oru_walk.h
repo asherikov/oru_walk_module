@@ -123,6 +123,7 @@ private:
 
 
     WMG *wmg;
+    smpc_parameters *mpc;
     smpc::solver *solver;
     avgFilter *com_filter;
     nao_igm nao;

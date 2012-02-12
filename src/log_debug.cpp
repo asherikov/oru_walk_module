@@ -99,10 +99,10 @@ void oruw_log::logJointValues(
 
 
 void oruw_log::logCoM(
-        WMG *wmg,
+        smpc_parameters *mpc,
         modelState& state_sensor)
 {
-    fprintf (FCoMLog, "%f %f %f    ", wmg->init_state.x(), wmg->init_state.y(), wmg->hCoM);
+    fprintf (FCoMLog, "%f %f %f    ", mpc->init_state.x(), mpc->init_state.y(), mpc->hCoM);
 
 
     double CoM[3];

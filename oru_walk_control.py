@@ -72,10 +72,7 @@ while True:
             motion_proxy.walkInit()
 
             # (X length, Y length, theta, frequency)
-            motion_proxy.setWalkTargetVelocity(1.0, 0.0, 0.0, 1.0)
-            time.sleep(4)
-
-            motion_proxy.stopWalk()
+            motionProxy.walkTo(1.0, 0.0, 0.0);
         elif nao_action == 7:
             # reset stiffness and angles using motion proxy,
             # otherwise it doesn't work well later

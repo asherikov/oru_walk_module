@@ -339,15 +339,15 @@ void oru_walk::initWMG_NaoModel()
     wmg->AddFootstep(0.0, step_y/2, 0.0, 0, 0, wmg->def_ss_constraint, FS_TYPE_SS_L);
 
     // Initial double support
-    wmg->AddFootstep(0.0, -step_y/2, 0.0, wp.ss_number/2, wp.ss_number/2, ds_constraint, FS_TYPE_DS);
+    wmg->AddFootstep(0.0, -step_y/2, 0.0, 3*wp.ss_number, 3*wp.ss_number, ds_constraint, FS_TYPE_DS);
 
 
     // all subsequent steps have normal feet size
     // 2 reference ZMP positions in single support 
     // 1 in double support
     // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , wp.ss_number,  wp.ss_number + wp.ds_number, wmg->def_ss_constraint);
-    wmg->AddFootstep(step_x,  step_y, 0.0);
+    wmg->AddFootstep(0.0   , -step_y/2, 0.0, wp.ss_number, wp.ss_number, wmg->def_ss_constraint);
+    wmg->AddFootstep(step_x,  step_y,   0.0, wp.ss_number, wp.ss_number + wp.ds_number, wmg->def_ss_constraint);
 
     for (int i = 0; i < wp.step_pairs_number; i++)
     {

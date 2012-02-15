@@ -100,13 +100,13 @@ void oruw_log::logJointValues(
 
 void oruw_log::logCoM(
         smpc_parameters *mpc,
-        modelState& state_sensor)
+        nao_igm& nao)
 {
     fprintf (FCoMLog, "%f %f %f    ", mpc->init_state.x(), mpc->init_state.y(), mpc->hCoM);
 
 
     double CoM[3];
-    state_sensor.getCoM(CoM);
+    nao.state_sensor.getCoM(CoM);
     //com_filter->addValue(CoM[0], CoM[1], CoM[0], CoM[1]);
 
     fprintf (FCoMLog, "%f %f %f\n", CoM[0], CoM[1], CoM[2]);

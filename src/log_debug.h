@@ -88,7 +88,7 @@ class oruw_log
 
         void logJointValues (const modelState&, const modelState&);
 
-        void logCoM (smpc_parameters *, modelState&);
+        void logCoM (smpc_parameters *, nao_igm&);
 
         void logFeet (nao_igm& nao);
 
@@ -109,7 +109,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_OPEN(state,filter_len) oruw_log_instance = new oruw_log(state,filter_len)
 #define ORUW_LOG_CLOSE delete oruw_log_instance; oruw_log_instance = NULL
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
-#define ORUW_LOG_COM(mpc,sensors) oruw_log_instance->logCoM(mpc,sensors)
+#define ORUW_LOG_COM(mpc,nao) oruw_log_instance->logCoM(mpc,nao)
 #define ORUW_LOG_FEET(nao) oruw_log_instance->logFeet(nao)
 #define ORUW_LOG_JOINT_VELOCITIES(current,time) oruw_log_instance->logJointVelocities(current,time)
 #define ORUW_LOG_MESSAGE(...) if(oruw_log_instance != NULL) {fprintf(oruw_log_instance->FMessages, __VA_ARGS__);}
@@ -120,7 +120,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_OPEN(state,filter_len) 
 #define ORUW_LOG_CLOSE 
 #define ORUW_LOG_JOINTS(sensors,actuators)
-#define ORUW_LOG_COM(mpc,sensors)
+#define ORUW_LOG_COM(mpc,nao)
 #define ORUW_LOG_FEET(nao)
 #define ORUW_LOG_JOINT_VELOCITIES(current,time)
 #define ORUW_LOG_MESSAGE(...)

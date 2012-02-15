@@ -126,7 +126,9 @@ private:
     smpc_parameters *mpc;
     smpc::solver *solver;
     avgFilter *com_filter;
+
     nao_igm nao;
+    nao_igm nao_next;
 
     walkParameters wp;
     int next_preview_len_ms;

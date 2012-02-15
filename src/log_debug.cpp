@@ -55,7 +55,7 @@ oruw_timer::~oruw_timer()
 oruw_log *oruw_log_instance = NULL;
 
 
-oruw_log::oruw_log (const modelState& state_init, const unsigned int filter_window_len)
+oruw_log::oruw_log (const jointState& state_init, const unsigned int filter_window_len)
 {
     state_old = state_init;
     FJointsLog = fopen ("./oru_joints.log", "w");
@@ -79,8 +79,8 @@ oruw_log::~oruw_log ()
 
 
 void oruw_log::logJointValues(
-        const modelState& state_sensor,
-        const modelState& state_expected)
+        const jointState& state_sensor,
+        const jointState& state_expected)
 {
     for (int i = 0; i < JOINTS_NUM; i++)
     {
@@ -106,7 +106,7 @@ void oruw_log::logCoM(
 
 
     double CoM[3];
-    nao.state_sensor.getCoM(CoM);
+    nao.getCoM(nao.state_sensor, CoM);
     //com_filter->addValue(CoM[0], CoM[1], CoM[0], CoM[1]);
 
     fprintf (FCoMLog, "%f %f %f\n", CoM[0], CoM[1], CoM[2]);
@@ -135,7 +135,7 @@ void oruw_log::logFeet(nao_igm& nao)
 }
 
 
-void oruw_log::logJointVelocities (const modelState& state_current, const double time)
+void oruw_log::logJointVelocities (const jointState& state_current, const double time)
 {
     for (int i = 0; i < JOINTS_NUM; i++)
     {

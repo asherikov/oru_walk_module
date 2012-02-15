@@ -159,7 +159,7 @@ int main(int argc, char **argv)
         nao.setCoM(test_04.par->init_state.x(), test_04.par->init_state.y(), test_04.par->hCoM); 
 
 
-        if (nao.igm (nao.state_model) < 0)
+        if (nao.igm () < 0)
         {
             cout << "IGM failed!" << endl;
             break;
@@ -185,26 +185,27 @@ int main(int argc, char **argv)
        
 
         //-----------------------------------------------------------
+        nao_igm nao_next = nao;
+
         test_04.wmg->getFeetPositions (
                 2*control_sampling_time_ms,
                 left_foot_pos,
                 right_foot_pos);
 
-        nao.setFeetPostures (left_foot_pos, right_foot_pos);
+        nao_next.setFeetPostures (left_foot_pos, right_foot_pos);
 
         // position of CoM
         smpc::state_orig next_CoM;
         next_CoM.get_state(solver, 1);
-        nao.setCoM(next_CoM.x(), next_CoM.y(), test_04.par->hCoM); 
+        nao_next.setCoM(next_CoM.x(), next_CoM.y(), test_04.par->hCoM); 
 
 
-        modelState tmp_state = nao.state_model;
-        if (nao.igm (tmp_state) < 0)
+        if (nao_next.igm () < 0)
         {
             cout << "IGM failed!" << endl;
             break;
         }
-        failed_joint = tmp_state.checkJointBounds();
+        failed_joint = nao_next.state_model.checkJointBounds();
         if (failed_joint >= 0)
         {
             cout << "MAX or MIN joint limit is violated! Number of the joint: " << failed_joint << endl;

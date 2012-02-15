@@ -83,16 +83,16 @@ using namespace std;
 class oruw_log
 {
     public:
-        oruw_log (const modelState&, const unsigned int);
+        oruw_log (const jointState&, const unsigned int);
         ~oruw_log ();
 
-        void logJointValues (const modelState&, const modelState&);
+        void logJointValues (const jointState&, const jointState&);
 
         void logCoM (smpc_parameters *, nao_igm&);
 
         void logFeet (nao_igm& nao);
 
-        void logJointVelocities (const modelState&, const double);
+        void logJointVelocities (const jointState&, const double);
 
 
         FILE *FJointsLog;
@@ -101,7 +101,7 @@ class oruw_log
         FILE *FJointVelocities;
         FILE *FMessages;
         avgFilter *com_filter;
-        modelState state_old;
+        jointState state_old;
 };
 
 extern oruw_log *oruw_log_instance;

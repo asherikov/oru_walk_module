@@ -454,7 +454,7 @@ void HomogGL(double x, double y , double z, double alpha, double beta, double ga
 // i[4*4]      - joint i (i=1..24)
 // (24+i)[4*4] - end-effector i (i=i..6)
 // 31[3]       - CoM
-void draw_nao(int case_flag, double *q)
+void draw_nao(int case_flag, double *q, Eigen::Transform<double, 3>& support_foot_posture)
 {
     // if case_flag = 1 LLeg is in support
     // if case_flag = 0 RLeg is in support
@@ -470,12 +470,12 @@ void draw_nao(int case_flag, double *q)
     if (case_flag)
     {
         kLeg = 25;
-        LLeg2Joints(q,A);
+        LLeg2Joints(q,support_foot_posture.data(),A);
     }
     else
     {
         kLeg = 26;
-        RLeg2Joints(q,A);
+        RLeg2Joints(q,support_foot_posture.data(),A);
     }
 
     for (int k=0; k<30; k++)
@@ -664,7 +664,8 @@ void drawSDL (
         std::vector<double> & y_coord, 
         std::vector<double> & angle_rot,
         igmSupportFoot support_foot,
-        double * q)
+        double *q,
+        Eigen::Transform<double,3>& support_foot_posture)
 {
     // slow down the execution of the program
     for (int i = 0; i <= delay; i++)
@@ -674,6 +675,6 @@ void drawSDL (
         events ();
     }
     draw_footsteps(x_coord, y_coord, angle_rot);
-    draw_nao(support_foot, q);
+    draw_nao(support_foot, q, support_foot_posture);
     SDL_GL_SwapBuffers();
 }

@@ -40,6 +40,7 @@ int main(int argc, char **argv)
     nao_igm nao;
     initNaoModel (&nao);
     init_07 test_05("test_05", preview_sampling_time_ms, nao.CoM_position[2], false);
+    nao_igm nao_next = nao;
 
     
     vector<double> x_coord;
@@ -118,7 +119,7 @@ int main(int argc, char **argv)
         nao.setCoM(test_05.par->init_state.x(), test_05.par->init_state.y(), test_05.par->hCoM);
 
 
-        if (nao.igm (nao.state_model) < 0)
+        if (nao.igm () < 0)
         {
             cout << "IGM failed!" << endl;
             break;
@@ -132,36 +133,37 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
 
 
-        drawSDL(50, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
-
 
         //-----------------------------------------------------------
+        nao_next.state_model = nao.state_model;
+        nao_next.support_foot = nao.support_foot;
+
         test_05.wmg->getFeetPositions (
                 2*control_sampling_time_ms,
                 left_foot_pos,
                 right_foot_pos);
 
-        nao.setFeetPostures (left_foot_pos, right_foot_pos);
+        nao_next.setFeetPostures (left_foot_pos, right_foot_pos);
 
         // position of CoM
         smpc::state_orig next_CoM;
         next_CoM.get_state(solver, 1);
-        nao.setCoM(next_CoM.x(), next_CoM.y(), test_05.par->hCoM); 
+        nao_next.setCoM(next_CoM.x(), next_CoM.y(), test_05.par->hCoM); 
 
 
-        modelState tmp_state = nao.state_model;
-        if (nao.igm (tmp_state) < 0)
+        if (nao_next.igm () < 0)
         {
             cout << "IGM failed!" << endl;
             break;
         }
-        failed_joint = tmp_state.checkJointBounds();
+        failed_joint = nao_next.state_model.checkJointBounds();
         if (failed_joint >= 0)
         {
             cout << "MAX or MIN joint limit is violated! Number of the joint: " << failed_joint << endl;
             break;
         }
         //-----------------------------------------------------------
+        drawSDL(100, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, nao_next.support_foot_posture);
 
         next_preview_len_ms -= control_sampling_time_ms;
     }
@@ -169,7 +171,7 @@ int main(int argc, char **argv)
     // keep the visualization active (until ESC is pressed)
     while (isRunning)
     {
-        drawSDL(0, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
+        drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.support_foot_posture);
     }
 
     return 0;

@@ -159,7 +159,7 @@ int main(int argc, char **argv)
         nao.setCoM(next_CoM.x(), next_CoM.y(), test_03.par->hCoM); 
 
 
-        if (nao.igm (nao.state_model) < 0)
+        if (nao.igm () < 0)
         {
             cout << "IGM failed!" << endl;
             break;
@@ -197,7 +197,7 @@ int main(int argc, char **argv)
         nao.setCoM(next_CoM.x(), next_CoM.y(), test_03.par->hCoM); 
 
 
-        if (nao.igm (nao.state_model) < 0)
+        if (nao.igm () < 0)
         {
             cout << "IGM failed!" << endl;
             break;

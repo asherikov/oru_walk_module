@@ -170,7 +170,7 @@ void oru_walk::callbackEveryCycle_walk()
 
 
     // inverse kinematics    
-    if (nao.igm (nao.state_model) < 0)
+    if (nao.igm () < 0)
     {
         halt("IK does not converge.\n", __FUNCTION__);
     }
@@ -196,7 +196,7 @@ void oru_walk::callbackEveryCycle_walk()
 
 
     // inverse kinematics    
-    if (nao_next.igm (nao_next.state_model) < 0)
+    if (nao_next.igm () < 0)
     {
         halt("IK does not converge.\n", __FUNCTION__);
     }
@@ -235,7 +235,7 @@ void oru_walk::callbackEveryCycle_walk()
 void oru_walk::feedbackError ()
 {
     double CoM_pos[POSITION_VECTOR_SIZE];
-    nao.state_sensor.getCoM (CoM_pos);
+    nao.getCoM (nao.state_sensor, CoM_pos);
 
     //com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
 
@@ -280,7 +280,7 @@ void oru_walk::feedbackError ()
 /**
  * @brief Update joint angles in the NAO model.
  */
-void oru_walk::readSensors(modelState& nao_state)
+void oru_walk::readSensors(jointState& nao_state)
 {
     accessSensorValues->GetValues (sensorValues);
     for (int i = 0; i < JOINTS_NUM; i++)
@@ -365,7 +365,7 @@ void oru_walk::initWMG_NaoModel()
 
 // error in position of the swing foot    
     double pos_error[POSITION_VECTOR_SIZE];
-    nao.state_sensor.getSwingFootPosition (pos_error);
+    nao.getSwingFootPosition (nao.state_sensor, pos_error);
     pos_error[0] =  0.0  - pos_error[0];
     pos_error[1] = -step_y/2 - pos_error[1];
     pos_error[2] =  0.0;//  - pos_error[2];
@@ -394,6 +394,7 @@ bool oru_walk::solveMPCProblem ()
         double pos_error[POSITION_VECTOR_SIZE];
         nao.switchSupportFoot(pos_error);
         wmg->correctNextSSPosition(pos_error);
+        nao_next.support_foot = nao.support_foot;
     }
 
 

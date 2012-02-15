@@ -117,7 +117,7 @@ int main(int argc, char **argv)
         nao.setCoM(next_CoM.x(), next_CoM.y(), test_02.par->hCoM); 
 
 
-        if (nao.igm (nao.state_model) < 0)
+        if (nao.igm () < 0)
         {
             cout << "IGM failed!" << endl;
             break;
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
 
 
-        drawSDL(50, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
+        drawSDL(50, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.support_foot_posture);
 
 
         //-----------------------------------------------------------
@@ -147,7 +147,7 @@ int main(int argc, char **argv)
         nao.setCoM(next_CoM.x(), next_CoM.y(), test_02.par->hCoM); 
 
 
-        if (nao.igm (nao.state_model) < 0)
+        if (nao.igm () < 0)
         {
             cout << "IGM failed!" << endl;
             break;
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
     // keep the visualization active (until ESC is pressed)
     while (isRunning)
     {
-        drawSDL(0, x_coord, y_coord, angle_rot, nao.state_model.support_foot, nao.state_model.q);
+        drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.support_foot_posture);
     }
 
     return 0;

@@ -435,12 +435,9 @@ void HomogGL(double x, double y , double z, double alpha, double beta, double ga
                            * AngleAxisd(beta, Vector3d::UnitY())
                            * AngleAxisd(gamma, Vector3d::UnitZ());
 
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 16; ++i)
     {
-        for(int j = 0; j < 4; ++j)
-        {
-            M[j*4+i] = T(j,i);
-        }
+        M[i] = T.data()[i];
     }
 
     M[12] *= scale;
@@ -643,9 +640,10 @@ void draw_footsteps(
         drawPolygon();
         glScalef(1.0, 1.0, 1.0);
         glPopMatrix();
-        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+
 
         // Draw reference point of the footsteps
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
         glPushMatrix();
         glTranslatef(x_coord[i]*scale1, y_coord[i]*scale1, 0);
         glScalef(scale3, scale3, scale3);

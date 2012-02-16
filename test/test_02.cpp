@@ -75,8 +75,7 @@ int main(int argc, char **argv)
 
             if (test_02.wmg->isSupportSwitchNeeded())
             {
-                double pos_error[POSITION_VECTOR_SIZE];
-                nao.switchSupportFoot(pos_error);
+                nao.switchSupportFoot();
             }
 
             if (test_02.wmg->formPreviewWindow(*test_02.par) == WMG_HALT)
@@ -102,14 +101,10 @@ int main(int argc, char **argv)
 
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
-        double left_foot_pos[POSITION_VECTOR_SIZE + 1];
-        double right_foot_pos[POSITION_VECTOR_SIZE + 1];
         test_02.wmg->getFeetPositions (
                 preview_sampling_time_ms,
-                left_foot_pos,
-                right_foot_pos);
-
-        nao.setFeetPostures (left_foot_pos, right_foot_pos);
+                nao.left_foot_posture.data(),
+                nao.right_foot_posture.data());
 
         // position of CoM
         smpc::state_orig next_CoM;
@@ -131,16 +126,23 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
 
 
-        drawSDL(50, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.support_foot_posture);
+        if (nao.support_foot == IGM_SUPPORT_RIGHT)
+        {
+            drawSDL(50, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.right_foot_posture);
+        }
+        else
+        {
+            drawSDL(50, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.left_foot_posture);
+        }
+
 
 
         //-----------------------------------------------------------
         test_02.wmg->getFeetPositions (
                 2*preview_sampling_time_ms,
-                left_foot_pos,
-                right_foot_pos);
+                nao.left_foot_posture.data(),
+                nao.right_foot_posture.data());
 
-        nao.setFeetPostures (left_foot_pos, right_foot_pos);
 
         // position of CoM
         next_CoM.get_state(solver, 1);
@@ -166,7 +168,14 @@ int main(int argc, char **argv)
     // keep the visualization active (until ESC is pressed)
     while (isRunning)
     {
-        drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.support_foot_posture);
+        if (nao.support_foot == IGM_SUPPORT_RIGHT)
+        {
+            drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.right_foot_posture);
+        }
+        else
+        {
+            drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.left_foot_posture);
+        }
     }
 
     return 0;

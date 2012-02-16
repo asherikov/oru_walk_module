@@ -100,8 +100,7 @@ int main(int argc, char **argv)
         cout << test_04.wmg->isSupportSwitchNeeded() << endl;
         if (test_04.wmg->isSupportSwitchNeeded())
         {
-            double pos_error[POSITION_VECTOR_SIZE];
-            nao.switchSupportFoot(pos_error);
+            nao.switchSupportFoot();
         }
 
         if (test_04.wmg->formPreviewWindow(*test_04.par) == WMG_HALT)
@@ -144,16 +143,10 @@ int main(int argc, char **argv)
 
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
-        double left_foot_pos[POSITION_VECTOR_SIZE + 1];
-        double right_foot_pos[POSITION_VECTOR_SIZE + 1];
-
-
         test_04.wmg->getFeetPositions (
                 control_sampling_time_ms,
-                left_foot_pos,
-                right_foot_pos);
-
-        nao.setFeetPostures (left_foot_pos, right_foot_pos);
+                nao.left_foot_posture.data(),
+                nao.right_foot_posture.data());
 
         // position of CoM
         nao.setCoM(test_04.par->init_state.x(), test_04.par->init_state.y(), test_04.par->hCoM); 
@@ -175,12 +168,12 @@ int main(int argc, char **argv)
 
         //-----------------------------------------------------------
         // output
-        left_foot_x.push_back(left_foot_pos[0]);
-        left_foot_y.push_back(left_foot_pos[1]);
-        left_foot_z.push_back(left_foot_pos[2]);
-        right_foot_x.push_back(right_foot_pos[0]);
-        right_foot_y.push_back(right_foot_pos[1]);
-        right_foot_z.push_back(right_foot_pos[2]);
+        left_foot_x.push_back(nao.left_foot_posture.data()[12]);
+        left_foot_y.push_back(nao.left_foot_posture.data()[13]);
+        left_foot_z.push_back(nao.left_foot_posture.data()[14]);
+        right_foot_x.push_back(nao.right_foot_posture.data()[12]);
+        right_foot_y.push_back(nao.right_foot_posture.data()[13]);
+        right_foot_z.push_back(nao.right_foot_posture.data()[14]);
         //-----------------------------------------------------------
        
 
@@ -189,10 +182,8 @@ int main(int argc, char **argv)
 
         test_04.wmg->getFeetPositions (
                 2*control_sampling_time_ms,
-                left_foot_pos,
-                right_foot_pos);
-
-        nao_next.setFeetPostures (left_foot_pos, right_foot_pos);
+                nao_next.left_foot_posture.data(),
+                nao_next.right_foot_posture.data());
 
         // position of CoM
         smpc::state_orig next_CoM;

@@ -155,8 +155,6 @@ void oru_walk::callbackEveryCycle_walk()
     }
 
 
-    double left_foot_pos[POSITION_VECTOR_SIZE + 1];
-    double right_foot_pos[POSITION_VECTOR_SIZE + 1];
     int failed_joint;
 
 
@@ -165,8 +163,10 @@ void oru_walk::callbackEveryCycle_walk()
 
 
     // support foot and swing foot position/orientation
-    wmg->getFeetPositions (wp.control_sampling_time_ms, left_foot_pos, right_foot_pos);
-    nao.setFeetPostures (left_foot_pos, right_foot_pos);
+    wmg->getFeetPositions (
+            wp.control_sampling_time_ms, 
+            nao.left_foot_posture.data(), 
+            nao.right_foot_posture.data());
 
 
     // inverse kinematics    
@@ -191,8 +191,10 @@ void oru_walk::callbackEveryCycle_walk()
 
 
     // support foot and swing foot position/orientation
-    wmg->getFeetPositions (2*wp.control_sampling_time_ms, left_foot_pos, right_foot_pos);
-    nao_next.setFeetPostures (left_foot_pos, right_foot_pos);
+    wmg->getFeetPositions (
+            2*wp.control_sampling_time_ms,
+            nao_next.left_foot_posture.data(), 
+            nao_next.right_foot_posture.data());
 
 
     // inverse kinematics    
@@ -364,12 +366,8 @@ void oru_walk::initWMG_NaoModel()
 
 
 // error in position of the swing foot    
-    double pos_error[POSITION_VECTOR_SIZE];
-    nao.getSwingFootPosition (nao.state_sensor, pos_error);
-    pos_error[0] =  0.0  - pos_error[0];
-    pos_error[1] = -step_y/2 - pos_error[1];
-    pos_error[2] =  0.0;//  - pos_error[2];
-    wmg->correctNextSSPosition (pos_error);
+    nao.getSwingFootPosture (nao.state_sensor);
+    wmg->correctNextSSPosition (nao.swing_foot_posture.data());
 }
 
 
@@ -391,9 +389,7 @@ bool oru_walk::solveMPCProblem ()
 
     if (wmg->isSupportSwitchNeeded())
     {
-        double pos_error[POSITION_VECTOR_SIZE];
-        nao.switchSupportFoot(pos_error);
-        wmg->correctNextSSPosition(pos_error);
+        wmg->correctNextSSPosition(nao.switchSupportFoot());
         nao_next.support_foot = nao.support_foot;
     }
 

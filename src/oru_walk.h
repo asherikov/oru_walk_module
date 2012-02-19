@@ -134,6 +134,11 @@ private:
     int next_preview_len_ms;
 
     double init_joint_angles[JOINTS_NUM];
+
+
+
+    ///@todo remove this
+    Transform<double,3> support_posture_copy;
 };
 
 #endif  // ORU_WALK_H

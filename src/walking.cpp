@@ -167,14 +167,6 @@ void oru_walk::callbackEveryCycle_walk()
             wp.control_sampling_time_ms, 
             nao.left_foot_posture.data(), 
             nao.right_foot_posture.data());
-    if (nao.support_foot == IGM_SUPPORT_LEFT)
-    {
-        nao.left_foot_posture = support_posture_copy;
-    }
-    else
-    {
-        nao.right_foot_posture = support_posture_copy;
-    }
 
 
     // inverse kinematics    
@@ -203,14 +195,6 @@ void oru_walk::callbackEveryCycle_walk()
             2*wp.control_sampling_time_ms,
             nao_next.left_foot_posture.data(), 
             nao_next.right_foot_posture.data());
-    if (nao_next.support_foot == IGM_SUPPORT_LEFT)
-    {
-        nao_next.left_foot_posture = support_posture_copy;
-    }
-    else
-    {
-        nao_next.right_foot_posture = support_posture_copy;
-    }
 
 
     // inverse kinematics    
@@ -329,7 +313,6 @@ void oru_walk::initWMG_NaoModel()
             0.0, 0.05, 0.0, // position
             0.0, 0.0, 0.0);  // orientation
     nao_next = nao;
-    support_posture_copy = nao.left_foot_posture;
     
 
 //  WMG & smpc_parameters  
@@ -403,20 +386,16 @@ bool oru_walk::solveMPCProblem ()
 
     /// @todo Works only for 20/40!
     wmg->T_ms[2] = next_preview_len_ms;
-
-    if (wmg->isSupportSwitchNeeded())
-    {
-        nao.switchSupportFoot();
-        support_posture_copy = nao.swing_foot_posture;
-        //wmg->correctNextSSPosition(nao.switchSupportFoot());
-        nao_next.support_foot = nao.support_foot;
-    }
-
-
     if (wmg->formPreviewWindow(*mpc) == WMG_HALT)
     {
         stopWalking("Not enough steps to form preview window. Stopping.");
         return (false);
+    }
+
+    if (wmg->isSupportSwitchNeeded())
+    {
+        wmg->correctNextSSPosition(nao.switchSupportFoot());
+        nao_next.support_foot = nao.support_foot;
     }
 
 

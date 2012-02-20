@@ -78,16 +78,16 @@ int main(int argc, char **argv)
 
 
         test_05.wmg->T_ms[2] = next_preview_len_ms;
-        cout << test_05.wmg->isSupportSwitchNeeded() << endl;
-        if (test_05.wmg->isSupportSwitchNeeded())
-        {
-            nao.switchSupportFoot();
-        }
 
         if (test_05.wmg->formPreviewWindow(*test_05.par) == WMG_HALT)
         {
             cout << "EXIT (halt = 1)" << endl;
             break;
+        }
+        cout << test_05.wmg->isSupportSwitchNeeded() << endl;
+        if (test_05.wmg->isSupportSwitchNeeded())
+        {
+            test_05.wmg->correctNextSSPosition(nao.switchSupportFoot());
         }
 
 

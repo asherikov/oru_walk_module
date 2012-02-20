@@ -97,11 +97,6 @@ int main(int argc, char **argv)
 
 
         test_04.wmg->T_ms[2] = next_preview_len_ms;
-        cout << test_04.wmg->isSupportSwitchNeeded() << endl;
-        if (test_04.wmg->isSupportSwitchNeeded())
-        {
-            nao.switchSupportFoot();
-        }
 
         if (test_04.wmg->formPreviewWindow(*test_04.par) == WMG_HALT)
         {
@@ -112,6 +107,11 @@ int main(int argc, char **argv)
         {
             ZMPref_x.push_back(test_04.par->zref_x[j]);
             ZMPref_y.push_back(test_04.par->zref_y[j]);
+        }
+        cout << test_04.wmg->isSupportSwitchNeeded() << endl;
+        if (test_04.wmg->isSupportSwitchNeeded())
+        {
+            test_04.wmg->correctNextSSPosition(nao.switchSupportFoot());
         }
 
        

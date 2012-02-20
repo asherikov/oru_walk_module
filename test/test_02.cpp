@@ -71,17 +71,15 @@ int main(int argc, char **argv)
         nao.state_sensor = nao.state_model;
         if (next_preview_len_ms == 0)
         {
-            cout << test_02.wmg->isSupportSwitchNeeded() << endl;
-
-            if (test_02.wmg->isSupportSwitchNeeded())
-            {
-                nao.switchSupportFoot();
-            }
-
             if (test_02.wmg->formPreviewWindow(*test_02.par) == WMG_HALT)
             {
                 cout << "EXIT (halt = 1)" << endl;
                 break;
+            }
+            cout << test_02.wmg->isSupportSwitchNeeded() << endl;
+            if (test_02.wmg->isSupportSwitchNeeded())
+            {
+                nao.switchSupportFoot();
             }
 
             next_preview_len_ms = preview_sampling_time_ms;

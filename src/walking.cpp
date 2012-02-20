@@ -133,9 +133,7 @@ void oru_walk::callbackEveryCycle_walk()
 
     // execution of the commands must finish when the next call to the
     // callback is made
-    int current_time_ms = dcmProxy->getTime(0);
-    walkCommands[4][0] = current_time_ms + wp.control_sampling_time_ms;
-    walkCommands[4][1] = current_time_ms + 2*wp.control_sampling_time_ms;
+    int callback_start_time_ms = dcmProxy->getTime(0);
 
     readSensors (nao.state_sensor);
 
@@ -155,54 +153,49 @@ void oru_walk::callbackEveryCycle_walk()
     }
 
 
-    int failed_joint;
+    solveIKsendCommands (callback_start_time_ms, 1, nao);
 
-
-    /// @attention hCoM is constant!
-    nao.setCoM(mpc->init_state.x(), mpc->init_state.y(), mpc->hCoM);
-
-
-    // support foot and swing foot position/orientation
-    wmg->getFeetPositions (
-            wp.control_sampling_time_ms, 
-            nao.left_foot_posture.data(), 
-            nao.right_foot_posture.data());
-
-
-    // inverse kinematics    
-    if (nao.igm () < 0)
-    {
-        halt("IK does not converge.\n", __FUNCTION__);
-    }
-    failed_joint = nao.state_model.checkJointBounds();
-    if (failed_joint >= 0)
-    {
-        ORUW_LOG_MESSAGE("Failed joint: %d\n", failed_joint);
-        halt("Joint bounds are violated.\n", __FUNCTION__);
-    }
-
-
-
-    /// @attention hCoM is constant!
     nao_next.state_model = nao.state_model;
+    solveIKsendCommands (callback_start_time_ms, 2, nao_next);
+
+    next_preview_len_ms -= wp.control_sampling_time_ms;
+    ORUW_TIMER_CHECK;
+}
+
+
+
+/**
+ * @brief Solve inverse kinematics and send commands to the controllers.
+ *
+ * @param[in] callback_start_time_ms the time, when the callback was started.
+ * @param[in] control_loop_num number of control loops in future (>= 1).
+ * @param[in,out] nao_model modelof the nao.
+ */
+void oru_walk::solveIKsendCommands (
+        const int callback_start_time_ms,
+        const int control_loop_num,
+        nao_igm &nao_model)
+{
     smpc::state_orig CoM;
-    CoM.get_state(*solver, 1);
-    nao_next.setCoM(CoM.x(), CoM.y(), mpc->hCoM);
+    CoM.get_state(*solver, control_loop_num-1);
+
+    /// @attention hCoM is constant!
+    nao_model.setCoM(CoM.x(), CoM.y(), mpc->hCoM);
 
 
     // support foot and swing foot position/orientation
     wmg->getFeetPositions (
-            2*wp.control_sampling_time_ms,
-            nao_next.left_foot_posture.data(), 
-            nao_next.right_foot_posture.data());
+            control_loop_num * wp.control_sampling_time_ms, 
+            nao_model.left_foot_posture.data(), 
+            nao_model.right_foot_posture.data());
 
 
     // inverse kinematics    
-    if (nao_next.igm () < 0)
+    if (nao_model.igm () < 0)
     {
         halt("IK does not converge.\n", __FUNCTION__);
     }
-    failed_joint = nao_next.state_model.checkJointBounds();
+    int failed_joint = nao_model.state_model.checkJointBounds();
     if (failed_joint >= 0)
     {
         ORUW_LOG_MESSAGE("Failed joint: %d\n", failed_joint);
@@ -213,10 +206,10 @@ void oru_walk::callbackEveryCycle_walk()
     // Set commands
     try
     {
+        walkCommands[4][0] = callback_start_time_ms + control_loop_num * wp.control_sampling_time_ms;
         for (int i = 0; i < LOWER_JOINTS_NUM; i++)
         {
-            walkCommands[5][i][0] = nao.state_model.q[i];
-            walkCommands[5][i][1] = nao_next.state_model.q[i];
+            walkCommands[5][i][0] = nao_model.state_model.q[i];
         }
         dcmProxy->setAlias(walkCommands);
     }
@@ -224,9 +217,6 @@ void oru_walk::callbackEveryCycle_walk()
     {
         halt("Cannot set joint angles: " + string(e.what()), __FUNCTION__);
     }
-
-    next_preview_len_ms -= wp.control_sampling_time_ms;
-    ORUW_TIMER_CHECK;
 }
 
 

@@ -96,6 +96,8 @@ private:
     void initWMG_NaoModel ();
     void readSensors (jointState&);
     bool solveMPCProblem ();
+    void solveIKsendCommands (const int, const int, nao_igm &);
+
     void feedbackError ();
     void halt(const string&, const char *);
     void stopWalking(const string& message);

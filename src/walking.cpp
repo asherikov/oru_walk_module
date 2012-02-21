@@ -42,8 +42,6 @@ void oru_walk::walk()
         com_filter = NULL;
     }
 
-    next_preview_len_ms = 0;
-
 
 // solver    
     solver = new smpc::solver(
@@ -158,7 +156,6 @@ void oru_walk::callbackEveryCycle_walk()
     nao_next.state_model = nao.state_model;
     solveIKsendCommands (callback_start_time_ms, 2, nao_next);
 
-    next_preview_len_ms -= wp.control_sampling_time_ms;
     ORUW_TIMER_CHECK;
 }
 
@@ -274,6 +271,8 @@ void oru_walk::feedbackError ()
  */
 void oru_walk::readSensors(jointState& nao_state)
 {
+    vector<float> sensorValues;
+
     accessSensorValues->GetValues (sensorValues);
     for (int i = 0; i < JOINTS_NUM; i++)
     {
@@ -369,18 +368,17 @@ bool oru_walk::solveMPCProblem ()
 {
     ORUW_TIMER(wp.loop_time_limit_ms);
 
-    if (next_preview_len_ms == 0)
-    {
-        next_preview_len_ms = wp.preview_sampling_time_ms;
-    }
-
     /// @todo Works only for 20/40!
-    wmg->T_ms[2] = next_preview_len_ms;
+    if (wmg->T_ms[2] == 0)
+    {
+        wmg->T_ms[2] = wp.preview_sampling_time_ms;
+    }
     if (wmg->formPreviewWindow(*mpc) == WMG_HALT)
     {
         stopWalking("Not enough steps to form preview window. Stopping.");
         return (false);
     }
+    wmg->T_ms[2] -= wp.control_sampling_time_ms;
 
     if (wmg->isSupportSwitchNeeded())
     {

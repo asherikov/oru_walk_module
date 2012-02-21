@@ -133,7 +133,6 @@ private:
     nao_igm nao_next;
 
     walkParameters wp;
-    int next_preview_len_ms;
 
     double init_joint_angles[JOINTS_NUM];
 };

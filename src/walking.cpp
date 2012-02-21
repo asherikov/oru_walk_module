@@ -142,19 +142,15 @@ void oru_walk::callbackEveryCycle_walk()
     ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, wp.control_sampling_time_sec);
 
 
-
-    // solve MPC
     feedbackError ();
-    if (! solveMPCProblem ())
+    if (solveMPCProblem ())  // solve MPC
     {
-        return;
+        nao.state_model = nao_next.state_model; // initial guess (the old solution of nao_next);
+        solveIKsendCommands (callback_start_time_ms, 1, nao);
+
+        nao_next.state_model = nao.state_model;
+        solveIKsendCommands (callback_start_time_ms, 2, nao_next);
     }
-
-
-    solveIKsendCommands (callback_start_time_ms, 1, nao);
-
-    nao_next.state_model = nao.state_model;
-    solveIKsendCommands (callback_start_time_ms, 2, nao_next);
 
     ORUW_TIMER_CHECK;
 }
@@ -311,6 +307,7 @@ void oru_walk::initWMG_NaoModel()
             wp.step_height);              // step height (for interpolation of feet movements)
     wmg->T_ms[0] = wp.control_sampling_time_ms;
     wmg->T_ms[1] = wp.control_sampling_time_ms;
+    wmg->T_ms[2] = 0;
     
 
     mpc = new smpc_parameters (
@@ -380,12 +377,12 @@ bool oru_walk::solveMPCProblem ()
     }
     wmg->T_ms[2] -= wp.control_sampling_time_ms;
 
+
     if (wmg->isSupportSwitchNeeded())
     {
         wmg->correctNextSSPosition(nao.switchSupportFoot());
         nao_next.support_foot = nao.support_foot;
     }
-
 
 
     //------------------------------------------------------

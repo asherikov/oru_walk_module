@@ -145,7 +145,7 @@ void oru_walk::callbackEveryCycle_walk()
     feedbackError ();
     if (solveMPCProblem ())  // solve MPC
     {
-        nao.state_model = nao_next.state_model; // initial guess (the old solution of nao_next);
+        nao.state_model = nao_next.state_model; // the old solution from nao_next -> initial guess;
         solveIKsendCommands (callback_start_time_ms, 1, nao);
 
         nao_next.state_model = nao.state_model;
@@ -353,7 +353,7 @@ void oru_walk::initWMG_NaoModel()
 
 // error in position of the swing foot    
     nao.getSwingFootPosture (nao.state_sensor);
-    wmg->correctNextSSPosition (nao.swing_foot_posture.data());
+    wmg->changeNextSSPosition (nao.swing_foot_posture.data(), wp.set_support_z_to_zero);
 }
 
 
@@ -380,7 +380,7 @@ bool oru_walk::solveMPCProblem ()
 
     if (wmg->isSupportSwitchNeeded())
     {
-        wmg->correctNextSSPosition(nao.switchSupportFoot());
+        wmg->changeNextSSPosition(nao.switchSupportFoot(), wp.set_support_z_to_zero);
         nao_next.support_foot = nao.support_foot;
     }
 
@@ -389,10 +389,11 @@ bool oru_walk::solveMPCProblem ()
     solver->set_parameters (mpc->T, mpc->h, mpc->h[0], mpc->angle, mpc->zref_x, mpc->zref_y, mpc->lb, mpc->ub);
     solver->form_init_fp (mpc->fp_x, mpc->fp_y, mpc->init_state, mpc->X);
     int num_iq_constr = solver->solve();
-    ORUW_LOG_MESSAGE("Num of active constraints: %d\n", num_iq_constr);
     mpc->init_state.get_next_state(*solver);
     //------------------------------------------------------
-    
+
+
+    ORUW_LOG_MESSAGE("Num of active constraints: %d\n", num_iq_constr);
     ORUW_TIMER_CHECK;
     return (true);
 }

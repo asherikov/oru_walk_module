@@ -111,7 +111,7 @@ int main(int argc, char **argv)
         cout << test_04.wmg->isSupportSwitchNeeded() << endl;
         if (test_04.wmg->isSupportSwitchNeeded())
         {
-            test_04.wmg->correctNextSSPosition(nao.switchSupportFoot());
+            test_04.wmg->changeNextSSPosition(nao.switchSupportFoot(), true);
         }
 
        

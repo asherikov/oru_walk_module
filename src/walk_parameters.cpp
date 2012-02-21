@@ -54,6 +54,9 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     preview_window_size = 40;
 
 
+    set_support_z_to_zero = true;
+
+
     filter_window_length = 1; // not used
 
 

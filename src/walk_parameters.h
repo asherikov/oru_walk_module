@@ -91,6 +91,8 @@ class walkParameters
 
         unsigned int filter_window_length;
 
+        bool set_support_z_to_zero;
+
         int ss_number;
         int ds_number;
         int step_pairs_number;

@@ -42,7 +42,6 @@ oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) :
     wmg = NULL;
     mpc = NULL;
     solver = NULL;
-    com_filter = NULL;
 }
 
 
@@ -65,11 +64,6 @@ oru_walk::~oru_walk()
     {
         delete solver;
         solver = NULL;
-    }
-    if (com_filter != NULL)
-    {
-        delete com_filter;
-        com_filter = NULL;
     }
 }
 

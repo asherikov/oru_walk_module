@@ -75,7 +75,6 @@ class oruw_timer
 #include "nao_igm.h"
 #include "WMG.h"
 #include "joints_sensors_id.h"
-#include "avg_filter.h"
 
 using namespace AL;
 using namespace std;
@@ -83,7 +82,7 @@ using namespace std;
 class oruw_log
 {
     public:
-        oruw_log (const jointState&, const unsigned int);
+        oruw_log (const jointState&);
         ~oruw_log ();
 
         void logJointValues (const jointState&, const jointState&);
@@ -100,13 +99,12 @@ class oruw_log
         FILE *FFeetLog;
         FILE *FJointVelocities;
         FILE *FMessages;
-        avgFilter *com_filter;
         jointState state_old;
 };
 
 extern oruw_log *oruw_log_instance;
 
-#define ORUW_LOG_OPEN(state,filter_len) oruw_log_instance = new oruw_log(state,filter_len)
+#define ORUW_LOG_OPEN(state) oruw_log_instance = new oruw_log(state)
 #define ORUW_LOG_CLOSE delete oruw_log_instance; oruw_log_instance = NULL
 #define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
 #define ORUW_LOG_COM(mpc,nao) oruw_log_instance->logCoM(mpc,nao)
@@ -117,7 +115,7 @@ extern oruw_log *oruw_log_instance;
 
 #else // ORUW_LOG_ENABLE
 
-#define ORUW_LOG_OPEN(state,filter_len) 
+#define ORUW_LOG_OPEN(state) 
 #define ORUW_LOG_CLOSE 
 #define ORUW_LOG_JOINTS(sensors,actuators)
 #define ORUW_LOG_COM(mpc,nao)

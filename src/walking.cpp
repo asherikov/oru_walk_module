@@ -36,12 +36,6 @@ void oru_walk::walk()
         mpc = NULL;
     }
 
-    if (com_filter != NULL)
-    {
-        delete com_filter;
-        com_filter = NULL;
-    }
-
 
 // solver    
     solver = new smpc::solver(
@@ -53,12 +47,11 @@ void oru_walk::walk()
             wp.mpc_tolerance);
     solver->enable_fexceptions();
 
-    com_filter = new avgFilter(wp.filter_window_length);
 
 // models
     initWMG_NaoModel();
 
-    ORUW_LOG_OPEN(nao.state_sensor, wp.filter_window_length);
+    ORUW_LOG_OPEN(nao.state_sensor);
 
 // Connect callback to the DCM post proccess
     try
@@ -222,7 +215,6 @@ void oru_walk::feedbackError ()
     double CoM_pos[POSITION_VECTOR_SIZE];
     nao.getCoM (nao.state_sensor, CoM_pos);
 
-    //com_filter->addValue(CoM_pos[0], CoM_pos[1], state_sensor.x(), state_sensor.y());
 
     smpc::state_orig state_error;
     state_error.set (

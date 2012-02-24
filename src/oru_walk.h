@@ -44,7 +44,6 @@
 #include "smpc_solver.h" // solver
 #include "joints_sensors_id.h"
 #include "nao_igm.h"
-#include "avg_filter.h"
 #include "walk_parameters.h"
 
 
@@ -127,7 +126,6 @@ private:
     WMG *wmg;
     smpc_parameters *mpc;
     smpc::solver *solver;
-    avgFilter *com_filter;
 
     nao_igm nao;
     nao_igm nao_next;

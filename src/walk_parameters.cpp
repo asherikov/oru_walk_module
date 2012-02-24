@@ -26,7 +26,6 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
      */
     feedback_threshold = 0.006;
 
-    joint_feedback_gain = 0.0;
 
     mpc_alpha = 400.0;  // penalty for the velocity
     mpc_beta = 4000.0;  // closeness to the reference ZMP points 
@@ -57,9 +56,6 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     set_support_z_to_zero = true;
 
 
-    filter_window_length = 1; // not used
-
-
     ss_number = 11;
     ds_number = 3;
     step_pairs_number = 8;
@@ -68,7 +64,6 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     param_names.arraySetSize(NUM_PARAMETERS);
     param_names[FEEDBACK_GAIN]            = "feedback_gain";
     param_names[FEEDBACK_THRESHOLD]       = "feedback_threshold";
-    param_names[JOINT_FEEDBACK_GAIN]      = "joint_feedback_gain";
     param_names[MPC_ALPHA]                = "mpc_alpha";
     param_names[MPC_BETA]                 = "mpc_beta";
     param_names[MPC_GAMMA]                = "mpc_gamma";
@@ -130,9 +125,6 @@ void walkParameters::readParameters()
                         break;
                     case FEEDBACK_THRESHOLD:
                         feedback_threshold = preferences[i][2];
-                        break;
-                    case JOINT_FEEDBACK_GAIN:
-                        joint_feedback_gain = preferences[i][2];
                         break;
                     case MPC_ALPHA:
                         mpc_alpha = preferences[i][2];
@@ -214,10 +206,6 @@ void walkParameters::writeParameters()
             case FEEDBACK_THRESHOLD:     
                 preferences[i][1] = string("");
                 preferences[i][2] = feedback_threshold;
-                break;
-            case JOINT_FEEDBACK_GAIN:    
-                preferences[i][1] = string("");
-                preferences[i][2] = joint_feedback_gain;
                 break;
             case MPC_ALPHA:              
                 preferences[i][1] = string("");

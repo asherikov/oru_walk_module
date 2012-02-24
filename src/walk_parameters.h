@@ -36,24 +36,23 @@ using namespace std;
 
 enum parametersNames
 {
-    FEEDBACK_GAIN               = 0,
-    FEEDBACK_THRESHOLD          = 1,
-    JOINT_FEEDBACK_GAIN         = 2,
-    MPC_ALPHA                   = 3,
-    MPC_BETA                    = 4,
-    MPC_GAMMA                   = 5,
-    MPC_REGULARIZATION          = 6,
-    MPC_TOLERANCE               = 7,
-    STEP_HEIGHT                 = 8,
-    STEP_LENGTH                 = 9,
-    LOOP_TIME_LIMIT_MS          = 10,
-    PREVIEW_SAMPLING_TIME_MS    = 11,
-    PREVIEW_WINDOW_SIZE         = 12,
-    SS_NUMBER                   = 13,
-    DS_NUMBER                   = 14,
-    STEP_PAIRS_NUMBER           = 15,
+    FEEDBACK_GAIN               ,
+    FEEDBACK_THRESHOLD          ,
+    MPC_ALPHA                   ,
+    MPC_BETA                    ,
+    MPC_GAMMA                   ,
+    MPC_REGULARIZATION          ,
+    MPC_TOLERANCE               ,
+    STEP_HEIGHT                 ,
+    STEP_LENGTH                 ,
+    LOOP_TIME_LIMIT_MS          ,
+    PREVIEW_SAMPLING_TIME_MS    ,
+    PREVIEW_WINDOW_SIZE         ,
+    SS_NUMBER                   ,
+    DS_NUMBER                   ,
+    STEP_PAIRS_NUMBER           ,
 
-    NUM_PARAMETERS              = 16
+    NUM_PARAMETERS              
 };
 
 
@@ -71,8 +70,6 @@ class walkParameters
         double feedback_gain;
         double feedback_threshold;
 
-        double joint_feedback_gain;
-
         double mpc_alpha;
         double mpc_beta;
         double mpc_gamma;
@@ -88,8 +85,6 @@ class walkParameters
         int preview_sampling_time_ms;
         double preview_sampling_time_sec;
         int preview_window_size;
-
-        unsigned int filter_window_length;
 
         bool set_support_z_to_zero;
 

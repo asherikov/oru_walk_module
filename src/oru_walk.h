@@ -101,14 +101,13 @@ private:
     void halt(const string&, const char *);
     void stopWalking(const string& message);
 
-    // Callback called by the DCM every 10ms
-    void callbackEveryCycle_walk();
+    // periodically called callback function
+    void walkCallback();
 
 
 // private variables
 
-    // Used for postprocess sync with the DCM
-    ProcessSignalConnection fDCMPostProcessConnection;
+    ProcessSignalConnection walkCallbackConnection;
 
     // Used for fast memory access
     ALPtr<ALMemoryFastAccess> accessSensorValues;

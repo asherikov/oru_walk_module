@@ -104,14 +104,29 @@ class oruw_log
 
 extern oruw_log *oruw_log_instance;
 
-#define ORUW_LOG_OPEN(state) oruw_log_instance = new oruw_log(state)
-#define ORUW_LOG_CLOSE delete oruw_log_instance; oruw_log_instance = NULL
-#define ORUW_LOG_JOINTS(sensors,actuators) oruw_log_instance->logJointValues(sensors,actuators)
-#define ORUW_LOG_COM(mpc,nao) oruw_log_instance->logCoM(mpc,nao)
-#define ORUW_LOG_FEET(nao) oruw_log_instance->logFeet(nao)
-#define ORUW_LOG_JOINT_VELOCITIES(current,time) oruw_log_instance->logJointVelocities(current,time)
-#define ORUW_LOG_MESSAGE(...) if(oruw_log_instance != NULL) {fprintf(oruw_log_instance->FMessages, __VA_ARGS__);}
-#define ORUW_LOG_STEPS wmg->FS2file("oru_steps_m.log", false)
+#define ORUW_LOG_IS_OPEN        (oruw_log_instance != NULL)
+#define ORUW_LOG_OPEN(state)    oruw_log_instance = new oruw_log(state);
+
+#define ORUW_LOG_CLOSE \
+    if ORUW_LOG_IS_OPEN {delete oruw_log_instance; oruw_log_instance = NULL;}
+
+#define ORUW_LOG_JOINTS(sensors,actuators) \
+    if ORUW_LOG_IS_OPEN {oruw_log_instance->logJointValues(sensors,actuators);}
+
+#define ORUW_LOG_COM(mpc,nao) \
+    if ORUW_LOG_IS_OPEN {oruw_log_instance->logCoM(mpc,nao);}
+
+#define ORUW_LOG_FEET(nao) \
+    if ORUW_LOG_IS_OPEN {oruw_log_instance->logFeet(nao);}
+
+#define ORUW_LOG_JOINT_VELOCITIES(current,time) \
+    if ORUW_LOG_IS_OPEN {oruw_log_instance->logJointVelocities(current,time);}
+
+#define ORUW_LOG_MESSAGE(...) \
+    if ORUW_LOG_IS_OPEN {fprintf(oruw_log_instance->FMessages, __VA_ARGS__);}
+
+#define ORUW_LOG_STEPS(wmg_pointer) \
+    if (wmg_pointer != NULL) {wmg_pointer->FS2file("oru_steps_m.log", false);}
 
 #else // ORUW_LOG_ENABLE
 
@@ -122,7 +137,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_FEET(nao)
 #define ORUW_LOG_JOINT_VELOCITIES(current,time)
 #define ORUW_LOG_MESSAGE(...)
-#define ORUW_LOG_STEPS
+#define ORUW_LOG_STEPS(wmg_pointer)
 
 #endif // ORUW_LOG_ENABLE
 

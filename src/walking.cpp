@@ -53,16 +53,16 @@ void oru_walk::walk()
 
     ORUW_LOG_OPEN(nao.state_sensor);
 
-// Connect callback to the DCM post proccess
+// register callback
     try
     {
-        fDCMPostProcessConnection =
+        walkCallbackConnection =
             getParentBroker()->getProxy("ALMotion")->getModule()->atPreProcess
-            (boost::bind(&oru_walk::callbackEveryCycle_walk, this));
+            (boost::bind(&oru_walk::walkCallback, this));
     }
     catch (const ALError &e)
     {
-        halt("Error when connecting to DCM postProccess: " + string(e.what()), __FUNCTION__);
+        halt("Callback registration failed: " + string(e.what()), __FUNCTION__);
     }
 }
 
@@ -90,10 +90,10 @@ void oru_walk::halt(const string &message, const char* function)
  */
 void oru_walk::stopWalking(const string& message)
 {
-    ORUW_LOG_STEPS;
+    ORUW_LOG_STEPS(wmg);
     ORUW_LOG_MESSAGE("%s", message.c_str());
     qiLogInfo ("module.oru_walk") << message;
-    fDCMPostProcessConnection.disconnect();
+    walkCallbackConnection.disconnect();
     ORUW_LOG_CLOSE;
 }
 
@@ -105,9 +105,7 @@ void oru_walk::stopWalking(const string& message)
  */
 void oru_walk::stopWalkingRemote()
 {
-    qiLogInfo ("module.oru_walk", "Stopped by user's request.\n");
-    fDCMPostProcessConnection.disconnect();
-    ORUW_LOG_CLOSE;
+    stopWalking ("Stopped by user's request.\n");
 }
 
 
@@ -117,7 +115,7 @@ void oru_walk::stopWalkingRemote()
  * appropriate commands to the joints.
  * @attention REAL-TIME!
  */
-void oru_walk::callbackEveryCycle_walk()
+void oru_walk::walkCallback()
 {
     ORUW_TIMER(wp.loop_time_limit_ms);
 

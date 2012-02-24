@@ -53,7 +53,7 @@ oru_walk::~oru_walk()
 {
     setStiffness(0.0f);
     // Remove the postProcess call back connection
-    fDCMPostProcessConnection.disconnect();
+    stopWalking ("Module destroyed.\n");
 
     if (wmg != NULL)
     {

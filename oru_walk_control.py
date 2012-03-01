@@ -38,11 +38,14 @@ while True:
         print "'0' - exit script"
         print "'1' - set stiffness to 1"
         print "'2' - set stiffness to 0"
-        print "'3' - set initial position"
+        print "'3' - take the initial position"
         print "'4' - stop"
         print "'5' - walk"
-        print "'6' - walk (using builtin module)"
-        print "'7' - reset stiffness and angles (using builtin module)"
+        print "'6' - set stiffness to 0.5"
+        print "'7' - set stiffness to 1 and take the initial position"
+        print "'8' - walk (using builtin module)"
+        print "'9' - reset stiffness and angles (using builtin module)"
+
         try:
             nao_action = int (raw_input("Type a number: "))
         except Exception,e:
@@ -65,6 +68,11 @@ while True:
         elif nao_action == 5:
             walk_proxy.walk()
         elif nao_action == 6:
+            walk_proxy.setStiffness(0.5)
+        elif nao_action == 7:
+            walk_proxy.setStiffness(1.0)
+            walk_proxy.initPosition()
+        elif nao_action == 8:
             motion_proxy.stiffnessInterpolation("Body", 1.0, 0.1)
             motion_proxy.setWalkArmsEnabled(False, False)
             # enable motion whe lifted in the air
@@ -73,7 +81,7 @@ while True:
 
             # (X length, Y length, theta, frequency)
             motion_proxy.walkTo(0.8, 0.0, 0.0);
-        elif nao_action == 7:
+        elif nao_action == 9:
             # reset stiffness and angles using motion proxy,
             # otherwise it doesn't work well later
             motion_proxy.stiffnessInterpolation("Body", 0.0, 1.0)
@@ -88,7 +96,7 @@ while True:
 
 
     # leave if requested
-    if nao_action < 1 or nao_action > 7 or options.nao_action != 0:
+    if nao_action < 1 or nao_action > 9 or options.nao_action != 0:
         print '----- The script was stopped'
         break
 

@@ -60,7 +60,7 @@ void oru_walk::walk()
     try
     {
         last_dcm_time_ms_ptr = (int *) memory_proxy->getDataPtr("DCM/Time");
-        walkCallbackConnection =
+        dcm_callback_connection =
             getParentBroker()->getProxy("DCM")->getModule()->atPostProcess
             (boost::bind(&oru_walk::dcmCallback, this));
     }
@@ -71,7 +71,7 @@ void oru_walk::walk()
 
     try
     {
-        boost::thread walk_control_thread(&oru_walk::walkCallback, this);
+        boost::thread walk_control_thread(&oru_walk::walkControl, this);
         struct sched_param walk_control_thread_sched;
 
         walk_control_thread_sched.sched_priority = wp.walk_control_thread_priority;
@@ -138,7 +138,7 @@ void oru_walk::stopWalking(const string& message)
     ORUW_LOG_STEPS(wmg);
     ORUW_LOG_MESSAGE("%s", message.c_str());
     qiLogInfo ("module.oru_walk") << message;
-    walkCallbackConnection.disconnect();
+    dcm_callback_connection.disconnect();
     ORUW_LOG_CLOSE;
 }
 
@@ -160,7 +160,7 @@ void oru_walk::stopWalkingRemote()
  * appropriate commands to the joints.
  * @attention REAL-TIME!
  */
-void oru_walk::walkCallback()
+void oru_walk::walkControl()
 {
     for (;;)
     {
@@ -249,12 +249,12 @@ void oru_walk::solveIKsendCommands (
     // Set commands
     try
     {
-        walkCommands[4][0] = callback_start_time_ms + control_loop_num * wp.control_sampling_time_ms;
+        joint_commands[4][0] = callback_start_time_ms + control_loop_num * wp.control_sampling_time_ms;
         for (int i = 0; i < LOWER_JOINTS_NUM; i++)
         {
-            walkCommands[5][i][0] = nao_model.state_model.q[i];
+            joint_commands[5][i][0] = nao_model.state_model.q[i];
         }
-        dcmProxy->setAlias(walkCommands);
+        dcm_proxy->setAlias(joint_commands);
     }
     catch (const AL::ALError &e)
     {
@@ -318,7 +318,7 @@ void oru_walk::readSensors(jointState& nao_state)
 {
     vector<float> sensorValues;
 
-    accessSensorValues->GetValues (sensorValues);
+    access_sensor_values->GetValues (sensorValues);
     for (int i = 0; i < JOINTS_NUM; i++)
     {
         nao_state.q[i] = sensorValues[i];

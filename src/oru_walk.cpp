@@ -17,8 +17,7 @@
  */
 oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) : 
     ALModule(broker, name),
-    accessSensorValues (ALPtr<ALMemoryFastAccess>(new ALMemoryFastAccess())),
-    accessActuatorValues (ALPtr<ALMemoryFastAccess>(new ALMemoryFastAccess())),
+    access_sensor_values (ALPtr<ALMemoryFastAccess>(new ALMemoryFastAccess())),
     wp (broker)
 {
     setModuleDescription("Orebro University: NAO walking module");
@@ -38,14 +37,9 @@ oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) :
     functionName( "stopWalking", getName() , "stopWalking");
     BIND_METHOD( oru_walk::stopWalkingRemote );
 
-    functionName("walkCallback", getName(), "");
-    BIND_METHOD( oru_walk::walkCallback );
-
-
     wmg = NULL;
     mpc = NULL;
     solver = NULL;
-    //walk_control_thread = NULL;
 }
 
 
@@ -100,7 +94,7 @@ void oru_walk::init()
     try
     {
         // Get the DCM proxy
-        dcmProxy = getParentBroker()->getDcmProxy();
+        dcm_proxy = getParentBroker()->getDcmProxy();
     }
     catch (ALError& e)
     {
@@ -154,7 +148,6 @@ void oru_walk::init()
     initFastRead(joint_names);
     initFastWrite(joint_names);
     initWalkCommands();
-    initJointAngles();
 }
 
 
@@ -189,7 +182,7 @@ void oru_walk::setStiffness(const float &stiffnessValue)
     unsigned int stiffness_change_time = 1000;
     try
     {
-        stiffnessCommands[2][0][1] = dcmProxy->getTime(stiffness_change_time);
+        stiffnessCommands[2][0][1] = dcm_proxy->getTime(stiffness_change_time);
     }
     catch (const ALError &e)
     {
@@ -199,7 +192,7 @@ void oru_walk::setStiffness(const float &stiffnessValue)
 
     try
     {
-        dcmProxy->set(stiffnessCommands);
+        dcm_proxy->set(stiffnessCommands);
     }
     catch (const ALError &e)
     {
@@ -233,13 +226,13 @@ void oru_walk::initPosition()
     for (int i = 0; i < JOINTS_NUM; i++)
     {
         initPositionCommands[5][i].arraySetSize(1);
-        initPositionCommands[5][i][0]  =  init_joint_angles[i];
     }
+    initJointAngles (initPositionCommands[5]);
 
     // set time
     try
     {
-        initPositionCommands[4][0] = dcmProxy->getTime(init_time);
+        initPositionCommands[4][0] = dcm_proxy->getTime(init_time);
     }
     catch (const ALError &e)
     {
@@ -250,7 +243,7 @@ void oru_walk::initPosition()
     // send commands
     try
     {
-        dcmProxy->setAlias(initPositionCommands);
+        dcm_proxy->setAlias(initPositionCommands);
     }
     catch (const AL::ALError &e)
     {

@@ -41,7 +41,7 @@ using namespace std;
 class oruw_timer
 {
     public:
-        oruw_timer(const char* timer_id, const unsigned int timer_limit);
+        oruw_timer(const char*, const unsigned int);
         ~oruw_timer();
 
         bool isLimitSatisfied ();

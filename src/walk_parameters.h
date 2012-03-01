@@ -46,6 +46,7 @@ enum parametersNames
     STEP_HEIGHT                 ,
     STEP_LENGTH                 ,
     LOOP_TIME_LIMIT_MS          ,
+    DCM_TIME_SHIFT_MS           ,
     PREVIEW_SAMPLING_TIME_MS    ,
     PREVIEW_WINDOW_SIZE         ,
     SS_NUMBER                   ,
@@ -97,6 +98,7 @@ class walkParameters
         int step_pairs_number;
 
         ALValue param_names;
+        ALValue param_description;
         ALPreferencesProxy pref_proxy;
 };
 

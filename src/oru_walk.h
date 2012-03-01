@@ -95,7 +95,7 @@ private:
     void initFastRead (const vector<string>&);
     void initFastWrite (const vector<string>&);
     void initWalkCommands ();
-    void initJointAngles ();
+    void initJointAngles (ALValue &);
 
 
     // walking
@@ -108,26 +108,20 @@ private:
     void halt(const string&, const char *);
     void stopWalking(const string& message);
 
+    void walkControl();
     // periodically called callback function
-    void walkCallback();
     void dcmCallback();
 
 
 // private variables
-
-    ProcessSignalConnection walkCallbackConnection;
+    ProcessSignalConnection dcm_callback_connection;
 
     // Used for fast memory access
-    ALPtr<ALMemoryFastAccess> accessSensorValues;
-    ALPtr<ALMemoryFastAccess> accessActuatorValues;
-
-    // Store sensor values.
-    vector<float> sensorValues;
-    ALPtr<DCMProxy> dcmProxy;
+    ALPtr<ALMemoryFastAccess> access_sensor_values;
+    int* last_dcm_time_ms_ptr;
 
     // Used to store command to send
-    ALValue walkCommands;
-
+    ALValue joint_commands;
 
 
     WMG *wmg;
@@ -139,13 +133,11 @@ private:
 
     walkParameters wp;
 
-    double init_joint_angles[JOINTS_NUM];
-
-
     int dcm_loop_counter;
     int last_dcm_time_ms;
+
+    ALPtr<DCMProxy> dcm_proxy;
     ALPtr<ALMemoryProxy> memory_proxy;
-    int* last_dcm_time_ms_ptr;
 
     boost::condition_variable walk_control_condition;
     boost::mutex walk_control_mutex;

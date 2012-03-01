@@ -28,16 +28,7 @@ void oru_walk::initFastRead(const vector<string>& joint_names)
         fSensorKeys[i] = joint_names[i] + "/Position/Sensor/Value";
     }
     // Create the fast memory access
-    accessSensorValues->ConnectToVariables(getParentBroker(), fSensorKeys, false);
-
-
-    // connect to actuators
-    for (int i = 0; i < JOINTS_NUM; i++)
-    {
-        fSensorKeys[i] = joint_names[i] + "/Position/Actuator/Value";
-    }
-    // Create the fast memory access
-    accessActuatorValues->ConnectToVariables(getParentBroker(), fSensorKeys, false);
+    access_sensor_values->ConnectToVariables(getParentBroker(), fSensorKeys, false);
 }
 
 
@@ -62,7 +53,7 @@ void oru_walk::initFastWrite(const vector<string>& joint_names)
         {
             jointAliases[1][i] = joint_names[i] + "/Position/Actuator/Value";
         }
-        dcmProxy->createAlias(jointAliases);
+        dcm_proxy->createAlias(jointAliases);
     }
     catch (const ALError &e)
     {
@@ -79,7 +70,7 @@ void oru_walk::initFastWrite(const vector<string>& joint_names)
         {
             jointAliases[1][i] = joint_names[i] + "/Hardness/Actuator/Value";
         }
-        dcmProxy->createAlias(jointAliases);
+        dcm_proxy->createAlias(jointAliases);
     }
     catch (const ALError &e)
     {
@@ -101,7 +92,7 @@ void oru_walk::initFastWrite(const vector<string>& joint_names)
         {
             jointAliases[1][i] = joint_names[i] + "/Position/Actuator/Value";
         }
-        dcmProxy->createAlias(jointAliases);
+        dcm_proxy->createAlias(jointAliases);
     }
     catch (const ALError &e)
     {
@@ -117,52 +108,52 @@ void oru_walk::initFastWrite(const vector<string>& joint_names)
 void oru_walk::initWalkCommands()
 {
     // create the structure of the commands
-    walkCommands.arraySetSize(6);
-    walkCommands[0] = string("lowerJointActuator");
-    walkCommands[1] = string("ClearAll");
-    walkCommands[2] = string("time-separate");
-    walkCommands[3] = 0;
+    joint_commands.arraySetSize(6);
+    joint_commands[0] = string("lowerJointActuator");
+    joint_commands[1] = string("ClearAll");
+    joint_commands[2] = string("time-separate");
+    joint_commands[3] = 0;
 
-    walkCommands[4].arraySetSize(1);
+    joint_commands[4].arraySetSize(1);
 
-    walkCommands[5].arraySetSize(LOWER_JOINTS_NUM); // For all joints
+    joint_commands[5].arraySetSize(LOWER_JOINTS_NUM); // For all joints
     for (int i=0; i < LOWER_JOINTS_NUM; i++)
     {
-        walkCommands[5][i].arraySetSize(1);
+        joint_commands[5][i].arraySetSize(1);
     }
 }
 
 
-void oru_walk::initJointAngles()
+void oru_walk::initJointAngles(ALValue &init_joint_angles)
 {
-    init_joint_angles[L_HIP_YAW_PITCH]  =  0.0;
+    init_joint_angles[L_HIP_YAW_PITCH][0]  =  0.0;
     // note, that R_HIP_YAW_PITCH is controlled by the same motor as L_HIP_YAW_PITCH 
-    init_joint_angles[R_HIP_YAW_PITCH]  =  0.0;
+    init_joint_angles[R_HIP_YAW_PITCH][0]  =  0.0;
 
-    init_joint_angles[L_HIP_ROLL]       = -0.000384;
-    init_joint_angles[L_HIP_PITCH]      = -0.598291;
-    init_joint_angles[L_KNEE_PITCH]     =  1.009413;
-    init_joint_angles[L_ANKLE_PITCH]    = -0.492352;
-    init_joint_angles[L_ANKLE_ROLL]     =  0.000469;
+    init_joint_angles[L_HIP_ROLL][0]       = -0.000384;
+    init_joint_angles[L_HIP_PITCH][0]      = -0.598291;
+    init_joint_angles[L_KNEE_PITCH][0]     =  1.009413;
+    init_joint_angles[L_ANKLE_PITCH][0]    = -0.492352;
+    init_joint_angles[L_ANKLE_ROLL][0]     =  0.000469;
 
-    init_joint_angles[R_HIP_ROLL]       = -0.000384;
-    init_joint_angles[R_HIP_PITCH]      = -0.598219;
-    init_joint_angles[R_KNEE_PITCH]     =  1.009237;
-    init_joint_angles[R_ANKLE_PITCH]    = -0.492248;
-    init_joint_angles[R_ANKLE_ROLL]     =  0.000469;
+    init_joint_angles[R_HIP_ROLL][0]       = -0.000384;
+    init_joint_angles[R_HIP_PITCH][0]      = -0.598219;
+    init_joint_angles[R_KNEE_PITCH][0]     =  1.009237;
+    init_joint_angles[R_ANKLE_PITCH][0]    = -0.492248;
+    init_joint_angles[R_ANKLE_ROLL][0]     =  0.000469;
 
-    init_joint_angles[L_SHOULDER_PITCH] =  1.418908;
-    init_joint_angles[L_SHOULDER_ROLL]  =  0.332836;
-    init_joint_angles[L_ELBOW_YAW]      = -1.379108;
-    init_joint_angles[L_ELBOW_ROLL]     = -1.021602;
-    init_joint_angles[L_WRIST_YAW]      = -0.013848;
+    init_joint_angles[L_SHOULDER_PITCH][0] =  1.418908;
+    init_joint_angles[L_SHOULDER_ROLL][0]  =  0.332836;
+    init_joint_angles[L_ELBOW_YAW][0]      = -1.379108;
+    init_joint_angles[L_ELBOW_ROLL][0]     = -1.021602;
+    init_joint_angles[L_WRIST_YAW][0]      = -0.013848;
 
-    init_joint_angles[R_SHOULDER_PITCH] =  1.425128;
-    init_joint_angles[R_SHOULDER_ROLL]  = -0.331386;
-    init_joint_angles[R_ELBOW_YAW]      =  1.383626;
-    init_joint_angles[R_ELBOW_ROLL]     =  1.029356;
-    init_joint_angles[R_WRIST_YAW]      = -0.01078; 
+    init_joint_angles[R_SHOULDER_PITCH][0] =  1.425128;
+    init_joint_angles[R_SHOULDER_ROLL][0]  = -0.331386;
+    init_joint_angles[R_ELBOW_YAW][0]      =  1.383626;
+    init_joint_angles[R_ELBOW_ROLL][0]     =  1.029356;
+    init_joint_angles[R_WRIST_YAW][0]      = -0.01078; 
 
-    init_joint_angles[HEAD_PITCH]       =  0.0;     
-    init_joint_angles[HEAD_YAW]         =  0.0;
+    init_joint_angles[HEAD_PITCH][0]       =  0.0;     
+    init_joint_angles[HEAD_YAW][0]         =  0.0;
 }

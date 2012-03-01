@@ -15,10 +15,10 @@
  * @param[in] timer_id identifier of the timer
  * @param[in] timer_limit the upper limit
  */
-oruw_timer::oruw_timer(const char* timer_id, const unsigned int timer_limit) : id(timer_id)
+oruw_timer::oruw_timer(const char* timer_id, const unsigned int timer_limit_ms) : id(timer_id)
 {
     qi::os::gettimeofday (&start_time);
-    limit = (double) timer_limit / 1000000;
+    limit = (double) timer_limit_ms * 1000 / 1000000;
 }
 
 

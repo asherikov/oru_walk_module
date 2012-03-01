@@ -2,7 +2,6 @@
 <ModulePreference name="aldebaran-robotics.com@oru_walk" xmlns="http://www.aldebaran-robotics.com/ns/ALPreference" schemaLocation="ModulePreference.xsd">
     <Preference name="feedback_gain" description="" value="0.3" type="float" />
     <Preference name="feedback_threshold" description="" value="0.006" type="float" />
-    <Preference name="joint_feedback_gain" description="" value="0" type="float" />
     <Preference name="mpc_alpha" description="" value="400" type="float" />
     <Preference name="mpc_beta" description="" value="8000" type="float" />
     <Preference name="mpc_gamma" description="" value="1" type="float" />

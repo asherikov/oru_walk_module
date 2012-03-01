@@ -2,7 +2,8 @@ function process_logs(dir, plot_velocities)
 %
 % dir - path to the directory containing logs.
 % plot_velocities - controls the plotting of velocities (1=true, 0=false)
-%
+%       NOTE: time period for computation of velocities is hardcoded below
+time_period = 20/1000;
 
 
 Names = {
@@ -89,16 +90,9 @@ try
             end
         end
         % close all
-    end
-catch
-end
 
-if (plot_velocities == 1)
-    try
-        load (strcat(dir, '/oru_joint_velocities.log'));
-
-        if exist('oru_joints')
-            Velocities = oru_joint_velocities(:,1:NumJoints);
+        if (plot_velocities == 1)
+            Velocities = abs(SensorValues(1:end-1, :) - SensorValues(2:end, :)) / time_period;
             for i = 1:size(PlotSensors, 2);
                 figure ('Position', get(0,'Screensize')*0.9);
                 for j = 1:length(PlotSensors{i});
@@ -114,9 +108,10 @@ if (plot_velocities == 1)
                 end
             end
         end
-    catch
     end
+catch
 end
+
 
 
 try

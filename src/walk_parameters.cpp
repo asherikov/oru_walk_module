@@ -107,30 +107,6 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     param_names[SS_NUMBER]                = "ss_number";     
     param_names[DS_NUMBER]                = "ds_number";     
     param_names[STEP_PAIRS_NUMBER]        = "step_pairs_number";     
-
-
-    param_description.arraySetSize(NUM_PARAMETERS);
-
-    param_description[FEEDBACK_GAIN]            = "";
-    param_description[FEEDBACK_THRESHOLD]       = "";
-
-    param_description[MPC_ALPHA]                = "";
-    param_description[MPC_BETA]                 = "";
-    param_description[MPC_GAMMA]                = "";
-    param_description[MPC_REGULARIZATION]       = "";
-    param_description[MPC_TOLERANCE]            = "";
-
-    param_description[STEP_HEIGHT]              = "";
-    param_description[STEP_LENGTH]              = "";
-
-    param_description[LOOP_TIME_LIMIT_MS]       = "";
-    param_description[DCM_TIME_SHIFT_MS]        = "";
-    param_description[PREVIEW_SAMPLING_TIME_MS] = "";
-    param_description[PREVIEW_WINDOW_SIZE]      = "";     
-
-    param_description[SS_NUMBER]                = "";     
-    param_description[DS_NUMBER]                = "";     
-    param_description[STEP_PAIRS_NUMBER]        = "";     
 }
 
 
@@ -254,62 +230,53 @@ void walkParameters::writeParameters()
     {
         preferences[i].arraySetSize(3);
         preferences[i][0] = param_names[i];
-        preferences[i][1] = param_description[i];
-        switch (i)
-        {
-            case FEEDBACK_GAIN:          
-                preferences[i][2] = feedback_gain;
-                break;
-            case FEEDBACK_THRESHOLD:     
-                preferences[i][2] = feedback_threshold;
-                break;
-            case MPC_ALPHA:              
-                preferences[i][2] = mpc_alpha;
-                break;
-            case MPC_BETA:               
-                preferences[i][2] = mpc_beta;
-                break;
-            case MPC_GAMMA:              
-                preferences[i][2] = mpc_gamma;
-                break;
-            case MPC_REGULARIZATION:     
-                preferences[i][2] = mpc_regularization;
-                break;
-            case MPC_TOLERANCE:          
-                preferences[i][2] = mpc_tolerance;
-                break;
-            case STEP_HEIGHT:            
-                preferences[i][2] = step_height;
-                break;
-            case STEP_LENGTH:            
-                preferences[i][2] = step_length;
-                break;
-            case LOOP_TIME_LIMIT_MS:     
-                preferences[i][2] = loop_time_limit_ms;
-                break;
-            case DCM_TIME_SHIFT_MS:     
-                preferences[i][2] = dcm_time_shift_ms;
-                break;
-            case PREVIEW_SAMPLING_TIME_MS:
-                preferences[i][2] = preview_sampling_time_ms;
-                break;
-            case PREVIEW_WINDOW_SIZE:    
-                preferences[i][2] = preview_window_size;
-                break;
-            case SS_NUMBER:
-                preferences[i][2] = ss_number;
-                break;
-            case DS_NUMBER:
-                preferences[i][2] = ds_number;
-                break;
-            case STEP_PAIRS_NUMBER:
-                preferences[i][2] = step_pairs_number;
-                break;
-            default:
-                preferences[i][2] = 0;
-                break;
-        }
     }
+
+
+    // descriptions
+    preferences[FEEDBACK_GAIN][1]            = "";
+    preferences[FEEDBACK_THRESHOLD][1]       = "";
+
+    preferences[MPC_ALPHA][1]                = "";
+    preferences[MPC_BETA][1]                 = "";
+    preferences[MPC_GAMMA][1]                = "";
+    preferences[MPC_REGULARIZATION][1]       = "";
+    preferences[MPC_TOLERANCE][1]            = "";
+
+    preferences[STEP_HEIGHT][1]              = "";
+    preferences[STEP_LENGTH][1]              = "";
+
+    preferences[LOOP_TIME_LIMIT_MS][1]       = "";
+    preferences[DCM_TIME_SHIFT_MS][1]        = "";
+    preferences[PREVIEW_SAMPLING_TIME_MS][1] = "";
+    preferences[PREVIEW_WINDOW_SIZE][1]      = "";     
+
+    preferences[SS_NUMBER][1]                = "";     
+    preferences[DS_NUMBER][1]                = "";     
+    preferences[STEP_PAIRS_NUMBER][1]        = "";     
+
+
+    // values
+    preferences[FEEDBACK_GAIN][2]               = feedback_gain;
+    preferences[FEEDBACK_THRESHOLD][2]          = feedback_threshold;
+
+    preferences[MPC_ALPHA][2]                   = mpc_alpha;
+    preferences[MPC_BETA][2]                    = mpc_beta;
+    preferences[MPC_GAMMA][2]                   = mpc_gamma;
+    preferences[MPC_REGULARIZATION][2]          = mpc_regularization;
+    preferences[MPC_TOLERANCE][2]               = mpc_tolerance;
+
+    preferences[STEP_HEIGHT][2]                 = step_height;
+    preferences[STEP_LENGTH][2]                 = step_length;
+
+    preferences[LOOP_TIME_LIMIT_MS][2]          = loop_time_limit_ms;
+    preferences[DCM_TIME_SHIFT_MS][2]           = dcm_time_shift_ms;
+    preferences[PREVIEW_SAMPLING_TIME_MS][2]    = preview_sampling_time_ms;
+    preferences[PREVIEW_WINDOW_SIZE][2]         = preview_window_size;
+
+    preferences[SS_NUMBER][2]                   = ss_number;
+    preferences[DS_NUMBER][2]                   = ds_number;
+    preferences[STEP_PAIRS_NUMBER][2]           = step_pairs_number;
 
 
     try

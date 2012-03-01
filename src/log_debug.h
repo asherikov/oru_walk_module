@@ -91,15 +91,11 @@ class oruw_log
 
         void logFeet (nao_igm& nao);
 
-        void logJointVelocities (const jointState&, const double);
-
 
         FILE *FJointsLog;
         FILE *FCoMLog;
         FILE *FFeetLog;
-        FILE *FJointVelocities;
         FILE *FMessages;
-        jointState state_old;
 };
 
 extern oruw_log *oruw_log_instance;
@@ -119,9 +115,6 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_FEET(nao) \
     if ORUW_LOG_IS_OPEN {oruw_log_instance->logFeet(nao);}
 
-#define ORUW_LOG_JOINT_VELOCITIES(current,time) \
-    if ORUW_LOG_IS_OPEN {oruw_log_instance->logJointVelocities(current,time);}
-
 #define ORUW_LOG_MESSAGE(...) \
     if ORUW_LOG_IS_OPEN {fprintf(oruw_log_instance->FMessages, __VA_ARGS__);}
 
@@ -135,7 +128,6 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_JOINTS(sensors,actuators)
 #define ORUW_LOG_COM(mpc,nao)
 #define ORUW_LOG_FEET(nao)
-#define ORUW_LOG_JOINT_VELOCITIES(current,time)
 #define ORUW_LOG_MESSAGE(...)
 #define ORUW_LOG_STEPS(wmg_pointer)
 

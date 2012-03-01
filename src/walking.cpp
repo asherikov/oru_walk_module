@@ -41,7 +41,7 @@ void oru_walk::walk()
 
 // solver    
     solver = new smpc::solver(
-            wp.preview_window_size, // size of the preview window
+            wp.preview_window_size,
             wp.mpc_alpha,
             wp.mpc_beta,
             wp.mpc_gamma,
@@ -59,7 +59,6 @@ void oru_walk::walk()
     dcm_loop_counter = 0;
     try
     {
-        last_dcm_time_ms_ptr = (int *) memory_proxy->getDataPtr("DCM/Time");
         dcm_callback_connection =
             getParentBroker()->getProxy("DCM")->getModule()->atPostProcess
             (boost::bind(&oru_walk::dcmCallback, this));
@@ -68,6 +67,7 @@ void oru_walk::walk()
     {
         halt("Callback registration failed: " + string(e.what()), __FUNCTION__);
     }
+
 
     try
     {
@@ -156,8 +156,7 @@ void oru_walk::stopWalkingRemote()
 
 
 /**
- * @brief A periodically called function, that determines and sends 
- * appropriate commands to the joints.
+ * @brief A control loop, that is executed in separate thread.
  * @attention REAL-TIME!
  */
 void oru_walk::walkControl()
@@ -175,7 +174,6 @@ void oru_walk::walkControl()
         ORUW_LOG_JOINTS(nao.state_sensor, nao.state_model);
         ORUW_LOG_COM(mpc, nao);
         ORUW_LOG_FEET(nao);
-        ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, wp.control_sampling_time_sec);
 
 
         try
@@ -194,7 +192,7 @@ void oru_walk::walkControl()
                 return;
             }
         }
-        catch(const ALError &e)
+        catch (const ALError &e)
         {
             return;
         }

@@ -98,7 +98,6 @@ class walkParameters
         int step_pairs_number;
 
         ALValue param_names;
-        ALValue param_description;
         ALPreferencesProxy pref_proxy;
 };
 

@@ -17,9 +17,7 @@ void oru_walk::initFastRead(const vector<string>& joint_names)
     vector<string> fSensorKeys;
 
     fSensorKeys.clear();
-
-    //  Here as an example /*inertial*/ + joints + /*FSR*/ are read
-    fSensorKeys.resize(/*7 +*/ JOINTS_NUM /*+ 6*/);
+    fSensorKeys.resize(JOINTS_NUM);
 
 
     // connect to sensors
@@ -29,6 +27,9 @@ void oru_walk::initFastRead(const vector<string>& joint_names)
     }
     // Create the fast memory access
     access_sensor_values->ConnectToVariables(getParentBroker(), fSensorKeys, false);
+
+
+    last_dcm_time_ms_ptr = (int *) memory_proxy->getDataPtr("DCM/Time");
 }
 
 

@@ -57,11 +57,9 @@ oruw_log *oruw_log_instance = NULL;
 
 oruw_log::oruw_log (const jointState& state_init)
 {
-    state_old = state_init;
     FJointsLog = fopen ("./oru_joints.log", "w");
     FCoMLog = fopen ("./oru_com.log", "w");
     FFeetLog = fopen ("./oru_feet.log", "w");
-    FJointVelocities = fopen ("./oru_joint_velocities.log", "w");
     FMessages = fopen ("./oru_messages.log", "w");
 }
 
@@ -70,7 +68,6 @@ oruw_log::~oruw_log ()
     fclose (FJointsLog);
     fclose (FCoMLog);
     fclose (FFeetLog);
-    fclose (FJointVelocities);
     fclose (FMessages);
 }
 
@@ -129,16 +126,5 @@ void oruw_log::logFeet(nao_igm& nao)
     fprintf (FFeetLog, "     %f %f %f    %f %f %f\n", 
             r_expected[0], r_expected[1], r_expected[2],
             r_real[0], r_real[1], r_real[2]);
-}
-
-
-void oruw_log::logJointVelocities (const jointState& state_current, const double time)
-{
-    for (int i = 0; i < JOINTS_NUM; i++)
-    {
-        fprintf (FJointVelocities, "%f ", fabs(state_old.q[i] - state_current.q[i]) / time);
-        state_old.q[i] = state_current.q[i];
-    }
-    fprintf (FJointVelocities, "\n");
 }
 #endif // ORUW_LOG_ENABLE

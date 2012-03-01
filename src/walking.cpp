@@ -8,6 +8,8 @@
 #include "oru_walk.h"
 #include "log_debug.h"
 
+#include <althread/alcriticalsection.h>
+#include <cstdlib>
 
 
 /**
@@ -54,15 +56,58 @@ void oru_walk::walk()
     ORUW_LOG_OPEN(nao.state_sensor);
 
 // register callback
+    dcm_loop_counter = 0;
     try
     {
+        last_dcm_time_ms_ptr = (int *) memory_proxy->getDataPtr("DCM/Time");
         walkCallbackConnection =
-            getParentBroker()->getProxy("ALMotion")->getModule()->atPreProcess
-            (boost::bind(&oru_walk::walkCallback, this));
+            getParentBroker()->getProxy("DCM")->getModule()->atPostProcess
+            (boost::bind(&oru_walk::dcmCallback, this));
     }
     catch (const ALError &e)
     {
         halt("Callback registration failed: " + string(e.what()), __FUNCTION__);
+    }
+
+    try
+    {
+        boost::thread walk_control_thread(&oru_walk::walkCallback, this);
+        struct sched_param walk_control_thread_sched;
+
+        walk_control_thread_sched.sched_priority = wp.walk_control_thread_priority;
+        int retval = pthread_setschedparam(
+                walk_control_thread.native_handle(), 
+                SCHED_FIFO, 
+                &walk_control_thread_sched);
+        if (retval != 0)
+        {
+            // Assume that this error is not critical
+            ORUW_LOG_MESSAGE("Cannot change the priority of the walk control thread: %s\n", strerror(retval));
+        }
+
+        walk_control_thread.detach();
+    }
+    catch (...)
+    {
+        halt("Failed to spawn the walk control thread.\n", __FUNCTION__);
+    }
+}
+
+
+/**
+ * @brief Wake up walk control thread periodically.
+ */
+void oru_walk::dcmCallback()
+{
+    dcm_loop_counter++;
+    if (dcm_loop_counter % (wp.control_sampling_time_ms / wp.dcm_sampling_time_ms) == 0)
+    {
+        last_dcm_time_ms = *last_dcm_time_ms_ptr + wp.dcm_time_shift_ms;
+        readSensors (nao.state_sensor);
+
+        boost::mutex::scoped_lock lock(walk_control_mutex);
+        walk_control_condition.notify_one();
+        lock.unlock();
     }
 }
 
@@ -117,33 +162,45 @@ void oru_walk::stopWalkingRemote()
  */
 void oru_walk::walkCallback()
 {
-    ORUW_TIMER(wp.loop_time_limit_ms);
-
-
-    // execution of the commands must finish when the next call to the
-    // callback is made
-    int callback_start_time_ms = dcmProxy->getTime(0);
-
-    readSensors (nao.state_sensor);
-
-
-    ORUW_LOG_JOINTS(nao.state_sensor, nao.state_model);
-    ORUW_LOG_COM(mpc, nao);
-    ORUW_LOG_FEET(nao);
-    ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, wp.control_sampling_time_sec);
-
-
-    feedbackError ();
-    if (solveMPCProblem ())  // solve MPC
+    for (;;)
     {
-        nao.state_model = nao_next.state_model; // the old solution from nao_next -> initial guess;
-        solveIKsendCommands (callback_start_time_ms, 1, nao);
+        boost::unique_lock<boost::mutex> lock(walk_control_mutex);
+        walk_control_condition.wait(lock);
+        lock.unlock();
 
-        nao_next.state_model = nao.state_model;
-        solveIKsendCommands (callback_start_time_ms, 2, nao_next);
+
+        ORUW_TIMER(wp.loop_time_limit_ms);
+
+
+        ORUW_LOG_JOINTS(nao.state_sensor, nao.state_model);
+        ORUW_LOG_COM(mpc, nao);
+        ORUW_LOG_FEET(nao);
+        ORUW_LOG_JOINT_VELOCITIES(nao.state_sensor, wp.control_sampling_time_sec);
+
+
+        try
+        {
+            feedbackError ();
+            if (solveMPCProblem ())  // solve MPC
+            {
+                nao.state_model = nao_next.state_model; // the old solution from nao_next -> initial guess;
+                solveIKsendCommands (last_dcm_time_ms, 1, nao);
+
+                nao_next.state_model = nao.state_model;
+                solveIKsendCommands (last_dcm_time_ms, 2, nao_next);
+            }
+            else
+            {
+                return;
+            }
+        }
+        catch(const ALError &e)
+        {
+            return;
+        }
+
+        ORUW_TIMER_CHECK;
     }
-
-    ORUW_TIMER_CHECK;
 }
 
 
@@ -174,8 +231,10 @@ void oru_walk::solveIKsendCommands (
             nao_model.right_foot_posture.data());
 
 
-    // inverse kinematics    
-    if (nao_model.igm () < 0)
+    // inverse kinematics
+    int iter_num = nao_model.igm ();    
+    ORUW_LOG_MESSAGE("IGM iterations num: %d\n", iter_num);
+    if (iter_num < 0)
     {
         halt("IK does not converge.\n", __FUNCTION__);
     }

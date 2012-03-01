@@ -31,12 +31,18 @@
 #include <alvalue/alvalue.h> // ALValue
 
 #include <alproxies/dcmproxy.h>
+#include <alproxies/almemoryproxy.h>
 
 #include <almemoryfastaccess/almemoryfastaccess.h>
+
+#include <althread/almutex.h>
 
 
 // other libraries
 #include <boost/bind.hpp> // callback hook
+#include <boost/thread.hpp> 
+
+#include <althread/alcriticalsection.h>
 
 
 // our headers
@@ -82,6 +88,7 @@ public:
     void setStiffness(const float &);
     void walk();
 
+//    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
 private:
     // initialization
@@ -103,6 +110,7 @@ private:
 
     // periodically called callback function
     void walkCallback();
+    void dcmCallback();
 
 
 // private variables
@@ -132,6 +140,15 @@ private:
     walkParameters wp;
 
     double init_joint_angles[JOINTS_NUM];
+
+
+    int dcm_loop_counter;
+    int last_dcm_time_ms;
+    ALPtr<ALMemoryProxy> memory_proxy;
+    int* last_dcm_time_ms_ptr;
+
+    boost::condition_variable walk_control_condition;
+    boost::mutex walk_control_mutex;
 };
 
 #endif  // ORU_WALK_H

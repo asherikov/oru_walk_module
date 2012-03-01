@@ -38,10 +38,14 @@ oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) :
     functionName( "stopWalking", getName() , "stopWalking");
     BIND_METHOD( oru_walk::stopWalkingRemote );
 
+    functionName("walkCallback", getName(), "");
+    BIND_METHOD( oru_walk::walkCallback );
+
 
     wmg = NULL;
     mpc = NULL;
     solver = NULL;
+    //walk_control_thread = NULL;
 }
 
 
@@ -102,6 +106,19 @@ void oru_walk::init()
     {
         ORUW_THROW_ERROR("Impossible to create DCM Proxy: ", e);
     }
+
+
+    try
+    {
+        // Get the memory proxy
+        memory_proxy = getParentBroker()->getMemoryProxy();
+    }
+    catch (ALError& e)
+    {
+        ORUW_THROW_ERROR("Impossible to create memory proxy: ", e);
+    }
+
+
 
 // Initialisation of ALmemory fast access, DCM commands, Alias, stiffness, ...
 

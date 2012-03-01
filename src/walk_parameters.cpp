@@ -44,7 +44,23 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     // The longest step in the built-in module.
     step_length = 0.04;
 
+
+    /*
+    Accordingly to the NAOqi documentation:
+    ---
+    Only DCM has a real-time thread in NAOqi. ::
+
+        scheduling policy: SCHED_FIFO
+        scheduling priority: 90
+    ---
+    Cannot set priority >= 70.
+    */
+    walk_control_thread_priority = 65; // constant
+
+    dcm_time_shift_ms = 2; //constant
+    dcm_sampling_time_ms = 10; // constant
     control_sampling_time_ms = 20; // constant
+
     control_sampling_time_sec = (double) control_sampling_time_ms / 1000;
     loop_time_limit_ms = 18000; // less than 20ms
     preview_sampling_time_ms = 40;

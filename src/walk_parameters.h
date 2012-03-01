@@ -79,6 +79,10 @@ class walkParameters
         double step_height;
         double step_length;
 
+        int walk_control_thread_priority;
+
+        int dcm_sampling_time_ms;
+        int dcm_time_shift_ms;
         int control_sampling_time_ms;
         double control_sampling_time_sec;
         int loop_time_limit_ms;

@@ -6,10 +6,8 @@
  */
 
 #include "oru_walk.h"
-#include "log_debug.h"
-
-#include <althread/alcriticalsection.h>
-#include <cstdlib>
+#include "oruw_log.h"
+#include "oruw_timer.h"
 
 
 /**
@@ -18,6 +16,7 @@
  */
 void oru_walk::walk()
 {
+    ORUW_LOG_OPEN;
     wp.readParameters();
 
     if (solver != NULL)
@@ -53,7 +52,6 @@ void oru_walk::walk()
 // models
     initWMG_NaoModel();
 
-    ORUW_LOG_OPEN(nao.state_sensor);
 
 // register callback
     dcm_loop_counter = 0;
@@ -65,7 +63,8 @@ void oru_walk::walk()
     }
     catch (const ALError &e)
     {
-        halt("Callback registration failed: " + string(e.what()), __FUNCTION__);
+        ORUW_LOG_MESSAGE("Callback registration failed: %s\n", e.what());
+        halt("Callback registration failed!", __FUNCTION__);
     }
 
 
@@ -119,7 +118,7 @@ void oru_walk::dcmCallback()
  * @param[in] message a message
  * @param[in] function name of the calling function.
  */
-void oru_walk::halt(const string &message, const char* function)
+void oru_walk::halt(const char *message, const char* function)
 {
     stopWalking(message);
     setStiffness(0.0);
@@ -133,13 +132,14 @@ void oru_walk::halt(const string &message, const char* function)
  *
  * @param[in] message a message
  */
-void oru_walk::stopWalking(const string& message)
+void oru_walk::stopWalking(const char* message)
 {
     ORUW_LOG_STEPS(wmg);
-    ORUW_LOG_MESSAGE("%s", message.c_str());
+    ORUW_LOG_MESSAGE("%s", message);
+    ORUW_LOG_CLOSE;
+
     qiLogInfo ("module.oru_walk") << message;
     dcm_callback_connection.disconnect();
-    ORUW_LOG_CLOSE;
 }
 
 
@@ -161,6 +161,9 @@ void oru_walk::stopWalkingRemote()
  */
 void oru_walk::walkControl()
 {
+    oruw_timer timer(__FUNCTION__, wp.loop_time_limit_ms);
+
+
     for (;;)
     {
         boost::unique_lock<boost::mutex> lock(walk_control_mutex);
@@ -168,7 +171,7 @@ void oru_walk::walkControl()
         lock.unlock();
 
 
-        ORUW_TIMER(wp.loop_time_limit_ms);
+        timer.reset();
 
 
         ORUW_LOG_JOINTS(nao.state_sensor, nao.state_model);
@@ -179,6 +182,7 @@ void oru_walk::walkControl()
         try
         {
             feedbackError ();
+
             if (solveMPCProblem ())  // solve MPC
             {
                 nao.state_model = nao_next.state_model; // the old solution from nao_next -> initial guess;
@@ -191,13 +195,16 @@ void oru_walk::walkControl()
             {
                 return;
             }
+
+            if (!timer.check()) 
+            {
+                halt("Time limit is violated!\n", __FUNCTION__);
+            }
         }
-        catch (const ALError &e)
+        catch (...)
         {
             return;
         }
-
-        ORUW_TIMER_CHECK;
     }
 }
 
@@ -208,7 +215,7 @@ void oru_walk::walkControl()
  *
  * @param[in] callback_start_time_ms the time, when the callback was started.
  * @param[in] control_loop_num number of control loops in future (>= 1).
- * @param[in,out] nao_model modelof the nao.
+ * @param[in,out] nao_model model of the nao.
  */
 void oru_walk::solveIKsendCommands (
         const int callback_start_time_ms,
@@ -256,7 +263,8 @@ void oru_walk::solveIKsendCommands (
     }
     catch (const AL::ALError &e)
     {
-        halt("Cannot set joint angles: " + string(e.what()), __FUNCTION__);
+        ORUW_LOG_MESSAGE("Cannot set joint angles: %s", e.what());
+        halt("Cannot set joint angles!", __FUNCTION__);
     }
 }
 
@@ -410,7 +418,7 @@ void oru_walk::initWMG_NaoModel()
  */
 bool oru_walk::solveMPCProblem ()
 {
-    ORUW_TIMER(wp.loop_time_limit_ms);
+    oruw_timer timer(__FUNCTION__, wp.loop_time_limit_ms);
 
     /// @todo Works only for 20/40!
     if (wmg->T_ms[2] == 0)
@@ -441,6 +449,9 @@ bool oru_walk::solveMPCProblem ()
 
 
     ORUW_LOG_MESSAGE("Num of active constraints: %d\n", num_iq_constr);
-    ORUW_TIMER_CHECK;
+    if (!timer.check()) 
+    {
+        halt("Time limit is violated!\n", __FUNCTION__);
+    }
     return (true);
 }

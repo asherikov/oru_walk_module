@@ -79,7 +79,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     control_sampling_time_ms = 20; // constant
     control_sampling_time_sec = (double) control_sampling_time_ms / 1000;
 
-    loop_time_limit_ms = 18000; // less than control_sampling_time_ms
+    loop_time_limit_ms = 18; // less than control_sampling_time_ms
 
 
 

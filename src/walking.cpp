@@ -238,8 +238,8 @@ void oru_walk::solveIKsendCommands (
     // support foot and swing foot position/orientation
     wmg->getFeetPositions (
             control_loop_num * wp.control_sampling_time_ms, 
-            nao_model.left_foot_posture.data(), 
-            nao_model.right_foot_posture.data());
+            nao_model.left_foot_posture->data(), 
+            nao_model.right_foot_posture->data());
 
 
     // inverse kinematics
@@ -415,7 +415,7 @@ void oru_walk::initWMG_NaoModel()
 
 // error in position of the swing foot    
     nao.getSwingFootPosture (nao.state_sensor);
-    wmg->changeNextSSPosition (nao.swing_foot_posture.data(), wp.set_support_z_to_zero);
+    wmg->changeNextSSPosition (nao.swing_foot_posture->data(), wp.set_support_z_to_zero);
 }
 
 

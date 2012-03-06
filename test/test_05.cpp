@@ -32,14 +32,13 @@ int main(int argc, char **argv)
     // sampling
     int control_sampling_time_ms = 20;
     int preview_sampling_time_ms = 40;
-    int next_preview_len_ms = 0;
     //-----------------------------------------------------------
 
     //-----------------------------------------------------------
     // initialize classes
     nao_igm nao;
     initNaoModel (&nao);
-    init_07 test_05("test_05", preview_sampling_time_ms, nao.CoM_position[2], false);
+    init_08 test_05("test_05", preview_sampling_time_ms, nao.CoM_position[2], false);
     nao_igm nao_next = nao;
 
     
@@ -71,13 +70,6 @@ int main(int argc, char **argv)
     while (isRunning)
     {
         nao.state_sensor = nao.state_model;
-        if (next_preview_len_ms == 0)
-        {
-            next_preview_len_ms = preview_sampling_time_ms;
-        }
-
-
-        test_05.wmg->T_ms[2] = next_preview_len_ms;
 
         if (test_05.wmg->formPreviewWindow(*test_05.par) == WMG_HALT)
         {
@@ -162,8 +154,6 @@ int main(int argc, char **argv)
         {
             drawSDL(100, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, nao_next.left_foot_posture);
         }
-
-        next_preview_len_ms -= control_sampling_time_ms;
     }
 
     // keep the visualization active (until ESC is pressed)

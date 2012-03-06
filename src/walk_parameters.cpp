@@ -41,7 +41,8 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     preview_sampling_time_ms = 40;
     preview_sampling_time_sec = (double) preview_sampling_time_ms / 1000;
 
-    ss_number = 10;
+    ss_time_ms = 400;
+    ds_time_ms = 40;
     ds_number = 3;
     step_pairs_number = 4;
 
@@ -79,7 +80,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     control_sampling_time_ms = 20; // constant
     control_sampling_time_sec = (double) control_sampling_time_ms / 1000;
 
-    loop_time_limit_ms = 18; // less than control_sampling_time_ms
+    loop_time_limit_ms = 15; // less than control_sampling_time_ms
 
 
 
@@ -104,7 +105,8 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     param_names[PREVIEW_SAMPLING_TIME_MS] = "preview_sampling_time_ms";
     param_names[PREVIEW_WINDOW_SIZE]      = "preview_window_size";     
 
-    param_names[SS_NUMBER]                = "ss_number";     
+    param_names[SS_CONTROL_LOOPS]         = "ss_control_loops";     
+    param_names[DS_CONTROL_LOOPS]         = "ds_control_loops";     
     param_names[DS_NUMBER]                = "ds_number";     
     param_names[STEP_PAIRS_NUMBER]        = "step_pairs_number";     
 }
@@ -198,8 +200,11 @@ void walkParameters::readParameters()
                     case PREVIEW_WINDOW_SIZE:
                         preview_window_size = preferences[i][2];
                         break;
-                    case SS_NUMBER:
-                        ss_number = preferences[i][2];
+                    case SS_CONTROL_LOOPS:
+                        ss_time_ms = control_sampling_time_ms * (int) preferences[i][2];
+                        break;
+                    case DS_CONTROL_LOOPS:
+                        ds_time_ms = control_sampling_time_ms * (int) preferences[i][2];
                         break;
                     case DS_NUMBER:
                         ds_number = preferences[i][2];     
@@ -251,7 +256,8 @@ void walkParameters::writeParameters()
     preferences[PREVIEW_SAMPLING_TIME_MS][1] = "";
     preferences[PREVIEW_WINDOW_SIZE][1]      = "";     
 
-    preferences[SS_NUMBER][1]                = "";     
+    preferences[SS_CONTROL_LOOPS][1]         = "";
+    preferences[DS_CONTROL_LOOPS][1]         = "";
     preferences[DS_NUMBER][1]                = "";     
     preferences[STEP_PAIRS_NUMBER][1]        = "";     
 
@@ -274,7 +280,8 @@ void walkParameters::writeParameters()
     preferences[PREVIEW_SAMPLING_TIME_MS][2]    = preview_sampling_time_ms;
     preferences[PREVIEW_WINDOW_SIZE][2]         = preview_window_size;
 
-    preferences[SS_NUMBER][2]                   = ss_number;
+    preferences[SS_CONTROL_LOOPS][2]            = ss_time_ms / control_sampling_time_ms;
+    preferences[DS_CONTROL_LOOPS][2]            = ds_time_ms / control_sampling_time_ms;
     preferences[DS_NUMBER][2]                   = ds_number;
     preferences[STEP_PAIRS_NUMBER][2]           = step_pairs_number;
 

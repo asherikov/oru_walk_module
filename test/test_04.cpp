@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     // initialize classes
     nao_igm nao;
     initNaoModel (&nao);
-    init_07 test_04("test_04", preview_sampling_time_ms, nao.CoM_position[2], false);
+    init_08 test_04("test_04", preview_sampling_time_ms, nao.CoM_position[2], false);
 
 
     smpc::solver solver(
@@ -90,13 +90,7 @@ int main(int argc, char **argv)
     {
         nao.state_sensor = nao.state_model;
 
-        if (next_preview_len_ms == 0)
-        {
-            next_preview_len_ms = preview_sampling_time_ms;
-        }   
 
-
-        test_04.wmg->T_ms[2] = next_preview_len_ms;
 
         if (test_04.wmg->formPreviewWindow(*test_04.par) == WMG_HALT)
         {
@@ -129,14 +123,18 @@ int main(int argc, char **argv)
 
         //-----------------------------------------------------------
         // output
-        if (next_preview_len_ms == preview_sampling_time_ms)
+        if (next_preview_len_ms == 0)
         {
+            next_preview_len_ms = preview_sampling_time_ms;
+
             ZMP_x.push_back(test_04.X_tilde.x());
             ZMP_y.push_back(test_04.X_tilde.y());
             test_04.X_tilde.get_next_state (solver);
         }
         CoM_x.push_back(test_04.par->init_state.x());
         CoM_y.push_back(test_04.par->init_state.y());
+
+        next_preview_len_ms -= control_sampling_time_ms;
         //-----------------------------------------------------------
     
 
@@ -203,9 +201,6 @@ int main(int argc, char **argv)
             break;
         }
         //-----------------------------------------------------------
-
-
-        next_preview_len_ms -= control_sampling_time_ms;
     }
 
 

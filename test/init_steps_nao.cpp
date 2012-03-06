@@ -64,27 +64,31 @@ class init_04 : public test_init_base
                 wmg->def_ss_constraint[3] + 0.5*step_y};
 
 
-            wmg->AddFootstep(0.0, step_y/2, 0.0, 0, 0, wmg->def_ss_constraint, FS_TYPE_SS_L);
+            wmg->setFootstepDefaults (0, 0, wmg->def_ss_constraint);
+            wmg->addFootstep(0.0, step_y/2, 0.0, FS_TYPE_SS_L);
 
             // Initial double support
-            wmg->AddFootstep(0.0, -step_y/2, 0.0, 10, 10, ds_constraint, FS_TYPE_DS);
+            wmg->setFootstepDefaults (10, 0, ds_constraint);
+            wmg->addFootstep(0.0, -step_y/2, 0.0, FS_TYPE_DS);
 
 
-            // 2 reference ZMP positions in single support 
+            // 5 reference ZMP positions in single support 
             // 1 in double support
-            // 1 + 2 = 3
-            wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 5,  6, wmg->def_ss_constraint);
-            wmg->AddFootstep(step_x,  step_y, 0.0);
-            wmg->AddFootstep(step_x, -step_y, 0.0);
-            wmg->AddFootstep(step_x,  step_y, 0.0);
-            wmg->AddFootstep(step_x, -step_y, 0.0);
-            wmg->AddFootstep(step_x,  step_y, 0.0);
+            wmg->setFootstepDefaults (5, 1, wmg->def_ss_constraint);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0);
+            wmg->addFootstep(step_x,  step_y, 0.0);
+            wmg->addFootstep(step_x, -step_y, 0.0);
+            wmg->addFootstep(step_x,  step_y, 0.0);
+            wmg->addFootstep(step_x, -step_y, 0.0);
+            wmg->addFootstep(step_x,  step_y, 0.0);
 
             // here we give many reference points, since otherwise we 
             // would not have enough steps in preview window to reach 
             // the last footsteps
-            wmg->AddFootstep(0.0   , -step_y/2, 0.0, 120, 120, ds_constraint, FS_TYPE_DS);
-            wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 0,  0, wmg->def_ss_constraint, FS_TYPE_SS_R);
+            wmg->setFootstepDefaults (120, 0, ds_constraint);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_DS);
+            wmg->setFootstepDefaults (0, 0, wmg->def_ss_constraint);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_SS_R);
 
             if (!name.empty())
             {
@@ -98,10 +102,10 @@ class init_04 : public test_init_base
 /**
  * @brief Walk straight
  */
-class init_07 : public test_init_base
+class init_08 : public test_init_base
 {
     public:
-        init_07 (
+        init_08 (
                 const string & test_name, 
                 const int preview_sampling_time_ms,
                 const double hCoM,
@@ -110,7 +114,8 @@ class init_07 : public test_init_base
         {
             wmg = new WMG (40, preview_sampling_time_ms, 0.02);
             par = new smpc_parameters (wmg->N, hCoM);
-            int ss_number = 11;
+            int ss_time_ms = 400;
+            int ds_time_ms = 40;
             int ds_number = 3;
 
 
@@ -125,33 +130,36 @@ class init_07 : public test_init_base
                 wmg->def_ss_constraint[3] + 0.5*step_y};
 
 
-            wmg->AddFootstep(0.0, step_y/2, 0.0, 0, 0, wmg->def_ss_constraint, FS_TYPE_SS_L);
+            wmg->setFootstepDefaults (0, 0, 0, wmg->def_ss_constraint);
+            wmg->addFootstep(0.0, step_y/2, 0.0, FS_TYPE_SS_L);
 
             // Initial double support
-            wmg->AddFootstep(0.0, -step_y/2, 0.0, 3*ss_number, 3*ss_number, ds_constraint, FS_TYPE_DS);
+            wmg->setFootstepDefaults (3*ss_time_ms, 0, 0, wmg->def_ss_constraint);
+            wmg->addFootstep(0.0, -step_y/2, 0.0, FS_TYPE_DS);
             // ZMP, CoM are at [0;0]
 
 
             // all subsequent steps have normal feet size
-            // 2 reference ZMP positions in single support 
-            // 1 in double support
-            // 1 + 2 = 3
-            wmg->AddFootstep(0.0   , -step_y/2, 0.0, ss_number, ss_number, wmg->def_ss_constraint);
-            wmg->AddFootstep(step_x,  step_y, 0.0, ss_number, ss_number+ds_number, wmg->def_ss_constraint);
-            wmg->AddFootstep(step_x, -step_y, 0.0);
-            wmg->AddFootstep(step_x,  step_y, 0.0);
-            wmg->AddFootstep(step_x, -step_y, 0.0);
-            wmg->AddFootstep(step_x,  step_y, 0.0);
-            wmg->AddFootstep(step_x, -step_y, 0.0);
-            wmg->AddFootstep(step_x,  step_y, 0.0);
-            wmg->AddFootstep(step_x, -step_y, 0.0);
-            wmg->AddFootstep(step_x,  step_y, 0.0);
+            wmg->setFootstepDefaults (ss_time_ms, 0, 0, wmg->def_ss_constraint);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0);
+            wmg->setFootstepDefaults (ss_time_ms, ds_time_ms, ds_number);
+            wmg->addFootstep(step_x,  step_y, 0.0);
+            wmg->addFootstep(step_x, -step_y, 0.0);
+            wmg->addFootstep(step_x,  step_y, 0.0);
+            wmg->addFootstep(step_x, -step_y, 0.0);
+            wmg->addFootstep(step_x,  step_y, 0.0);
+            wmg->addFootstep(step_x, -step_y, 0.0);
+            wmg->addFootstep(step_x,  step_y, 0.0);
+            wmg->addFootstep(step_x, -step_y, 0.0);
+            wmg->addFootstep(step_x,  step_y, 0.0);
 
             // here we give many reference points, since otherwise we 
             // would not have enough steps in preview window to reach 
             // the last footsteps
-            wmg->AddFootstep(0.0   , -step_y/2, 0.0, 50, 50, ds_constraint, FS_TYPE_DS);
-            wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 0,  0, wmg->def_ss_constraint, FS_TYPE_SS_R);
+            wmg->setFootstepDefaults (5*ss_time_ms, 0, 0, ds_constraint);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_DS);
+            wmg->setFootstepDefaults (0, 0, 0, wmg->def_ss_constraint);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_SS_R);
 
             if (!name.empty())
             {

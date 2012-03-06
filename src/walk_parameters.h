@@ -49,7 +49,8 @@ enum parametersNames
     DCM_TIME_SHIFT_MS           ,
     PREVIEW_SAMPLING_TIME_MS    ,
     PREVIEW_WINDOW_SIZE         ,
-    SS_NUMBER                   ,
+    SS_CONTROL_LOOPS            ,
+    DS_CONTROL_LOOPS            ,
     DS_NUMBER                   ,
     STEP_PAIRS_NUMBER           ,
 
@@ -93,7 +94,8 @@ class walkParameters
 
         bool set_support_z_to_zero;
 
-        int ss_number;
+        int ss_time_ms;
+        int ds_time_ms;
         int ds_number;
         int step_pairs_number;
 

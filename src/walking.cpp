@@ -185,6 +185,12 @@ void oru_walk::walkControl()
 
             if (solveMPCProblem ())  // solve MPC
             {
+                if (wmg->isSupportSwitchNeeded())
+                {
+                    wmg->changeNextSSPosition(nao.switchSupportFoot(), wp.set_support_z_to_zero);
+                    nao_next.support_foot = nao.support_foot;
+                }
+
                 nao.state_model = nao_next.state_model; // the old solution from nao_next -> initial guess;
                 solveIKsendCommands (last_dcm_time_ms, 1, nao);
 
@@ -225,7 +231,7 @@ void oru_walk::solveIKsendCommands (
     smpc::state_orig CoM;
     CoM.get_state(*solver, control_loop_num-1);
 
-    /// @attention hCoM is constant!
+    // hCoM is constant!
     nao_model.setCoM(CoM.x(), CoM.y(), mpc->hCoM);
 
 
@@ -362,7 +368,6 @@ void oru_walk::initWMG_NaoModel()
             wp.step_height);              // step height (for interpolation of feet movements)
     wmg->T_ms[0] = wp.control_sampling_time_ms;
     wmg->T_ms[1] = wp.control_sampling_time_ms;
-    wmg->T_ms[2] = 0;
     
 
     mpc = new smpc_parameters (
@@ -379,31 +384,33 @@ void oru_walk::initWMG_NaoModel()
         wmg->def_ss_constraint[2],
         wmg->def_ss_constraint[3] + 0.5*step_y};
 
-
-    wmg->AddFootstep(0.0, step_y/2, 0.0, 0, 0, wmg->def_ss_constraint, FS_TYPE_SS_L);
+    wmg->setFootstepDefaults(0, 0, 0, wmg->def_ss_constraint);
+    wmg->addFootstep(0.0, step_y/2, 0.0, FS_TYPE_SS_L);
 
     // Initial double support
-    wmg->AddFootstep(0.0, -step_y/2, 0.0, 3*wp.ss_number, 3*wp.ss_number, ds_constraint, FS_TYPE_DS);
+    wmg->setFootstepDefaults(3*wp.ss_time_ms, 0, 0, ds_constraint);
+    wmg->addFootstep(0.0, -step_y/2, 0.0, FS_TYPE_DS);
 
 
     // all subsequent steps have normal feet size
-    // 2 reference ZMP positions in single support 
-    // 1 in double support
-    // 1 + 2 = 3
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0, wp.ss_number, wp.ss_number, wmg->def_ss_constraint);
-    wmg->AddFootstep(step_x,  step_y,   0.0, wp.ss_number, wp.ss_number + wp.ds_number, wmg->def_ss_constraint);
+    wmg->setFootstepDefaults(wp.ss_time_ms, 0, 0, wmg->def_ss_constraint);
+    wmg->addFootstep(0.0   , -step_y/2, 0.0);
+    wmg->setFootstepDefaults(wp.ss_time_ms, wp.ds_time_ms, wp.ds_number);
+    wmg->addFootstep(step_x,  step_y,   0.0);
 
     for (int i = 0; i < wp.step_pairs_number; i++)
     {
-        wmg->AddFootstep(step_x, -step_y, 0.0);
-        wmg->AddFootstep(step_x,  step_y, 0.0);
+        wmg->addFootstep(step_x, -step_y, 0.0);
+        wmg->addFootstep(step_x,  step_y, 0.0);
     }
 
     // here we give many reference points, since otherwise we 
     // would not have enough steps in preview window to reach 
     // the last footsteps
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0, 5*wp.ss_number, 5*wp.ss_number, ds_constraint, FS_TYPE_DS);
-    wmg->AddFootstep(0.0   , -step_y/2, 0.0 , 0,  0, wmg->def_ss_constraint, FS_TYPE_SS_R);
+    wmg->setFootstepDefaults(5*wp.ss_time_ms, 0, 0, ds_constraint);
+    wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_DS);
+    wmg->setFootstepDefaults(0, 0, 0, wmg->def_ss_constraint);
+    wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_SS_R);
 
 
 // error in position of the swing foot    
@@ -415,28 +422,17 @@ void oru_walk::initWMG_NaoModel()
 
 /**
  * @brief Solve the MPC problem.
+ *
+ * @return false if there is not enough steps, true otherwise.
  */
 bool oru_walk::solveMPCProblem ()
 {
     oruw_timer timer(__FUNCTION__, wp.loop_time_limit_ms);
 
-    /// @todo Works only for 20/40!
-    if (wmg->T_ms[2] == 0)
-    {
-        wmg->T_ms[2] = wp.preview_sampling_time_ms;
-    }
     if (wmg->formPreviewWindow(*mpc) == WMG_HALT)
     {
         stopWalking("Not enough steps to form preview window. Stopping.");
         return (false);
-    }
-    wmg->T_ms[2] -= wp.control_sampling_time_ms;
-
-
-    if (wmg->isSupportSwitchNeeded())
-    {
-        wmg->changeNextSSPosition(nao.switchSupportFoot(), wp.set_support_z_to_zero);
-        nao_next.support_foot = nao.support_foot;
     }
 
 

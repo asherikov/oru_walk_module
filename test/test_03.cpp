@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     // initialize classes
     nao_igm nao;
     initNaoModel (&nao);
-    init_07 test_03("test_03", preview_sampling_time_ms, nao.CoM_position[2], false);
+    init_08 test_03("test_03", preview_sampling_time_ms, nao.CoM_position[2], false);
     IPM ipm ((double) control_sampling_time_ms / 1000);
 
 

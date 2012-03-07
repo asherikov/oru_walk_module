@@ -97,9 +97,13 @@ private:
     void initWalkCommands ();
     void initJointAngles (ALValue &);
 
+    void initWalkPattern_Straight();
+    void initWalkPattern_Diagonal();
+
 
     // walking
     void initWMG_NaoModel ();
+    void initWMG_NaoModel1 ();
     void readSensors (jointState&);
     bool solveMPCProblem ();
     void solveIKsendCommands (const int, const int, nao_igm &);

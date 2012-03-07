@@ -34,6 +34,14 @@
 using namespace AL;
 using namespace std;
 
+
+enum walkPatterns
+{
+    WALK_PATTERN_STRAIGHT = 0,
+    WALK_PATTERN_DIAGONAL = 1
+};
+
+
 enum parametersNames
 {
     FEEDBACK_GAIN               ,
@@ -53,6 +61,7 @@ enum parametersNames
     DS_CONTROL_LOOPS            ,
     DS_NUMBER                   ,
     STEP_PAIRS_NUMBER           ,
+    WALK_PATTERN                ,
 
     NUM_PARAMETERS              
 };
@@ -101,6 +110,9 @@ class walkParameters
 
         ALValue param_names;
         ALPreferencesProxy pref_proxy;
+
+
+        int walk_pattern;
 };
 
 #endif  // WALK_PARAMETERS_H

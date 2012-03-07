@@ -378,39 +378,18 @@ void oru_walk::initWMG_NaoModel()
 
 
 // steps
-    double ds_constraint[4] = {
-        wmg->def_ss_constraint[0],
-        wmg->def_ss_constraint[1] + 0.5*step_y,
-        wmg->def_ss_constraint[2],
-        wmg->def_ss_constraint[3] + 0.5*step_y};
-
-    wmg->setFootstepDefaults(0, 0, 0, wmg->def_ss_constraint);
-    wmg->addFootstep(0.0, step_y/2, 0.0, FS_TYPE_SS_L);
-
-    // Initial double support
-    wmg->setFootstepDefaults(3*wp.ss_time_ms, 0, 0, ds_constraint);
-    wmg->addFootstep(0.0, -step_y/2, 0.0, FS_TYPE_DS);
-
-
-    // all subsequent steps have normal feet size
-    wmg->setFootstepDefaults(wp.ss_time_ms, 0, 0, wmg->def_ss_constraint);
-    wmg->addFootstep(0.0   , -step_y/2, 0.0);
-    wmg->setFootstepDefaults(wp.ss_time_ms, wp.ds_time_ms, wp.ds_number);
-    wmg->addFootstep(step_x,  step_y,   0.0);
-
-    for (int i = 0; i < wp.step_pairs_number; i++)
+    switch (wp.walk_pattern)
     {
-        wmg->addFootstep(step_x, -step_y, 0.0);
-        wmg->addFootstep(step_x,  step_y, 0.0);
+        case WALK_PATTERN_STRAIGHT:
+            initWalkPattern_Straight();
+            break;
+        case WALK_PATTERN_DIAGONAL:
+            initWalkPattern_Diagonal();
+            break;
+        default:
+            halt("Unknown walk pattern.\n", __FUNCTION__);
+            break;
     }
-
-    // here we give many reference points, since otherwise we 
-    // would not have enough steps in preview window to reach 
-    // the last footsteps
-    wmg->setFootstepDefaults(5*wp.ss_time_ms, 0, 0, ds_constraint);
-    wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_DS);
-    wmg->setFootstepDefaults(0, 0, 0, wmg->def_ss_constraint);
-    wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_SS_R);
 
 
 // error in position of the swing foot    

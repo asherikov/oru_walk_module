@@ -40,13 +40,13 @@ int main(int argc, char **argv)
     // initialize classes
     nao_igm nao;
     initNaoModel (&nao);
-    init_08 test_04("test_04", preview_sampling_time_ms, nao.CoM_position[2], false);
+    init_09 test_07("test_07", preview_sampling_time_ms, nao.CoM_position[2], false);
 
 
     smpc::solver solver(
-            test_04.wmg->N, // size of the preview window
+            test_07.wmg->N, // size of the preview window
             1.0,  // Alpha
-            8000.0,  // Beta
+            4000.0,  // Beta
             1.0,    // Gamma
             0.01,   // regularization
             1e-7);  // tolerance
@@ -55,15 +55,15 @@ int main(int argc, char **argv)
 
 
     //-----------------------------------------------------------
-    test_04.par->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
-    test_04.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
+    test_07.par->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
+    test_07.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
     //-----------------------------------------------------------
 
 
 
     //-----------------------------------------------------------
     // output
-    FILE *file_op = fopen(test_04.fs_out_filename.c_str(), "a");
+    FILE *file_op = fopen(test_07.fs_out_filename.c_str(), "a");
     fprintf(file_op,"hold on\n");
 
     vector<double> ZMP_x;
@@ -84,39 +84,39 @@ int main(int argc, char **argv)
 
 
 
-    test_04.wmg->T_ms[0] = control_sampling_time_ms;
-    test_04.wmg->T_ms[1] = control_sampling_time_ms;
+    test_07.wmg->T_ms[0] = control_sampling_time_ms;
+    test_07.wmg->T_ms[1] = control_sampling_time_ms;
     for(int i=0 ;; i++)
     {
         nao.state_sensor = nao.state_model;
 
 
 
-        if (test_04.wmg->formPreviewWindow(*test_04.par) == WMG_HALT)
+        if (test_07.wmg->formPreviewWindow(*test_07.par) == WMG_HALT)
         {
             cout << "EXIT (halt = 1)" << endl;
             break;
         }
-        for (unsigned int j = 0; j < test_04.wmg->N; j++)
+        for (unsigned int j = 0; j < test_07.wmg->N; j++)
         {
-            ZMPref_x.push_back(test_04.par->zref_x[j]);
-            ZMPref_y.push_back(test_04.par->zref_y[j]);
+            ZMPref_x.push_back(test_07.par->zref_x[j]);
+            ZMPref_y.push_back(test_07.par->zref_y[j]);
         }
-        cout << test_04.wmg->isSupportSwitchNeeded() << endl;
-        if (test_04.wmg->isSupportSwitchNeeded())
+        cout << test_07.wmg->isSupportSwitchNeeded() << endl;
+        if (test_07.wmg->isSupportSwitchNeeded())
         {
-            test_04.wmg->changeNextSSPosition(nao.switchSupportFoot(), true);
+            test_07.wmg->changeNextSSPosition(nao.switchSupportFoot(), true);
         }
 
        
         
         //------------------------------------------------------
-        solver.set_parameters (test_04.par->T, test_04.par->h, test_04.par->h[0], test_04.par->angle, test_04.par->zref_x, test_04.par->zref_y, test_04.par->lb, test_04.par->ub);
-        solver.form_init_fp (test_04.par->fp_x, test_04.par->fp_y, test_04.par->init_state, test_04.par->X);
+        solver.set_parameters (test_07.par->T, test_07.par->h, test_07.par->h[0], test_07.par->angle, test_07.par->zref_x, test_07.par->zref_y, test_07.par->lb, test_07.par->ub);
+        solver.form_init_fp (test_07.par->fp_x, test_07.par->fp_y, test_07.par->init_state, test_07.par->X);
         solver.solve();
         //-----------------------------------------------------------
         // update state
-        test_04.par->init_state.get_next_state (solver);
+        test_07.par->init_state.get_next_state (solver);
         //-----------------------------------------------------------
 
 
@@ -127,12 +127,12 @@ int main(int argc, char **argv)
         {
             next_preview_len_ms = preview_sampling_time_ms;
 
-            ZMP_x.push_back(test_04.X_tilde.x());
-            ZMP_y.push_back(test_04.X_tilde.y());
-            test_04.X_tilde.get_next_state (solver);
+            ZMP_x.push_back(test_07.X_tilde.x());
+            ZMP_y.push_back(test_07.X_tilde.y());
+            test_07.X_tilde.get_next_state (solver);
         }
-        CoM_x.push_back(test_04.par->init_state.x());
-        CoM_y.push_back(test_04.par->init_state.y());
+        CoM_x.push_back(test_07.par->init_state.x());
+        CoM_y.push_back(test_07.par->init_state.y());
 
         next_preview_len_ms -= control_sampling_time_ms;
         //-----------------------------------------------------------
@@ -141,13 +141,13 @@ int main(int argc, char **argv)
 
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
-        test_04.wmg->getFeetPositions (
+        test_07.wmg->getFeetPositions (
                 control_sampling_time_ms,
                 nao.left_foot_posture->data(),
                 nao.right_foot_posture->data());
 
         // position of CoM
-        nao.setCoM(test_04.par->init_state.x(), test_04.par->init_state.y(), test_04.par->hCoM); 
+        nao.setCoM(test_07.par->init_state.x(), test_07.par->init_state.y(), test_07.par->hCoM); 
 
 
         if (nao.igm () < 0)
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
         nao_igm nao_next = nao;
 
-        test_04.wmg->getFeetPositions (
+        test_07.wmg->getFeetPositions (
                 2*control_sampling_time_ms,
                 nao_next.left_foot_posture->data(),
                 nao_next.right_foot_posture->data());
@@ -186,7 +186,7 @@ int main(int argc, char **argv)
         // position of CoM
         smpc::state_orig next_CoM;
         next_CoM.get_state(solver, 1);
-        nao_next.setCoM(next_CoM.x(), next_CoM.y(), test_04.par->hCoM); 
+        nao_next.setCoM(next_CoM.x(), next_CoM.y(), test_07.par->hCoM); 
 
 
         if (nao_next.igm () < 0)

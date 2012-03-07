@@ -38,70 +38,70 @@ int main(int argc, char **argv)
     // initialize classes
     nao_igm nao;
     initNaoModel (&nao);
-    init_08 test_05("test_05", preview_sampling_time_ms, nao.CoM_position[2], false);
+    init_09 test_06("test_06", preview_sampling_time_ms, nao.CoM_position[2], false);
     nao_igm nao_next = nao;
 
     
     vector<double> x_coord;
     vector<double> y_coord;
     vector<double> angle_rot;
-    test_05.wmg->getFootsteps(x_coord, y_coord, angle_rot);
+    test_06.wmg->getFootsteps(x_coord, y_coord, angle_rot);
 
 
     smpc::solver solver(
-        test_05.wmg->N, // size of the preview window
+        test_06.wmg->N, // size of the preview window
         1.0,  // Alpha
-        8000.0,  // Beta
+        4000.0,  // Beta
         1.0,    // Gamma
         0.01,   // regularization
         1e-7);  // tolerance
     //-----------------------------------------------------------
 
     //-----------------------------------------------------------
-    test_05.par->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
-    test_05.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
+    test_06.par->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
+    test_06.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
     //-----------------------------------------------------------
 
 
     initSDL();
     isRunning=1;
-    test_05.wmg->T_ms[0] = control_sampling_time_ms;
-    test_05.wmg->T_ms[1] = control_sampling_time_ms;
+    test_06.wmg->T_ms[0] = control_sampling_time_ms;
+    test_06.wmg->T_ms[1] = control_sampling_time_ms;
     while (isRunning)
     {
         nao.state_sensor = nao.state_model;
 
-        if (test_05.wmg->formPreviewWindow(*test_05.par) == WMG_HALT)
+        if (test_06.wmg->formPreviewWindow(*test_06.par) == WMG_HALT)
         {
             cout << "EXIT (halt = 1)" << endl;
             break;
         }
-        cout << test_05.wmg->isSupportSwitchNeeded() << endl;
-        if (test_05.wmg->isSupportSwitchNeeded())
+        cout << test_06.wmg->isSupportSwitchNeeded() << endl;
+        if (test_06.wmg->isSupportSwitchNeeded())
         {
-            test_05.wmg->changeNextSSPosition(nao.switchSupportFoot(), true);
+            test_06.wmg->changeNextSSPosition(nao.switchSupportFoot(), true);
         }
 
 
         //------------------------------------------------------
-        solver.set_parameters (test_05.par->T, test_05.par->h, test_05.par->h[0], test_05.par->angle, test_05.par->zref_x, test_05.par->zref_y, test_05.par->lb, test_05.par->ub);
-        solver.form_init_fp (test_05.par->fp_x, test_05.par->fp_y, test_05.par->init_state, test_05.par->X);
+        solver.set_parameters (test_06.par->T, test_06.par->h, test_06.par->h[0], test_06.par->angle, test_06.par->zref_x, test_06.par->zref_y, test_06.par->lb, test_06.par->ub);
+        solver.form_init_fp (test_06.par->fp_x, test_06.par->fp_y, test_06.par->init_state, test_06.par->X);
         solver.solve();
         //-----------------------------------------------------------
         // update state
-        test_05.par->init_state.get_next_state (solver);
+        test_06.par->init_state.get_next_state (solver);
         //-----------------------------------------------------------
 
 
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
-        test_05.wmg->getFeetPositions (
+        test_06.wmg->getFeetPositions (
                 control_sampling_time_ms,
                 nao.left_foot_posture->data(),
                 nao.right_foot_posture->data());
 
         // position of CoM
-        nao.setCoM(test_05.par->init_state.x(), test_05.par->init_state.y(), test_05.par->hCoM);
+        nao.setCoM(test_06.par->init_state.x(), test_06.par->init_state.y(), test_06.par->hCoM);
 
 
         if (nao.igm () < 0)
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
         nao_next.state_model = nao.state_model;
         nao_next.support_foot = nao.support_foot;
 
-        test_05.wmg->getFeetPositions (
+        test_06.wmg->getFeetPositions (
                 2*control_sampling_time_ms,
                 nao_next.left_foot_posture->data(),
                 nao_next.right_foot_posture->data());
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
         // position of CoM
         smpc::state_orig next_CoM;
         next_CoM.get_state(solver, 1);
-        nao_next.setCoM(next_CoM.x(), next_CoM.y(), test_05.par->hCoM); 
+        nao_next.setCoM(next_CoM.x(), next_CoM.y(), test_06.par->hCoM); 
 
 
         if (nao_next.igm () < 0)

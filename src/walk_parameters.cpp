@@ -29,7 +29,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
 
 
 // parameters of the MPC solver
-    mpc_alpha = 400.0;  // penalty for the velocity
+    mpc_alpha = 1.0;    // penalty for the velocity
     mpc_beta = 4000.0;  // closeness to the reference ZMP points 
     mpc_gamma = 1.0;    // penalty for the jerk
     mpc_regularization = 0.01;

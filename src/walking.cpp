@@ -376,20 +376,8 @@ void oru_walk::initWMG_NaoModel()
     mpc->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
 
 
-
 // steps
-    switch (wp.walk_pattern)
-    {
-        case WALK_PATTERN_STRAIGHT:
-            initWalkPattern_Straight();
-            break;
-        case WALK_PATTERN_DIAGONAL:
-            initWalkPattern_Diagonal();
-            break;
-        default:
-            halt("Unknown walk pattern.\n", __FUNCTION__);
-            break;
-    }
+    initWalkPattern();
 
 
 // error in position of the swing foot    

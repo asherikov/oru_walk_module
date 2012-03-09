@@ -1,3 +1,5 @@
+#include <cmath>
+
 class test_init_base
 {
     public:
@@ -238,6 +240,86 @@ class init_09 : public test_init_base
             }
         }
 };
+
+
+
+/**
+ * @brief Circular walk. // Doesn't work on the robot.
+ */
+class init_10 : public test_init_base
+{
+    public:
+        init_10 (
+                const string & test_name, 
+                const int preview_sampling_time_ms,
+                const double hCoM,
+                const bool plot_ds_ = true) :
+            test_init_base (test_name, plot_ds_)
+        {
+            wmg = new WMG (40, preview_sampling_time_ms, 0.02);
+            par = new smpc_parameters (wmg->N, hCoM);
+            int ss_time_ms = 400;
+            int ds_time_ms = 40;
+            int ds_number = 3;
+
+
+
+            // each step is defined relatively to the previous step
+            double step_x_ext = 0.04;      // relative X position
+            double step_y = 0.1;       // relative Y position
+
+
+            double R_ext = 2.05;
+            double R_int = R_ext - step_y;
+
+            // relative angle
+            double a = asin (step_x_ext / R_ext);
+            double step_x_int = step_x_ext * R_int / R_ext;
+
+
+
+            // Initial double support
+            double ds_constraint[4] = {
+                wmg->def_ss_constraint[0],
+                wmg->def_ss_constraint[1] + 0.5*step_y,
+                wmg->def_ss_constraint[2],
+                wmg->def_ss_constraint[3] + 0.5*step_y};
+
+            wmg->setFootstepDefaults (0, 0, 0, wmg->def_ss_constraint);
+            wmg->addFootstep(0.0, step_y/2, 0.0, FS_TYPE_SS_L);
+
+            // Initial double support
+            wmg->setFootstepDefaults (3*ss_time_ms, 0, 0, ds_constraint);
+            wmg->addFootstep(0.0, -step_y/2, 0.0, FS_TYPE_DS);
+
+
+
+            wmg->setFootstepDefaults (ss_time_ms, ds_time_ms, ds_number, wmg->def_ss_constraint);
+            wmg->addFootstep(0.0   ,     -step_y/2, 0.0);
+            wmg->addFootstep(step_x_int,  step_y, a);
+
+            for (int i = 0; i < 4; i++)
+            {
+                wmg->addFootstep(step_x_ext, -step_y, a);
+                wmg->addFootstep(step_x_int,  step_y, a);
+            }
+
+            // here we give many reference points, since otherwise we 
+            // would not have enough steps in preview window to reach 
+            // the last footsteps
+            wmg->setFootstepDefaults (6*ss_time_ms, 0, 0, ds_constraint);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_DS);
+            wmg->setFootstepDefaults (0, 0, 0, wmg->def_ss_constraint);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_SS_R);
+
+
+            if (!name.empty())
+            {
+                wmg->FS2file(fs_out_filename, plot_ds);
+            }
+        }
+};
+
 
 
 void initNaoModel (nao_igm* nao)

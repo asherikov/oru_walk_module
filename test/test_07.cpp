@@ -40,7 +40,8 @@ int main(int argc, char **argv)
     // initialize classes
     nao_igm nao;
     initNaoModel (&nao);
-    init_09 test_07("test_07", preview_sampling_time_ms, nao.CoM_position[2], false);
+//    init_09 test_07("test_07", preview_sampling_time_ms, nao.CoM_position[2], false);
+    init_10 test_07("test_07", preview_sampling_time_ms, nao.CoM_position[2], false);
 
 
     smpc::solver solver(

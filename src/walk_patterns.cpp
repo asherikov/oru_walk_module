@@ -11,6 +11,26 @@
 
 
 /**
+ * @brief Initialize selected walk pattern
+ */
+void oru_walk::initWalkPattern()
+{
+    switch (wp.walk_pattern)
+    {
+        case WALK_PATTERN_STRAIGHT:
+            initWalkPattern_Straight();
+            break;
+        case WALK_PATTERN_DIAGONAL:
+            initWalkPattern_Diagonal();
+            break;
+        default:
+            halt("Unknown walk pattern.\n", __FUNCTION__);
+            break;
+    }
+}
+
+
+/**
  * @brief Initializes walk pattern
  */
 void oru_walk::initWalkPattern_Straight()

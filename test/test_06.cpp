@@ -38,7 +38,8 @@ int main(int argc, char **argv)
     // initialize classes
     nao_igm nao;
     initNaoModel (&nao);
-    init_09 test_06("test_06", preview_sampling_time_ms, nao.CoM_position[2], false);
+//    init_09 test_06("test_06", preview_sampling_time_ms, nao.CoM_position[2], false);
+    init_10 test_06("test_06", preview_sampling_time_ms, nao.CoM_position[2], false);
     nao_igm nao_next = nao;
 
     
@@ -146,13 +147,13 @@ int main(int argc, char **argv)
             break;
         }
         //-----------------------------------------------------------
-        if (nao_next.support_foot == IGM_SUPPORT_RIGHT)
+        if (nao.support_foot == IGM_SUPPORT_RIGHT)
         {
-            drawSDL(100, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, *nao_next.right_foot_posture);
+            drawSDL(100, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, *nao.right_foot_posture);
         }
         else
         {
-            drawSDL(100, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, *nao_next.left_foot_posture);
+            drawSDL(100, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, *nao.left_foot_posture);
         }
     }
 

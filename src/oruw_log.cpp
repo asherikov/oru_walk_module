@@ -51,10 +51,10 @@ void oruw_log::logJointValues(
 
 
 void oruw_log::logCoM(
-        smpc_parameters *mpc,
+        smpc_parameters &mpc,
         nao_igm& nao)
 {
-    fprintf (FCoMLog, "%f %f %f    ", mpc->init_state.x(), mpc->init_state.y(), mpc->hCoM);
+    fprintf (FCoMLog, "%f %f %f    ", mpc.init_state.x(), mpc.init_state.y(), mpc.hCoM);
 
 
     double CoM[3];

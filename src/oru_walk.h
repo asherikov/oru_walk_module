@@ -97,19 +97,18 @@ private:
     void initWalkCommands ();
     void initJointAngles (ALValue &);
 
-    void initWalkPattern();
-    void initWalkPattern_Straight();
-    void initWalkPattern_Diagonal();
-    void initWalkPattern_Circular();
+    void initWalkPattern(WMG &);
+    void initWalkPattern_Straight(WMG &);
+    void initWalkPattern_Diagonal(WMG &);
+    void initWalkPattern_Circular(WMG &);
 
 
     // walking
-    void initWMG_NaoModel ();
     void readSensors (jointState&);
-    bool solveMPCProblem ();
-    void solveIKsendCommands (const int, const int, nao_igm &);
+    bool solveMPCProblem (WMG&, smpc_parameters&, smpc::solver &);
+    void solveIKsendCommands (const smpc_parameters&, const smpc::solver &, const int, WMG&, nao_igm &);
 
-    void feedbackError ();
+    void feedbackError (smpc::state_orig &);
     void halt(const char*, const char *);
     void stopWalking(const char*);
 
@@ -128,10 +127,6 @@ private:
     // Used to store command to send
     ALValue joint_commands;
 
-
-    WMG *wmg;
-    smpc_parameters *mpc;
-    smpc::solver *solver;
 
     nao_igm nao;
     nao_igm nao_next;

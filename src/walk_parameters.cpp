@@ -225,29 +225,29 @@ void walkParameters::writeParameters()
 
 
     // values
-    preferences[FEEDBACK_GAIN][2]               = feedback_gain;
-    preferences[FEEDBACK_THRESHOLD][2]          = feedback_threshold;
+    preferences[FEEDBACK_GAIN][2]            = feedback_gain;
+    preferences[FEEDBACK_THRESHOLD][2]       = feedback_threshold;
 
-    preferences[MPC_ALPHA][2]                   = mpc_alpha;
-    preferences[MPC_BETA][2]                    = mpc_beta;
-    preferences[MPC_GAMMA][2]                   = mpc_gamma;
-    preferences[MPC_REGULARIZATION][2]          = mpc_regularization;
-    preferences[MPC_TOLERANCE][2]               = mpc_tolerance;
+    preferences[MPC_ALPHA][2]                = mpc_alpha;
+    preferences[MPC_BETA][2]                 = mpc_beta;
+    preferences[MPC_GAMMA][2]                = mpc_gamma;
+    preferences[MPC_REGULARIZATION][2]       = mpc_regularization;
+    preferences[MPC_TOLERANCE][2]            = mpc_tolerance;
 
-    preferences[STEP_HEIGHT][2]                 = step_height;
-    preferences[STEP_LENGTH][2]                 = step_length;
+    preferences[STEP_HEIGHT][2]              = step_height;
+    preferences[STEP_LENGTH][2]              = step_length;
 
-    preferences[LOOP_TIME_LIMIT_MS][2]          = loop_time_limit_ms;
-    preferences[DCM_TIME_SHIFT_MS][2]           = dcm_time_shift_ms;
-    preferences[PREVIEW_SAMPLING_TIME_MS][2]    = preview_sampling_time_ms;
-    preferences[PREVIEW_WINDOW_SIZE][2]         = preview_window_size;
+    preferences[LOOP_TIME_LIMIT_MS][2]       = loop_time_limit_ms;
+    preferences[DCM_TIME_SHIFT_MS][2]        = dcm_time_shift_ms;
+    preferences[PREVIEW_SAMPLING_TIME_MS][2] = preview_sampling_time_ms;
+    preferences[PREVIEW_WINDOW_SIZE][2]      = preview_window_size;
 
-    preferences[SS_CONTROL_LOOPS][2]            = ss_time_ms / control_sampling_time_ms;
-    preferences[DS_CONTROL_LOOPS][2]            = ds_time_ms / control_sampling_time_ms;
-    preferences[DS_NUMBER][2]                   = ds_number;
-    preferences[STEP_PAIRS_NUMBER][2]           = step_pairs_number;
+    preferences[SS_CONTROL_LOOPS][2]         = ss_time_ms / control_sampling_time_ms;
+    preferences[DS_CONTROL_LOOPS][2]         = ds_time_ms / control_sampling_time_ms;
+    preferences[DS_NUMBER][2]                = ds_number;
+    preferences[STEP_PAIRS_NUMBER][2]        = step_pairs_number;
 
-    preferences[WALK_PATTERN][2]                = walk_pattern;
+    preferences[WALK_PATTERN][2]             = walk_pattern;
 
     try
     {

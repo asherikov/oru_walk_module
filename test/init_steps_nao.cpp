@@ -269,7 +269,7 @@ class init_10 : public test_init_base
             double step_y = 0.1;       // relative Y position
 
 
-            double R_ext = 2.05;
+            double R_ext = 0.55;
             double R_int = R_ext - step_y;
 
             // relative angle
@@ -298,7 +298,7 @@ class init_10 : public test_init_base
             wmg->addFootstep(0.0   ,     -step_y/2, 0.0);
             wmg->addFootstep(step_x_int,  step_y, a);
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 50; i++)
             {
                 wmg->addFootstep(step_x_ext, -step_y, a);
                 wmg->addFootstep(step_x_int,  step_y, a);

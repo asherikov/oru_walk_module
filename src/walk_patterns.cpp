@@ -23,6 +23,11 @@ void oru_walk::initWalkPattern()
         case WALK_PATTERN_DIAGONAL:
             initWalkPattern_Diagonal();
             break;
+/*         
+        case WALK_PATTERN_CIRCULAR:
+            initWalkPattern_Circular();
+            break;
+*/
         default:
             halt("Unknown walk pattern.\n", __FUNCTION__);
             break;
@@ -116,6 +121,63 @@ void oru_walk::initWalkPattern_Diagonal()
         wmg->addFootstep(step_x,  step_y + shift, 0.0);
     }
 
+
+    // here we give many reference points, since otherwise we 
+    // would not have enough steps in preview window to reach 
+    // the last footsteps
+    wmg->setFootstepDefaults (6*wp.ss_time_ms, 0, 0, ds_constraint);
+    wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_DS);
+    wmg->setFootstepDefaults (0, 0, 0, wmg->def_ss_constraint);
+    wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_SS_R);
+}
+
+
+
+
+/**
+ * @brief Initializes walk pattern
+ */
+void oru_walk::initWalkPattern_Circular()
+{
+    // each step is defined relatively to the previous step
+    double step_x_ext = wp.step_length;      // relative X position
+    double step_y = 0.1;       // relative Y position
+
+
+    double R_ext = 2.05;
+    double R_int = R_ext - step_y;
+
+    // relative angle
+    double a = asin (step_x_ext / R_ext);
+    double step_x_int = step_x_ext * R_int / R_ext;
+
+
+
+    // Initial double support
+    double ds_constraint[4] = {
+        wmg->def_ss_constraint[0],
+        wmg->def_ss_constraint[1] + 0.5*step_y,
+        wmg->def_ss_constraint[2],
+        wmg->def_ss_constraint[3] + 0.5*step_y};
+
+    wmg->setFootstepDefaults (0, 0, 0, wmg->def_ss_constraint);
+    wmg->addFootstep(0.0, step_y/2, 0.0, FS_TYPE_SS_L);
+
+    // Initial double support
+    wmg->setFootstepDefaults (3*wp.ss_time_ms, 0, 0, ds_constraint);
+    wmg->addFootstep(0.0, -step_y/2, 0.0, FS_TYPE_DS);
+
+
+
+    wmg->setFootstepDefaults (wp.ss_time_ms, wp.ds_time_ms, wp.ds_number, wmg->def_ss_constraint);
+    wmg->addFootstep(0.0   ,     -step_y/2, 0.0);
+    wmg->addFootstep(step_x_int,  step_y, a);
+
+    for (int i = 0; i < wp.step_pairs_number; i++)
+    {
+        wmg->addFootstep(step_x_ext, -step_y, a);
+        wmg->addFootstep(step_x_int,  step_y, a);
+    }
 
     // here we give many reference points, since otherwise we 
     // would not have enough steps in preview window to reach 

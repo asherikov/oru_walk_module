@@ -38,7 +38,8 @@ using namespace std;
 enum walkPatterns
 {
     WALK_PATTERN_STRAIGHT = 0,
-    WALK_PATTERN_DIAGONAL = 1
+    WALK_PATTERN_DIAGONAL = 1,
+    WALK_PATTERN_CIRCULAR = 2
 };
 
 

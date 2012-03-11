@@ -100,6 +100,7 @@ private:
     void initWalkPattern();
     void initWalkPattern_Straight();
     void initWalkPattern_Diagonal();
+    void initWalkPattern_Circular();
 
 
     // walking

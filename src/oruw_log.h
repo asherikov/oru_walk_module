@@ -30,9 +30,7 @@ class oruw_log
         ~oruw_log ();
 
         void logJointValues (const jointState&, const jointState&);
-
         void logCoM (smpc_parameters&, nao_igm&);
-
         void logFeet (nao_igm& nao);
 
 
@@ -41,6 +39,7 @@ class oruw_log
         FILE *FFeetLog;
         FILE *FMessages;
 };
+
 
 extern oruw_log *oruw_log_instance;
 
@@ -64,7 +63,7 @@ extern oruw_log *oruw_log_instance;
     if ORUW_LOG_IS_OPEN {fprintf(oruw_log_instance->FMessages, __VA_ARGS__);}
 
 #define ORUW_LOG_STEPS(wmg) \
-    wmg.FS2file("oru_steps_m.log", false);
+    if ORUW_LOG_IS_OPEN {wmg.FS2file("oru_steps_m.log", false);}
 
 
 #else // ORUW_LOG_ENABLE
@@ -76,7 +75,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_COM(mpc,nao)
 #define ORUW_LOG_FEET(nao)
 #define ORUW_LOG_MESSAGE(...)
-#define ORUW_LOG_STEPS(wmg_pointer)
+#define ORUW_LOG_STEPS(wmg)
 
 
 #endif // ORUW_LOG_ENABLE

@@ -49,7 +49,6 @@ void oruw_log::logJointValues(
 }
 
 
-
 void oruw_log::logCoM(
         smpc_parameters &mpc,
         nao_igm& nao)
@@ -57,7 +56,7 @@ void oruw_log::logCoM(
     fprintf (FCoMLog, "%f %f %f    ", mpc.init_state.x(), mpc.init_state.y(), mpc.hCoM);
 
 
-    double CoM[3];
+    double CoM[POSITION_VECTOR_SIZE];
     nao.getCoM(nao.state_sensor, CoM);
 
     fprintf (FCoMLog, "%f %f %f\n", CoM[0], CoM[1], CoM[2]);

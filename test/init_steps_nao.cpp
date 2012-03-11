@@ -145,14 +145,13 @@ class init_08 : public test_init_base
             wmg->addFootstep(0.0   , -step_y/2, 0.0);
             wmg->setFootstepDefaults (ss_time_ms, ds_time_ms, ds_number);
             wmg->addFootstep(step_x,  step_y, 0.0);
-            wmg->addFootstep(step_x, -step_y, 0.0);
-            wmg->addFootstep(step_x,  step_y, 0.0);
-            wmg->addFootstep(step_x, -step_y, 0.0);
-            wmg->addFootstep(step_x,  step_y, 0.0);
-            wmg->addFootstep(step_x, -step_y, 0.0);
-            wmg->addFootstep(step_x,  step_y, 0.0);
-            wmg->addFootstep(step_x, -step_y, 0.0);
-            wmg->addFootstep(step_x,  step_y, 0.0);
+
+
+            for (int i = 0; i < 5; i++)
+            {
+                wmg->addFootstep(step_x, -step_y, 0.0);
+                wmg->addFootstep(step_x,  step_y, 0.0);
+            }
 
             // here we give many reference points, since otherwise we 
             // would not have enough steps in preview window to reach 
@@ -298,7 +297,7 @@ class init_10 : public test_init_base
             wmg->addFootstep(0.0   ,     -step_y/2, 0.0);
             wmg->addFootstep(step_x_int,  step_y, a);
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 20; i++)
             {
                 wmg->addFootstep(step_x_ext, -step_y, a);
                 wmg->addFootstep(step_x_int,  step_y, a);

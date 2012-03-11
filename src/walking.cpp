@@ -205,6 +205,7 @@ void oru_walk::walkControl()
     }
 
     ORUW_LOG_STEPS(wmg);
+    ORUW_LOG_CLOSE;
 }
 
 
@@ -364,8 +365,6 @@ bool oru_walk::solveMPCProblem (
 void oru_walk::stopWalking(const char* message)
 {
     ORUW_LOG_MESSAGE("%s", message);
-    ORUW_LOG_CLOSE;
-
     qiLogInfo ("module.oru_walk") << message;
     dcm_callback_connection.disconnect();
 }
@@ -394,4 +393,5 @@ void oru_walk::halt(const char *message, const char* function)
 void oru_walk::stopWalkingRemote()
 {
     stopWalking ("Stopped by user's request.\n");
+    ORUW_LOG_CLOSE;
 }

@@ -82,9 +82,18 @@ int main(int argc, char **argv)
     vector<double> right_foot_z;
     //-----------------------------------------------------------
 
+/*
+nao.torso_orientation[0] = 1.0;
+nao.torso_orientation[4] = 1.0;
+nao.torso_orientation[8] = 1.0;
 
-
-
+nao.torso_orientation[1] = 0.0;
+nao.torso_orientation[2] = 0.0;
+nao.torso_orientation[3] = 0.0;
+nao.torso_orientation[5] = 0.0;
+nao.torso_orientation[6] = 0.0;
+nao.torso_orientation[7] = 0.0;
+*/
     test_07.wmg->T_ms[0] = control_sampling_time_ms;
     test_07.wmg->T_ms[1] = control_sampling_time_ms;
     for(int i=0 ;; i++)

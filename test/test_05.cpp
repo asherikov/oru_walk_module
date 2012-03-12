@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     smpc::solver solver(
         test_05.wmg->N, // size of the preview window
         1.0,  // Alpha
-        8000.0,  // Beta
+        4000.0,  // Beta
         1.0,    // Gamma
         0.01,   // regularization
         1e-7);  // tolerance
@@ -149,11 +149,11 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
         if (nao_next.support_foot == IGM_SUPPORT_RIGHT)
         {
-            drawSDL(100, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, *nao_next.right_foot_posture);
+            drawSDL(200, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, *nao_next.right_foot_posture);
         }
         else
         {
-            drawSDL(100, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, *nao_next.left_foot_posture);
+            drawSDL(200, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, *nao_next.left_foot_posture);
         }
     }
 

@@ -74,7 +74,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
      */
     walk_control_thread_priority = 65; // constant
 
-    dcm_time_shift_ms = 2;
+    dcm_time_shift_ms = 0;
     dcm_sampling_time_ms = 10; // constant
 
     control_sampling_time_ms = 20; // constant

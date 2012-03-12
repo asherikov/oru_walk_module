@@ -147,7 +147,7 @@ class init_08 : public test_init_base
             wmg->addFootstep(step_x,  step_y, 0.0);
 
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 10; i++)
             {
                 wmg->addFootstep(step_x, -step_y, 0.0);
                 wmg->addFootstep(step_x,  step_y, 0.0);
@@ -273,7 +273,8 @@ class init_10 : public test_init_base
 
             // relative angle
             double a = asin (step_x_ext / R_ext);
-            double step_x_int = step_x_ext * R_int / R_ext;
+//            double step_x_int = step_x_ext * R_int / R_ext;
+            double step_x_int = step_x_ext;
 
 
 
@@ -283,7 +284,12 @@ class init_10 : public test_init_base
                 wmg->def_ss_constraint[1] + 0.5*step_y,
                 wmg->def_ss_constraint[2],
                 wmg->def_ss_constraint[3] + 0.5*step_y};
-
+/*
+            wmg->def_auto_ds_constraint[0] = ds_constraint[0];
+            wmg->def_auto_ds_constraint[1] = ds_constraint[1];
+            wmg->def_auto_ds_constraint[2] = ds_constraint[2];
+            wmg->def_auto_ds_constraint[3] = ds_constraint[3];
+*/
             wmg->setFootstepDefaults (0, 0, 0, wmg->def_ss_constraint);
             wmg->addFootstep(0.0, step_y/2, 0.0, FS_TYPE_SS_L);
 
@@ -297,7 +303,7 @@ class init_10 : public test_init_base
             wmg->addFootstep(0.0   ,     -step_y/2, 0.0);
             wmg->addFootstep(step_x_int,  step_y, a);
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 10; i++)
             {
                 wmg->addFootstep(step_x_ext, -step_y, a);
                 wmg->addFootstep(step_x_int,  step_y, a);

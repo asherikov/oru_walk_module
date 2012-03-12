@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     double ref_angles[LOWER_JOINTS_NUM];
     initNaoModel (&nao, ref_angles);
 //    init_09 test_07("test_07", preview_sampling_time_ms, nao.CoM_position[2], false);
-    init_10 test_07("test_07", preview_sampling_time_ms, nao.CoM_position[2], false);
+    init_10 test_07("test_07", preview_sampling_time_ms, nao.CoM_position[2], true);
 
 
     smpc::solver solver(
@@ -120,19 +120,20 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
 
 
-
         //-----------------------------------------------------------
         // output
+        smpc::state_orig state;
+        state.get_state (solver, 1);
         if (next_preview_len_ms == 0)
         {
             next_preview_len_ms = preview_sampling_time_ms;
 
             ZMP_x.push_back(test_07.X_tilde.x());
             ZMP_y.push_back(test_07.X_tilde.y());
-            test_07.X_tilde.get_next_state (solver);
+            test_07.X_tilde.get_state (solver, 1);
         }
-        CoM_x.push_back(test_07.par->init_state.x());
-        CoM_y.push_back(test_07.par->init_state.y());
+        CoM_x.push_back(state.x());
+        CoM_y.push_back(state.y());
 
         next_preview_len_ms -= control_sampling_time_ms;
         //-----------------------------------------------------------

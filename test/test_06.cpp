@@ -105,6 +105,7 @@ int main(int argc, char **argv)
         // position of CoM
         nao.setCoM(test_06.par->init_state.x(), test_06.par->init_state.y(), test_06.par->hCoM);
 
+        nao.state_model = nao_next.state_model;
 
         if (nao.igm(ref_angles, 1.2, 0.0015, 20) < 0)
         {
@@ -148,13 +149,13 @@ int main(int argc, char **argv)
             break;
         }
         //-----------------------------------------------------------
-        if (nao.support_foot == IGM_SUPPORT_RIGHT)
+        if (nao_next.support_foot == IGM_SUPPORT_RIGHT)
         {
-            drawSDL(100, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, *nao.right_foot_posture);
+            drawSDL(200, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, *nao_next.right_foot_posture);
         }
         else
         {
-            drawSDL(100, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, *nao.left_foot_posture);
+            drawSDL(200, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, *nao_next.left_foot_posture);
         }
     }
 

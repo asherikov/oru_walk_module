@@ -130,6 +130,7 @@ private:
 
     nao_igm nao;
     nao_igm nao_next;
+    double ref_joint_angles[LOWER_JOINTS_NUM];
 
     walkParameters wp;
 

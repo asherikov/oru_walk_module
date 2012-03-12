@@ -39,7 +39,8 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
     // initialize classes
     nao_igm nao;
-    initNaoModel (&nao);
+    double ref_angles[LOWER_JOINTS_NUM];
+    initNaoModel (&nao, ref_angles);
     init_08 test_03("test_03", preview_sampling_time_ms, nao.CoM_position[2], false);
     IPM ipm ((double) control_sampling_time_ms / 1000);
 
@@ -153,7 +154,7 @@ int main(int argc, char **argv)
         nao.setCoM(next_CoM.x(), next_CoM.y(), test_03.par->hCoM); 
 
 
-        if (nao.igm () < 0)
+        if (nao.igm(ref_angles, 1.2, 0.0015, 20) < 0)
         {
             cout << "IGM failed!" << endl;
             break;
@@ -189,7 +190,7 @@ int main(int argc, char **argv)
         nao.setCoM(next_CoM.x(), next_CoM.y(), test_03.par->hCoM); 
 
 
-        if (nao.igm () < 0)
+        if (nao.igm(ref_angles, 1.2, 0.0015, 20) < 0)
         {
             cout << "IGM failed!" << endl;
             break;

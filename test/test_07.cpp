@@ -39,7 +39,8 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
     // initialize classes
     nao_igm nao;
-    initNaoModel (&nao);
+    double ref_angles[LOWER_JOINTS_NUM];
+    initNaoModel (&nao, ref_angles);
 //    init_09 test_07("test_07", preview_sampling_time_ms, nao.CoM_position[2], false);
     init_10 test_07("test_07", preview_sampling_time_ms, nao.CoM_position[2], false);
 
@@ -82,18 +83,7 @@ int main(int argc, char **argv)
     vector<double> right_foot_z;
     //-----------------------------------------------------------
 
-/*
-nao.torso_orientation[0] = 1.0;
-nao.torso_orientation[4] = 1.0;
-nao.torso_orientation[8] = 1.0;
 
-nao.torso_orientation[1] = 0.0;
-nao.torso_orientation[2] = 0.0;
-nao.torso_orientation[3] = 0.0;
-nao.torso_orientation[5] = 0.0;
-nao.torso_orientation[6] = 0.0;
-nao.torso_orientation[7] = 0.0;
-*/
     test_07.wmg->T_ms[0] = control_sampling_time_ms;
     test_07.wmg->T_ms[1] = control_sampling_time_ms;
     for(int i=0 ;; i++)
@@ -160,7 +150,7 @@ nao.torso_orientation[7] = 0.0;
         nao.setCoM(test_07.par->init_state.x(), test_07.par->init_state.y(), test_07.par->hCoM); 
 
 
-        if (nao.igm () < 0)
+        if (nao.igm(ref_angles, 1.2, 0.0015, 20) < 0)
         {
             cout << "IGM failed!" << endl;
             break;
@@ -199,7 +189,7 @@ nao.torso_orientation[7] = 0.0;
         nao_next.setCoM(next_CoM.x(), next_CoM.y(), test_07.par->hCoM); 
 
 
-        if (nao_next.igm () < 0)
+        if (nao_next.igm(ref_angles, 1.2, 0.0015, 20) < 0)
         {
             cout << "IGM failed!" << endl;
             break;
@@ -217,8 +207,8 @@ nao.torso_orientation[7] = 0.0;
 
     //-----------------------------------------------------------
     // output
-    printVectors (file_op, left_foot_x, left_foot_y, left_foot_z, "LFP", "r");
-    printVectors (file_op, right_foot_x, right_foot_y, right_foot_z, "RFP", "r");
+//    printVectors (file_op, left_foot_x, left_foot_y, left_foot_z, "LFP", "r");
+//    printVectors (file_op, right_foot_x, right_foot_y, right_foot_z, "RFP", "r");
     printVectors (file_op, ZMP_x, ZMP_y, "ZMP", "k");
     printVectors (file_op, ZMPref_x, ZMPref_y, "ZMPref", "x");
     printVectors (file_op, CoM_x, CoM_y, "CoM", "b");

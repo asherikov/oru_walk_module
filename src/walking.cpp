@@ -28,6 +28,10 @@ void oru_walk::walk()
             0.0, 0.05, 0.0, // position
             0.0, 0.0, 0.0);  // orientation
     nao_next = nao;
+    for (int i = 0; i < LOWER_JOINTS_NUM; i++)
+    {
+        ref_joint_angles[i] = nao.state_sensor.q[i];
+    }
 
 
     // start walk control thread
@@ -239,7 +243,11 @@ void oru_walk::solveIKsendCommands (
 
 
     // inverse kinematics
-    int iter_num = nao_model.igm ();    
+    int iter_num = nao_model.igm (
+            ref_joint_angles, 
+            wp.igm_mu, 
+            wp.igm_tol, 
+            wp.igm_max_iter);
     ORUW_LOG_MESSAGE("IGM iterations num: %d\n", iter_num);
     if (iter_num < 0)
     {

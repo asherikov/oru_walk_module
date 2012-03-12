@@ -86,6 +86,15 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     walk_pattern = WALK_PATTERN_STRAIGHT;
 
 
+// IGM    
+    // Acc. to the reference: "32 x Hall effect sensors. 12 bit precision, ie 4096 values per turn"
+    // i.e. 3.14*2/4096 = 0.0015 radian is the lowest detectable change in a joint angle.
+    igm_tol = 0.0015;
+    igm_max_iter = 20;
+    igm_mu = 1.2;
+
+
+
 // list of parameters, that are stored in config file:
     param_names.arraySetSize(NUM_PARAMETERS);
 
@@ -97,6 +106,8 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     param_names[MPC_GAMMA]                = "mpc_gamma";
     param_names[MPC_REGULARIZATION]       = "mpc_regularization";
     param_names[MPC_TOLERANCE]            = "mpc_tolerance";
+
+    param_names[IGM_MU]                   = "igm_mu";
 
     param_names[STEP_HEIGHT]              = "step_height";
     param_names[STEP_LENGTH]              = "step_length";
@@ -153,6 +164,7 @@ void walkParameters::readParameters()
             if(preferences[i][0] == param_names[MPC_GAMMA])          { mpc_gamma          = preferences[i][2]; }
             if(preferences[i][0] == param_names[MPC_REGULARIZATION]) { mpc_regularization = preferences[i][2]; }
             if(preferences[i][0] == param_names[MPC_TOLERANCE])      { mpc_tolerance      = preferences[i][2]; }
+            if(preferences[i][0] == param_names[IGM_MU])             { igm_mu             = preferences[i][2]; }
             if(preferences[i][0] == param_names[STEP_HEIGHT])        { step_height        = preferences[i][2]; }
             if(preferences[i][0] == param_names[STEP_LENGTH])        { step_length        = preferences[i][2]; }
         }
@@ -208,6 +220,8 @@ void walkParameters::writeParameters()
     preferences[MPC_REGULARIZATION][1]       = "";
     preferences[MPC_TOLERANCE][1]            = "";
 
+    preferences[IGM_MU][1]                   = "";
+
     preferences[STEP_HEIGHT][1]              = "";
     preferences[STEP_LENGTH][1]              = "";
 
@@ -233,6 +247,8 @@ void walkParameters::writeParameters()
     preferences[MPC_GAMMA][2]                = mpc_gamma;
     preferences[MPC_REGULARIZATION][2]       = mpc_regularization;
     preferences[MPC_TOLERANCE][2]            = mpc_tolerance;
+
+    preferences[IGM_MU][2]                   = igm_mu;
 
     preferences[STEP_HEIGHT][2]              = step_height;
     preferences[STEP_LENGTH][2]              = step_length;

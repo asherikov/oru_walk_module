@@ -52,6 +52,7 @@ enum parametersNames
     MPC_GAMMA                   ,
     MPC_REGULARIZATION          ,
     MPC_TOLERANCE               ,
+    IGM_MU                      ,
     STEP_HEIGHT                 ,
     STEP_LENGTH                 ,
     LOOP_TIME_LIMIT_MS          ,
@@ -109,11 +110,16 @@ class walkParameters
         int ds_number;
         int step_pairs_number;
 
+        int walk_pattern;
+
+
+        double igm_tol;
+        int igm_max_iter;
+        double igm_mu;
+
+
         ALValue param_names;
         ALPreferencesProxy pref_proxy;
-
-
-        int walk_pattern;
 };
 
 #endif  // WALK_PARAMETERS_H

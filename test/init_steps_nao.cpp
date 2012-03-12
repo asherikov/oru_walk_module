@@ -297,7 +297,7 @@ class init_10 : public test_init_base
             wmg->addFootstep(0.0   ,     -step_y/2, 0.0);
             wmg->addFootstep(step_x_int,  step_y, a);
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 50; i++)
             {
                 wmg->addFootstep(step_x_ext, -step_y, a);
                 wmg->addFootstep(step_x_int,  step_y, a);
@@ -321,23 +321,23 @@ class init_10 : public test_init_base
 
 
 
-void initNaoModel (nao_igm* nao)
+void initNaoModel (nao_igm* nao, double* ref_angles)
 {
     // joint angles
-    nao->state_sensor.q[L_HIP_YAW_PITCH]  =  0.0;
-    nao->state_sensor.q[R_HIP_YAW_PITCH]  =  0.0;
-
-    nao->state_sensor.q[L_HIP_ROLL]       = -0.000384;
-    nao->state_sensor.q[L_HIP_PITCH]      = -0.598291;
-    nao->state_sensor.q[L_KNEE_PITCH]     =  1.009413;
-    nao->state_sensor.q[L_ANKLE_PITCH]    = -0.492352;
-    nao->state_sensor.q[L_ANKLE_ROLL]     =  0.000469;
-
-    nao->state_sensor.q[R_HIP_ROLL]       = -0.000384;
-    nao->state_sensor.q[R_HIP_PITCH]      = -0.598219;
-    nao->state_sensor.q[R_KNEE_PITCH]     =  1.009237;
-    nao->state_sensor.q[R_ANKLE_PITCH]    = -0.492248;
-    nao->state_sensor.q[R_ANKLE_ROLL]     =  0.000469;
+    nao->state_sensor.q[L_HIP_YAW_PITCH] = ref_angles[L_HIP_YAW_PITCH] =  0.0;
+    nao->state_sensor.q[R_HIP_YAW_PITCH] = ref_angles[R_HIP_YAW_PITCH] =  0.0;
+                                                             
+    nao->state_sensor.q[L_HIP_ROLL]      = ref_angles[L_HIP_ROLL]      = -0.000384;
+    nao->state_sensor.q[L_HIP_PITCH]     = ref_angles[L_HIP_PITCH]     = -0.598291;
+    nao->state_sensor.q[L_KNEE_PITCH]    = ref_angles[L_KNEE_PITCH]    =  1.009413;
+    nao->state_sensor.q[L_ANKLE_PITCH]   = ref_angles[L_ANKLE_PITCH]   = -0.492352;
+    nao->state_sensor.q[L_ANKLE_ROLL]    = ref_angles[L_ANKLE_ROLL]    =  0.000469;
+                                                             
+    nao->state_sensor.q[R_HIP_ROLL]      = ref_angles[R_HIP_ROLL]      = -0.000384;
+    nao->state_sensor.q[R_HIP_PITCH]     = ref_angles[R_HIP_PITCH]     = -0.598219;
+    nao->state_sensor.q[R_KNEE_PITCH]    = ref_angles[R_KNEE_PITCH]    =  1.009237;
+    nao->state_sensor.q[R_ANKLE_PITCH]   = ref_angles[R_ANKLE_PITCH]   = -0.492248;
+    nao->state_sensor.q[R_ANKLE_ROLL]    = ref_angles[R_ANKLE_ROLL]    =  0.000469;
 
     nao->state_sensor.q[L_SHOULDER_PITCH] =  1.418908;
     nao->state_sensor.q[L_SHOULDER_ROLL]  =  0.332836;

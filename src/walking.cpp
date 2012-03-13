@@ -20,14 +20,13 @@ void oru_walk::walk()
     wp.readParameters();
 
 
-    // initialize Nao models
+    // initialize Nao model
     readSensors(nao.state_sensor);
     // support foot position and orientation
     nao.init (
             IGM_SUPPORT_LEFT,
             0.0, 0.05, 0.0, // position
             0.0, 0.0, 0.0);  // orientation
-    nao_next = nao;
     for (int i = 0; i < LOWER_JOINTS_NUM; i++)
     {
         ref_joint_angles[i] = nao.state_sensor.q[i];
@@ -112,6 +111,19 @@ void oru_walk::dcmCallback()
 
 
 /**
+ * @brief The position of the next support foot may change from the targeted, 
+ * this function moves it to the right place.
+ */
+void oru_walk::correctNextSupportPosition(WMG &wmg)
+{
+    Transform<double,3> swing_foot_posture;
+    nao.getSwingFootPosture (nao.state_sensor, swing_foot_posture.data());
+    wmg.changeNextSSPosition (swing_foot_posture.data(), wp.set_support_z_to_zero);
+}
+
+
+
+/**
  * @brief A control loop, that is executed in separate thread.
  * @attention REAL-TIME!
  */
@@ -127,20 +139,18 @@ void oru_walk::walkControl()
             wp.mpc_gamma,
             wp.mpc_regularization,
             wp.mpc_tolerance);
-    solver.enable_fexceptions();
+//    solver.enable_fexceptions();
 
 
-    WMG wmg(
-            wp.preview_window_size,
+    WMG wmg(wp.preview_window_size,
             wp.preview_sampling_time_ms,
             wp.step_height);
     wmg.T_ms[0] = wp.control_sampling_time_ms;
     wmg.T_ms[1] = wp.control_sampling_time_ms;
 
 
-    smpc_parameters mpc(
-            wp.preview_window_size,
-            nao.CoM_position[2]);         // height of the center of mass
+    nao.getCoM (nao.state_sensor, nao.CoM_position);
+    smpc_parameters mpc(wp.preview_window_size, nao.CoM_position[2]);
     mpc.init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
 
 
@@ -148,9 +158,8 @@ void oru_walk::walkControl()
     {
         // steps
         initWalkPattern(wmg);
-        // error in position of the swing foot    
-        nao.getSwingFootPosture (nao.state_sensor);
-        wmg.changeNextSSPosition (nao.swing_foot_posture->data(), wp.set_support_z_to_zero);
+        // error in position of the swing foot
+        correctNextSupportPosition(wmg);
     }
     catch (...)
     {
@@ -158,6 +167,7 @@ void oru_walk::walkControl()
     }
 
 
+    jointState target_joint_state = nao.state_model;
     for (;;)
     {
         boost::unique_lock<boost::mutex> lock(walk_control_mutex);
@@ -168,7 +178,7 @@ void oru_walk::walkControl()
         timer.reset();
 
 
-        ORUW_LOG_JOINTS(nao.state_sensor, nao.state_model);
+        ORUW_LOG_JOINTS(nao.state_sensor, target_joint_state);
         ORUW_LOG_COM(mpc, nao);
         ORUW_LOG_FEET(nao);
 
@@ -181,16 +191,14 @@ void oru_walk::walkControl()
             {
                 if (wmg.isSupportSwitchNeeded())
                 {
-                    wmg.changeNextSSPosition(nao.switchSupportFoot(), wp.set_support_z_to_zero);
-                    nao_next.support_foot = nao.support_foot;
+                    correctNextSupportPosition(wmg);
+                    nao.switchSupportFoot();
                 }
 
-                // the old solution from nao_next -> initial guess;
-                nao.state_model = nao_next.state_model;
-                solveIKsendCommands (mpc, solver, 1, wmg, nao);
-
-                nao_next.state_model = nao.state_model;
-                solveIKsendCommands (mpc, solver, 2, wmg, nao_next);
+                // the old solution from is an initial guess;
+                solveIKsendCommands (mpc, solver, 1, wmg);
+                target_joint_state = nao.state_model;
+                solveIKsendCommands (mpc, solver, 2, wmg);
             }
             else
             {
@@ -219,31 +227,29 @@ void oru_walk::walkControl()
  *
  * @param[in] callback_start_time_ms the time, when the callback was started.
  * @param[in] control_loop_num number of control loops in future (>= 1).
- * @param[in,out] nao_model model of the nao.
  */
 void oru_walk::solveIKsendCommands (
         const smpc_parameters &mpc,
         const smpc::solver &solver,
         const int control_loop_num,
-        WMG &wmg,
-        nao_igm &nao_model)
+        WMG &wmg)
 {
     smpc::state_orig CoM;
     CoM.get_state(solver, control_loop_num-1);
 
     // hCoM is constant!
-    nao_model.setCoM(CoM.x(), CoM.y(), mpc.hCoM);
+    nao.setCoM(CoM.x(), CoM.y(), mpc.hCoM);
 
 
     // support foot and swing foot position/orientation
     wmg.getFeetPositions (
             control_loop_num * wp.control_sampling_time_ms, 
-            nao_model.left_foot_posture->data(), 
-            nao_model.right_foot_posture->data());
+            nao.left_foot_posture->data(), 
+            nao.right_foot_posture->data());
 
 
     // inverse kinematics
-    int iter_num = nao_model.igm (
+    int iter_num = nao.igm (
             ref_joint_angles, 
             wp.igm_mu, 
             wp.igm_tol, 
@@ -253,7 +259,7 @@ void oru_walk::solveIKsendCommands (
     {
         halt("IK does not converge.\n", __FUNCTION__);
     }
-    int failed_joint = nao_model.state_model.checkJointBounds();
+    int failed_joint = nao.state_model.checkJointBounds();
     if (failed_joint >= 0)
     {
         ORUW_LOG_MESSAGE("Failed joint: %d\n", failed_joint);
@@ -267,7 +273,7 @@ void oru_walk::solveIKsendCommands (
         joint_commands[4][0] = last_dcm_time_ms + control_loop_num * wp.control_sampling_time_ms;
         for (int i = 0; i < LOWER_JOINTS_NUM; i++)
         {
-            joint_commands[5][i][0] = nao_model.state_model.q[i];
+            joint_commands[5][i][0] = nao.state_model.q[i];
         }
         dcm_proxy->setAlias(joint_commands);
     }

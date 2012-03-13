@@ -106,9 +106,11 @@ private:
     // walking
     void readSensors (jointState&);
     bool solveMPCProblem (WMG&, smpc_parameters&, smpc::solver &);
-    void solveIKsendCommands (const smpc_parameters&, const smpc::solver &, const int, WMG&, nao_igm &);
+    void solveIKsendCommands (const smpc_parameters&, const smpc::solver &, const int, WMG&);
 
+    void correctNextSupportPosition(WMG &);
     void feedbackError (smpc::state_orig &);
+
     void halt(const char*, const char *);
     void stopWalking(const char*);
 
@@ -129,7 +131,6 @@ private:
 
 
     nao_igm nao;
-    nao_igm nao_next;
     double ref_joint_angles[LOWER_JOINTS_NUM];
 
     walkParameters wp;

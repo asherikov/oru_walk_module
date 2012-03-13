@@ -41,6 +41,11 @@ int main(int argc, char **argv)
     nao_igm nao;
     double ref_angles[LOWER_JOINTS_NUM];
     initNaoModel (&nao, ref_angles);
+    nao.init (
+            IGM_SUPPORT_RIGHT,
+            0.0, -0.05, 0.0,
+            0.0, 0.0, 0.0);
+    nao.getCoM(nao.state_sensor, nao.CoM_position);
     init_08 test_04("test_04", preview_sampling_time_ms, nao.CoM_position[2], false);
 
 
@@ -106,7 +111,7 @@ int main(int argc, char **argv)
         cout << test_04.wmg->isSupportSwitchNeeded() << endl;
         if (test_04.wmg->isSupportSwitchNeeded())
         {
-            test_04.wmg->changeNextSSPosition(nao.switchSupportFoot(), true);
+            nao.switchSupportFoot();
         }
 
        

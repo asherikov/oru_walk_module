@@ -361,7 +361,7 @@ void initNaoModel (nao_igm* nao, double* ref_angles)
     // support foot position and orientation
     /// @attention Hardcoded parameters.
     nao->init (
-            IGM_SUPPORT_RIGHT,
-            0.0, -0.05, 0.0,
+            IGM_SUPPORT_LEFT,
+            0.0, 0.05, 0.0,
             0.0, 0.0, 0.0);
 }

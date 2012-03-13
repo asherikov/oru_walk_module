@@ -41,6 +41,7 @@ int main(int argc, char **argv)
     nao_igm nao;
     double ref_angles[LOWER_JOINTS_NUM];
     initNaoModel (&nao, ref_angles);
+    nao.getCoM(nao.state_sensor, nao.CoM_position);
     init_08 test_03("test_03", preview_sampling_time_ms, nao.CoM_position[2], false);
     IPM ipm ((double) control_sampling_time_ms / 1000);
 

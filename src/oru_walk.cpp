@@ -213,6 +213,12 @@ void oru_walk::initPosition()
         initPositionCommands[5][i].arraySetSize(1);
     }
     initJointAngles (initPositionCommands[5]);
+    for (int i = 0; i < LOWER_JOINTS_NUM; i++)
+    {
+        ref_joint_angles[i] = initPositionCommands[5][i][0];
+    }
+
+
 
     // set time
     try

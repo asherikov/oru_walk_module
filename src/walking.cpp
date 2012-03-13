@@ -22,10 +22,6 @@ void oru_walk::walk()
 
     // initialize Nao model
     readSensors(nao.state_sensor);
-    for (int i = 0; i < LOWER_JOINTS_NUM; i++)
-    {
-        ref_joint_angles[i] = nao.state_sensor.q[i];
-    }
 
 
     // start walk control thread

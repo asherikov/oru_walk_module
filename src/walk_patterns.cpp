@@ -15,6 +15,15 @@
  */
 void oru_walk::initWalkPattern(WMG &wmg)
 {
+    // support foot position and orientation
+    nao.init (
+            IGM_SUPPORT_LEFT,
+            0.0, 0.05, 0.0, // position
+            0.0, 0.0, 0.0);  // orientation
+    // swing foot position
+    nao.getSwingFootPosture (nao.state_sensor, nao.right_foot_posture->data());
+
+
     switch (wp.walk_pattern)
     {
         case WALK_PATTERN_STRAIGHT:

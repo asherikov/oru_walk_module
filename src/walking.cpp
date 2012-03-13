@@ -22,11 +22,6 @@ void oru_walk::walk()
 
     // initialize Nao model
     readSensors(nao.state_sensor);
-    // support foot position and orientation
-    nao.init (
-            IGM_SUPPORT_LEFT,
-            0.0, 0.05, 0.0, // position
-            0.0, 0.0, 0.0);  // orientation
     for (int i = 0; i < LOWER_JOINTS_NUM; i++)
     {
         ref_joint_angles[i] = nao.state_sensor.q[i];
@@ -76,16 +71,16 @@ void oru_walk::walk()
 
 
 /**
- * @brief Update joint angles in the NAO model.
+ * @brief Update joint angles.
  */
-void oru_walk::readSensors(jointState& nao_state)
+void oru_walk::readSensors(jointState& joint_state)
 {
     vector<float> sensorValues;
 
     access_sensor_values->GetValues (sensorValues);
     for (int i = 0; i < JOINTS_NUM; i++)
     {
-        nao_state.q[i] = sensorValues[i];
+        joint_state.q[i] = sensorValues[i];
     }
 }
 
@@ -148,12 +143,6 @@ void oru_walk::walkControl()
     wmg.T_ms[0] = wp.control_sampling_time_ms;
     wmg.T_ms[1] = wp.control_sampling_time_ms;
 
-
-    nao.getCoM (nao.state_sensor, nao.CoM_position);
-    smpc_parameters mpc(wp.preview_window_size, nao.CoM_position[2]);
-    mpc.init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
-
-
     try
     {
         // steps
@@ -165,6 +154,11 @@ void oru_walk::walkControl()
     {
         return;
     }
+
+
+    nao.getCoM (nao.state_sensor, nao.CoM_position);
+    smpc_parameters mpc(wp.preview_window_size, nao.CoM_position[2]);
+    mpc.init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
 
 
     jointState target_joint_state = nao.state_model;

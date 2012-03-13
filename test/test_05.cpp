@@ -45,7 +45,6 @@ int main(int argc, char **argv)
             0.0, 0.0, 0.0);
     nao.getCoM(nao.state_sensor, nao.CoM_position);
     init_08 test_05("test_05", preview_sampling_time_ms, nao.CoM_position[2], false);
-    nao_igm nao_next = nao;
 
     
     vector<double> x_coord;
@@ -126,39 +125,36 @@ int main(int argc, char **argv)
 
 
         //-----------------------------------------------------------
-        nao_next.state_model = nao.state_model;
-        nao_next.support_foot = nao.support_foot;
-
         test_05.wmg->getFeetPositions (
                 2*control_sampling_time_ms,
-                nao_next.left_foot_posture->data(),
-                nao_next.right_foot_posture->data());
+                nao.left_foot_posture->data(),
+                nao.right_foot_posture->data());
 
         // position of CoM
         smpc::state_orig next_CoM;
         next_CoM.get_state(solver, 1);
-        nao_next.setCoM(next_CoM.x(), next_CoM.y(), test_05.par->hCoM); 
+        nao.setCoM(next_CoM.x(), next_CoM.y(), test_05.par->hCoM); 
 
 
-        if (nao_next.igm(ref_angles, 1.2, 0.0015, 20) < 0)
+        if (nao.igm(ref_angles, 1.2, 0.0015, 20) < 0)
         {
             cout << "IGM failed!" << endl;
             break;
         }
-        failed_joint = nao_next.state_model.checkJointBounds();
+        failed_joint = nao.state_model.checkJointBounds();
         if (failed_joint >= 0)
         {
             cout << "MAX or MIN joint limit is violated! Number of the joint: " << failed_joint << endl;
             break;
         }
         //-----------------------------------------------------------
-        if (nao_next.support_foot == IGM_SUPPORT_RIGHT)
+        if (nao.support_foot == IGM_SUPPORT_RIGHT)
         {
-            drawSDL(200, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, *nao_next.right_foot_posture);
+            drawSDL(200, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, *nao.right_foot_posture);
         }
         else
         {
-            drawSDL(200, x_coord, y_coord, angle_rot, nao_next.support_foot, nao_next.state_model.q, *nao_next.left_foot_posture);
+            drawSDL(200, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, *nao.left_foot_posture);
         }
     }
 

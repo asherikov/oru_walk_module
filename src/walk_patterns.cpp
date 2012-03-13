@@ -21,7 +21,7 @@ void oru_walk::initWalkPattern(WMG &wmg)
             0.0, 0.05, 0.0, // position
             0.0, 0.0, 0.0);  // orientation
     // swing foot position
-    nao.getSwingFootPosture (nao.state_sensor, nao.right_foot_posture->data());
+    nao.getSwingFootPosture (nao.state_sensor, nao.right_foot_posture.data());
 
 
     switch (wp.walk_pattern)

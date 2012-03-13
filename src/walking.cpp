@@ -238,8 +238,8 @@ void oru_walk::solveIKsendCommands (
     // support foot and swing foot position/orientation
     wmg.getFeetPositions (
             control_loop_num * wp.control_sampling_time_ms, 
-            nao.left_foot_posture->data(), 
-            nao.right_foot_posture->data());
+            nao.left_foot_posture.data(), 
+            nao.right_foot_posture.data());
 
 
     // inverse kinematics

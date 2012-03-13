@@ -102,8 +102,8 @@ int main(int argc, char **argv)
         // support foot and swing foot position/orientation
         test_05.wmg->getFeetPositions (
                 control_sampling_time_ms,
-                nao.left_foot_posture->data(),
-                nao.right_foot_posture->data());
+                nao.left_foot_posture.data(),
+                nao.right_foot_posture.data());
 
         // position of CoM
         nao.setCoM(test_05.par->init_state.x(), test_05.par->init_state.y(), test_05.par->hCoM);
@@ -127,8 +127,8 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
         test_05.wmg->getFeetPositions (
                 2*control_sampling_time_ms,
-                nao.left_foot_posture->data(),
-                nao.right_foot_posture->data());
+                nao.left_foot_posture.data(),
+                nao.right_foot_posture.data());
 
         // position of CoM
         smpc::state_orig next_CoM;
@@ -150,11 +150,11 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
         if (nao.support_foot == IGM_SUPPORT_RIGHT)
         {
-            drawSDL(200, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, *nao.right_foot_posture);
+            drawSDL(200, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.right_foot_posture);
         }
         else
         {
-            drawSDL(200, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, *nao.left_foot_posture);
+            drawSDL(200, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.left_foot_posture);
         }
     }
 
@@ -163,11 +163,11 @@ int main(int argc, char **argv)
     {
         if (nao.support_foot == IGM_SUPPORT_RIGHT)
         {
-            drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, *nao.right_foot_posture);
+            drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.right_foot_posture);
         }
         else
         {
-            drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, *nao.left_foot_posture);
+            drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.left_foot_posture);
         }
     }
 

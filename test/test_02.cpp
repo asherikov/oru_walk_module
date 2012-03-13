@@ -37,22 +37,18 @@ int main(int argc, char **argv)
 
     //-----------------------------------------------------------
     // initialize classes
-    nao_igm nao;
-    double ref_angles[LOWER_JOINTS_NUM];
-    initNaoModel (&nao, ref_angles);
-    nao.getCoM(nao.state_sensor, nao.CoM_position);
-    init_08 test_02("test_02", preview_sampling_time_ms, nao.CoM_position[2], false);
+    init_08 tdata("test_02", preview_sampling_time_ms, false);
     IPM ipm ((double) control_sampling_time_ms / 1000);
 
     
     vector<double> x_coord;
     vector<double> y_coord;
     vector<double> angle_rot;
-    test_02.wmg->getFootsteps(x_coord, y_coord, angle_rot);
+    tdata.wmg->getFootsteps(x_coord, y_coord, angle_rot);
 
 
     smpc::solver solver(
-        test_02.wmg->N, // size of the preview window
+        tdata.wmg->N, // size of the preview window
         400.0,  // Alpha
         4000.0,  // Beta
         1.0,    // Gamma
@@ -61,8 +57,9 @@ int main(int argc, char **argv)
     //-----------------------------------------------------------
 
     //-----------------------------------------------------------
-    test_02.par->init_state.set (nao.CoM_position[0], nao.CoM_position[1]);
-    test_02.X_tilde.set (nao.CoM_position[0], nao.CoM_position[1]);
+    tdata.nao.getCoM(tdata.nao.state_sensor, tdata.nao.CoM_position);
+    tdata.par->init_state.set (tdata.nao.CoM_position[0], tdata.nao.CoM_position[1]);
+    tdata.X_tilde.set (tdata.nao.CoM_position[0], tdata.nao.CoM_position[1]);
     //-----------------------------------------------------------
 
 
@@ -70,54 +67,54 @@ int main(int argc, char **argv)
     isRunning=1;
     while (isRunning)
     {
-        nao.state_sensor = nao.state_model;
+        tdata.nao.state_sensor = tdata.nao.state_model;
         if (next_preview_len_ms == 0)
         {
-            if (test_02.wmg->formPreviewWindow(*test_02.par) == WMG_HALT)
+            if (tdata.wmg->formPreviewWindow(*tdata.par) == WMG_HALT)
             {
                 cout << "EXIT (halt = 1)" << endl;
                 break;
             }
-            cout << test_02.wmg->isSupportSwitchNeeded() << endl;
-            if (test_02.wmg->isSupportSwitchNeeded())
+            cout << tdata.wmg->isSupportSwitchNeeded() << endl;
+            if (tdata.wmg->isSupportSwitchNeeded())
             {
-                nao.switchSupportFoot();
+                tdata.nao.switchSupportFoot();
             }
 
             next_preview_len_ms = preview_sampling_time_ms;
         }
 
         //------------------------------------------------------
-        test_02.par->T[0] = (double) next_preview_len_ms / 1000; // get seconds
-        solver.set_parameters (test_02.par->T, test_02.par->h, test_02.par->h[0], test_02.par->angle, test_02.par->zref_x, test_02.par->zref_y, test_02.par->lb, test_02.par->ub);
-        solver.form_init_fp (test_02.par->fp_x, test_02.par->fp_y, test_02.par->init_state, test_02.par->X);
+        tdata.par->T[0] = (double) next_preview_len_ms / 1000; // get seconds
+        solver.set_parameters (tdata.par->T, tdata.par->h, tdata.par->h[0], tdata.par->angle, tdata.par->zref_x, tdata.par->zref_y, tdata.par->lb, tdata.par->ub);
+        solver.form_init_fp (tdata.par->fp_x, tdata.par->fp_y, tdata.par->init_state, tdata.par->X);
         solver.solve();
         //-----------------------------------------------------------
         // update state
         ipm.control_vector.get_first_controls (solver);
-        ipm.calculateNextState(ipm.control_vector, test_02.par->init_state);
+        ipm.calculateNextState(ipm.control_vector, tdata.par->init_state);
         //-----------------------------------------------------------
 
 
         //-----------------------------------------------------------
         // support foot and swing foot position/orientation
-        test_02.wmg->getFeetPositions (
+        tdata.wmg->getFeetPositions (
                 preview_sampling_time_ms,
-                nao.left_foot_posture.data(),
-                nao.right_foot_posture.data());
+                tdata.nao.left_foot_posture.data(),
+                tdata.nao.right_foot_posture.data());
 
         // position of CoM
         smpc::state_orig next_CoM;
         next_CoM.get_state(solver, 0);
-        nao.setCoM(next_CoM.x(), next_CoM.y(), test_02.par->hCoM); 
+        tdata.nao.setCoM(next_CoM.x(), next_CoM.y(), tdata.par->hCoM); 
 
 
-        if (nao.igm(ref_angles, 1.2, 0.0015, 20) < 0)
+        if (tdata.nao.igm(tdata.ref_angles, 1.2, 0.0015, 20) < 0)
         {
             cout << "IGM failed!" << endl;
             break;
         }
-        int failed_joint = nao.state_model.checkJointBounds();
+        int failed_joint = tdata.nao.state_model.checkJointBounds();
         if (failed_joint >= 0)
         {
             cout << "MAX or MIN joint limit is violated! Number of the joint: " << failed_joint << endl;
@@ -126,35 +123,35 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
 
 
-        if (nao.support_foot == IGM_SUPPORT_RIGHT)
+        if (tdata.nao.support_foot == IGM_SUPPORT_RIGHT)
         {
-            drawSDL(50, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.right_foot_posture);
+            drawSDL(50, x_coord, y_coord, angle_rot, tdata.nao.support_foot, tdata.nao.state_model.q, tdata.nao.right_foot_posture);
         }
         else
         {
-            drawSDL(50, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.left_foot_posture);
+            drawSDL(50, x_coord, y_coord, angle_rot, tdata.nao.support_foot, tdata.nao.state_model.q, tdata.nao.left_foot_posture);
         }
 
 
 
         //-----------------------------------------------------------
-        test_02.wmg->getFeetPositions (
+        tdata.wmg->getFeetPositions (
                 2*preview_sampling_time_ms,
-                nao.left_foot_posture.data(),
-                nao.right_foot_posture.data());
+                tdata.nao.left_foot_posture.data(),
+                tdata.nao.right_foot_posture.data());
 
 
         // position of CoM
         next_CoM.get_state(solver, 1);
-        nao.setCoM(next_CoM.x(), next_CoM.y(), test_02.par->hCoM); 
+        tdata.nao.setCoM(next_CoM.x(), next_CoM.y(), tdata.par->hCoM); 
 
 
-        if (nao.igm(ref_angles, 1.2, 0.0015, 20) < 0)
+        if (tdata.nao.igm(tdata.ref_angles, 1.2, 0.0015, 20) < 0)
         {
             cout << "IGM failed!" << endl;
             break;
         }
-        failed_joint = nao.state_model.checkJointBounds();
+        failed_joint = tdata.nao.state_model.checkJointBounds();
         if (failed_joint >= 0)
         {
             cout << "MAX or MIN joint limit is violated! Number of the joint: " << failed_joint << endl;
@@ -168,13 +165,13 @@ int main(int argc, char **argv)
     // keep the visualization active (until ESC is pressed)
     while (isRunning)
     {
-        if (nao.support_foot == IGM_SUPPORT_RIGHT)
+        if (tdata.nao.support_foot == IGM_SUPPORT_RIGHT)
         {
-            drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.right_foot_posture);
+            drawSDL(0, x_coord, y_coord, angle_rot, tdata.nao.support_foot, tdata.nao.state_model.q, tdata.nao.right_foot_posture);
         }
         else
         {
-            drawSDL(0, x_coord, y_coord, angle_rot, nao.support_foot, nao.state_model.q, nao.left_foot_posture);
+            drawSDL(0, x_coord, y_coord, angle_rot, tdata.nao.support_foot, tdata.nao.state_model.q, tdata.nao.left_foot_posture);
         }
     }
 

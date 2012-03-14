@@ -30,7 +30,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
 
 // parameters of the MPC solver
     mpc_alpha = 1.0;    // penalty for the velocity
-    mpc_beta = 4000.0;  // closeness to the reference ZMP points 
+    mpc_beta = 6000.0;  // closeness to the reference ZMP points 
     mpc_gamma = 1.0;    // penalty for the jerk
     mpc_regularization = 0.01;
     mpc_tolerance = 1e-7;
@@ -42,8 +42,8 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     preview_sampling_time_sec = (double) preview_sampling_time_ms / 1000;
 
     ss_time_ms = 400;
-    ds_time_ms = 60;
-    ds_number = 2;
+    ds_time_ms = 40;
+    ds_number = 3;
     step_pairs_number = 4;
 
 
@@ -60,9 +60,9 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
 
     // Refer to smpc_solver/include/WMG.h for the description of these  parameters.
     bezier_weight_1 = 1.0;
-    bezier_weight_2 = 2.0;
+    bezier_weight_2 = 2.2;
     bezier_inclination_1 = 0.01;
-    bezier_inclination_2 = 0.008;
+    bezier_inclination_2 = 0.005;
 
     // assume that z coordinate of a foot after position correction is 0.0
     set_support_z_to_zero = true;

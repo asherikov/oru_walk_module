@@ -78,6 +78,13 @@ void oru_walk::readSensors(jointState& joint_state)
     {
         joint_state.q[i] = sensorValues[i];
     }
+    /* Acc. to the documentation:
+     * "LHipYawPitch and RHipYawPitch share the same motor so they move
+     *  simultaneously and symmetrically. In case of conflicting orders, 
+     *  LHipYawPitch always takes the priority."
+     * Make sure that these joint angles are equal:
+     */
+    joint_state.q[R_HIP_YAW_PITCH] = joint_state.q[L_HIP_YAW_PITCH];
 }
 
 
@@ -281,14 +288,13 @@ void oru_walk::solveIKsendCommands (
  */
 void oru_walk::feedbackError (smpc::state_orig &init_state)
 {
-    double CoM_pos[POSITION_VECTOR_SIZE];
-    nao.getCoM (nao.state_sensor, CoM_pos);
+    nao.getCoM (nao.state_sensor, nao.CoM_position);
 
 
     smpc::state_orig state_error;
     state_error.set (
-            init_state.x() - CoM_pos[0],
-            init_state.y() - CoM_pos[1]);
+            init_state.x() - nao.CoM_position[0],
+            init_state.y() - nao.CoM_position[1]);
 
     if (state_error.x() > wp.feedback_threshold)
     {

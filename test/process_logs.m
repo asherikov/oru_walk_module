@@ -33,7 +33,7 @@ Names = {
 '24 HEAD YAW'};
 
 
-PlotSensors = {[5 11] [6 12] [3 9] [2 8] [4 10] [1]};
+PlotSensors = {[5 11] [6 12] [3 9] [2 8] [4 10] [1 7]};
 
 %   min     max     max_velocity
 Limits = [

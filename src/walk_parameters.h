@@ -55,6 +55,10 @@ enum parametersNames
     IGM_MU                      ,
     STEP_HEIGHT                 ,
     STEP_LENGTH                 ,
+    BEZIER_WEIGHT_1             ,
+    BEZIER_WEIGHT_2             ,
+    BEZIER_INCLINATION_1        ,
+    BEZIER_INCLINATION_2        ,
     LOOP_TIME_LIMIT_MS          ,
     DCM_TIME_SHIFT_MS           ,
     PREVIEW_SAMPLING_TIME_MS    ,
@@ -116,6 +120,12 @@ class walkParameters
         double igm_tol;
         int igm_max_iter;
         double igm_mu;
+
+
+        double bezier_weight_1;
+        double bezier_weight_2;
+        double bezier_inclination_1;
+        double bezier_inclination_2;
 
 
         ALValue param_names;

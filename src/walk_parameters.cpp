@@ -42,8 +42,8 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     preview_sampling_time_sec = (double) preview_sampling_time_ms / 1000;
 
     ss_time_ms = 400;
-    ds_time_ms = 40;
-    ds_number = 3;
+    ds_time_ms = 60;
+    ds_number = 2;
     step_pairs_number = 4;
 
 
@@ -57,6 +57,12 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
 
     // The longest step in the built-in module.
     step_length = 0.04;
+
+    // Refer to smpc_solver/include/WMG.h for the description of these  parameters.
+    bezier_weight_1 = 1.0;
+    bezier_weight_2 = 2.0;
+    bezier_inclination_1 = 0.01;
+    bezier_inclination_2 = 0.008;
 
     // assume that z coordinate of a foot after position correction is 0.0
     set_support_z_to_zero = true;
@@ -111,6 +117,10 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
 
     param_names[STEP_HEIGHT]              = "step_height";
     param_names[STEP_LENGTH]              = "step_length";
+    param_names[BEZIER_WEIGHT_1]          = "bezier_weight_1";
+    param_names[BEZIER_WEIGHT_2]          = "bezier_weight_2";
+    param_names[BEZIER_INCLINATION_1]     = "bezier_inclination_1";
+    param_names[BEZIER_INCLINATION_2]     = "bezier_inclination_2";
 
     param_names[LOOP_TIME_LIMIT_MS]       = "loop_time_limit_ms";
     param_names[DCM_TIME_SHIFT_MS]        = "dcm_time_shift_ms";
@@ -157,16 +167,20 @@ void walkParameters::readParameters()
     {
         if (preferences[i][2].isFloat())
         {
-            if(preferences[i][0] == param_names[FEEDBACK_GAIN])      { feedback_gain      = preferences[i][2]; }
-            if(preferences[i][0] == param_names[FEEDBACK_THRESHOLD]) { feedback_threshold = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_ALPHA])          { mpc_alpha          = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_BETA])           { mpc_beta           = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_GAMMA])          { mpc_gamma          = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_REGULARIZATION]) { mpc_regularization = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_TOLERANCE])      { mpc_tolerance      = preferences[i][2]; }
-            if(preferences[i][0] == param_names[IGM_MU])             { igm_mu             = preferences[i][2]; }
-            if(preferences[i][0] == param_names[STEP_HEIGHT])        { step_height        = preferences[i][2]; }
-            if(preferences[i][0] == param_names[STEP_LENGTH])        { step_length        = preferences[i][2]; }
+            if(preferences[i][0] == param_names[FEEDBACK_GAIN])       { feedback_gain        = preferences[i][2]; }
+            if(preferences[i][0] == param_names[FEEDBACK_THRESHOLD])  { feedback_threshold   = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_ALPHA])           { mpc_alpha            = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_BETA])            { mpc_beta             = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_GAMMA])           { mpc_gamma            = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_REGULARIZATION])  { mpc_regularization   = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_TOLERANCE])       { mpc_tolerance        = preferences[i][2]; }
+            if(preferences[i][0] == param_names[IGM_MU])              { igm_mu               = preferences[i][2]; }
+            if(preferences[i][0] == param_names[STEP_HEIGHT])         { step_height          = preferences[i][2]; }
+            if(preferences[i][0] == param_names[STEP_LENGTH])         { step_length          = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_WEIGHT_1])     { bezier_weight_1      = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_WEIGHT_2])     { bezier_weight_2      = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_INCLINATION_1]){ bezier_inclination_1 = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_INCLINATION_2]){ bezier_inclination_2 = preferences[i][2]; }
         }
         if (preferences[i][2].isInt())
         {
@@ -224,6 +238,10 @@ void walkParameters::writeParameters()
 
     preferences[STEP_HEIGHT][1]              = "";
     preferences[STEP_LENGTH][1]              = "";
+    preferences[BEZIER_WEIGHT_1][1]          = "";
+    preferences[BEZIER_WEIGHT_2][1]          = "";
+    preferences[BEZIER_INCLINATION_1][1]     = "";
+    preferences[BEZIER_INCLINATION_2][1]     = "";
 
     preferences[LOOP_TIME_LIMIT_MS][1]       = "";
     preferences[DCM_TIME_SHIFT_MS][1]        = "";
@@ -252,6 +270,10 @@ void walkParameters::writeParameters()
 
     preferences[STEP_HEIGHT][2]              = step_height;
     preferences[STEP_LENGTH][2]              = step_length;
+    preferences[BEZIER_WEIGHT_1][2]          = bezier_weight_1;
+    preferences[BEZIER_WEIGHT_2][2]          = bezier_weight_2;
+    preferences[BEZIER_INCLINATION_1][2]     = bezier_inclination_1;
+    preferences[BEZIER_INCLINATION_2][2]     = bezier_inclination_2;
 
     preferences[LOOP_TIME_LIMIT_MS][2]       = loop_time_limit_ms;
     preferences[DCM_TIME_SHIFT_MS][2]        = dcm_time_shift_ms;

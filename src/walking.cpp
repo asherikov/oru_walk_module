@@ -142,7 +142,11 @@ void oru_walk::walkControl()
 
     WMG wmg(wp.preview_window_size,
             wp.preview_sampling_time_ms,
-            wp.step_height);
+            wp.step_height,
+            wp.bezier_weight_1,
+            wp.bezier_weight_2,
+            wp.bezier_inclination_1,
+            wp.bezier_inclination_2);
     wmg.T_ms[0] = wp.control_sampling_time_ms;
     wmg.T_ms[1] = wp.control_sampling_time_ms;
 

@@ -32,11 +32,9 @@ void oru_walk::initWalkPattern(WMG &wmg)
         case WALK_PATTERN_DIAGONAL:
             initWalkPattern_Diagonal(wmg);
             break;
-/*         
         case WALK_PATTERN_CIRCULAR:
             initWalkPattern_Circular(wmg);
             break;
-*/
         default:
             halt("Unknown walk pattern.\n", __FUNCTION__);
             break;
@@ -153,7 +151,7 @@ void oru_walk::initWalkPattern_Circular(WMG &wmg)
     double step_y = 0.1;       // relative Y position
 
 
-    double R_ext = 2.05;
+    double R_ext = 0.55;
     double R_int = R_ext - step_y;
 
     // relative angle

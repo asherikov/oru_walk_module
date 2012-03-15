@@ -97,7 +97,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     // i.e. 3.14*2/4096 = 0.0015 radian is the lowest detectable change in a joint angle.
     igm_tol = 0.0015;
     igm_max_iter = 20;
-    igm_mu = 1.2;
+    igm_mu = 1.0;
 
 
 

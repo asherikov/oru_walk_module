@@ -17,16 +17,18 @@
  * - @ref MainIntro
  * - @ref MainLicense
  * - @ref MainRef
- * @par Separate pages
+ *
+ * @par
  * - @ref pInstall
  * - @ref pArch
  * - @ref pImprove
  * - @ref pNotes
- * @par 
+ * 
+ * @par
  * - Homepage of the project: http://asherikov.github.com/Projects/naowalk.html
  * - Sources: http://github.com/asherikov/oru_walk_module
  * - Documentation: http://asherikov.github.com/oru_walk_module/index.html
- * \n\n
+ * \n
  *
  *
  * @section MainIntro Introduction
@@ -50,20 +52,13 @@
 /**
  * @page pInstall Installation and running
  * @verbinclude "INSTALL"
- * \n
  */
 
 
 /**
- * @page pArch Architecture and logic
- *
- * @par Contents
- * - @ref pGraph
- * - @ref pControlLoop
- * - @ref pControlThread
- * - @ref pFeedback
- * - @ref pIGM
- * \n
+ * @page pArch Architecture and operation
+ * 
+ * @tableofcontents
  *
  * @section pGraph Connections between submodules
     @dot
@@ -111,10 +106,10 @@
     cb  ->  ct [label = "Activate"];
     ct  =>  ct [label = "Feedback error"];
     ct  =>  ct [label = "Solve MPC"];
-    ct  =>  ct [label = "Solve IK"];
-    ct  =>  ct [label = "Send joint angles"];
-    ct  =>  ct [label = "Solve IK"];
-    ct  =>  ct [label = "Send joint angles"];
+    ct  =>  ct [label = "Solve IK (1)"];
+    ct  =>  ct [label = "Send joint angles (1)"];
+    ct  =>  ct [label = "Solve IK (2)"];
+    ct  =>  ct [label = "Send joint angles (2)"];
     ---        [ label = "Repeat until walk is finished"];
   @endmsc
  * The interconnection between DCM thread, DCM callback and control thread is explained
@@ -192,10 +187,6 @@
 /**
  * @page pNotes Notes
  *
- * Some notes are obvious, but sometimes they weren't taken into account, when 
- * it was necessary.
- *
- *
  * @section pNotesDoc Exerpts from the documentation
  * - LHipYawPitch and RHipYawPitch share the same motor so they move 
  *   simultaneously and symmetrically. In case of conflicting orders
@@ -268,8 +259,6 @@
  */
 
 
-
-
 /**
  * @page pImprove Possible improvements and other ideas
  *
@@ -284,8 +273,5 @@
  * the time available for solution. Alternatively, we can limit the number of
  * activated constraints or execution time of active set method.
  */
-
-
-
 #endif /*DOXYGEN_H*/
  

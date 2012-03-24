@@ -1,15 +1,18 @@
 Requirements:
+------------
     - GNU make
     - SDK or crosscompilation toolkit for NAO, version >= 1.12
     - Eigen (it is provided by SDK or toolkit)
 
 
+
 Downloading:
+-----------
 
 a) using git:
-    1) git clone git://github.com/asherikov/oru_walk_module.git
-    2) go to created oru_walk_module directory
-    3) git submodule update --init
+    1) run 'git clone git://github.com/asherikov/oru_walk_module.git'
+    2) enter the created 'oru_walk_module' directory
+    3) run 'git submodule update --init'
 
 b) without git:
     1) download all modules separately:
@@ -20,12 +23,16 @@ b) without git:
        in oru_walk_module folder.
 
 
+
 Compilation:
+-----------
     > make cmake TOOLCHAIN=<path to the toolchain>
     to build a debug version add 'DEBUG=1' to the command line above
 
 
+
 Running:
+-------
     1) Make sure, that the following environment variables are set:
     LD_LIBRARY_PATH <path to the sdk>/lib
     PYTHONPATH  <path to the sdk>/lib
@@ -37,3 +44,25 @@ Running:
     3) Restart naoqi.
 
     4) Use oru_walk_control.py script to send commands to the module.
+    By default the script connects to the localhost (127.0.0.1). The
+    IP address of the robot can be specified using '-b 11.22.33.44'.
+    Once the script is connected it prints available commands and 
+    waits for user's actions.
+
+    A typical sequence of the commands is:
+        - set stiffness to 1.0
+        - take the initial position
+        - walk
+        - set stiffness to 0.0 (when the walk is finished)
+
+    If you want to use the built-in walking module then only two
+    commands are needed:
+        - "walk (using builtin module)"
+        - "reset stiffness and angles (using builtin module)"
+    
+    5) Parameters of the module can be changed in a configuration file. 
+    It is automatically created and filled with defaults when the 'walk' 
+    command is send. 
+    Also, you may use the sample configuration file "oru_walk.xml" in 
+    the root directory of the project. The configuration file must be 
+    placed in "~/.config/naoqi/" directory.

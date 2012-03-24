@@ -226,8 +226,10 @@ void oru_walk::walkControl()
 /**
  * @brief Solve inverse kinematics and send commands to the controllers.
  *
- * @param[in] callback_start_time_ms the time, when the callback was started.
+ * @param[in] mpc MPC parameters
+ * @param[in] solver MPC solver
  * @param[in] control_loop_num number of control loops in future (>= 1).
+ * @param[in,out] wmg WMG
  */
 void oru_walk::solveIKsendCommands (
         const smpc_parameters &mpc,
@@ -289,6 +291,8 @@ void oru_walk::solveIKsendCommands (
 
 /**
  * @brief Correct state and the model based on the sensor data.
+ *
+ * @param[in,out] init_state expected state
  */
 void oru_walk::feedbackError (smpc::state_orig &init_state)
 {
@@ -334,6 +338,10 @@ void oru_walk::feedbackError (smpc::state_orig &init_state)
 
 /**
  * @brief Solve the MPC problem.
+ *
+ * @param[in,out] wmg WMG
+ * @param[in,out] mpc MPC parameters
+ * @param[in,out] solver MPC solver
  *
  * @return false if there is not enough steps, true otherwise.
  */

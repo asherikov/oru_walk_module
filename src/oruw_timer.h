@@ -24,7 +24,7 @@ class oruw_timer
          * @brief Create a timer
          *
          * @param[in] timer_id identifier of the timer
-         * @param[in] timer_limit the upper limit
+         * @param[in] timer_limit_ms the upper limit
          */
         oruw_timer(const char* timer_id, const unsigned int timer_limit_ms) : id(timer_id)
         {

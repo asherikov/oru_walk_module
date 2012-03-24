@@ -1,22 +1,13 @@
 This is a walking module for NAO humanoid robot.
+
 NAO is developed by Aldebaran Robotics: http://aldebaran-robotics.com/
 The company provides a more advanced walking module, but its sources
 are not publicly available. Furthermore, we use a different approach
 to control the robot. 
 
 The module depends on two libraries: nao_igm and smpc_solver. All sources
-are published on github.
-
-    1) oru_walk_module:
-    (sources)       http://github.com/asherikov/oru_walk_module
-    (documentation) http://asherikov.github.com/oru_walk_module
-
-    2) smpc_solver:
-    (sources)       http://github.com/asherikov/smpc_solver
-    (documentation) http://asherikov.github.com/smpc_solver
-
-    3) nao_igm:
-    (sources)       http://github.com/asherikov/nao_igm
+are published on github. Visit http://asherikov.github.com/Projects/naowalk.html
+for more information.
 
 Note, that if you want to build the module you need SDK or crosscompilation
 toolkit provided by Aldebaran Robotics.

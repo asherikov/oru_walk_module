@@ -47,30 +47,31 @@
 <p>Log time of existance on destruction. Throw an error, if the given upper limit is not satisfied.  
 <a href="#_details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="log__debug_8h_source.html">log_debug.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="oruw__timer_8h_source.html">oruw_timer.h</a>&gt;</code></p>
 
 <p><a href="classoruw__timer-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#ab15693f5cc5eb3dfaacba35bd78cf792">oruw_timer</a> (const char *timer_id, const unsigned int timer_limit)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Create timer.  <a href="#ab15693f5cc5eb3dfaacba35bd78cf792"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#a2f1074fa0d2331429d7b2e151571cf61">~oruw_timer</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy the timer: log time, throw an error if needed.  <a href="#a2f1074fa0d2331429d7b2e151571cf61"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#af093dd41192a206fbba0a68a7513c231">isLimitSatisfied</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#aa057b59b896b9499d52cc4a7278fc003">oruw_timer</a> (const char *timer_id, const unsigned int timer_limit_ms)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a timer.  <a href="#aa057b59b896b9499d52cc4a7278fc003"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#a69336948d4372d842de1b498d104dd7d">reset</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset timer to the current time.  <a href="#a69336948d4372d842de1b498d104dd7d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#a81b95ba187210d706389461556b28d69">check</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the limit is satisfied, logs a message.  <a href="#a81b95ba187210d706389461556b28d69"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">qi::os::timeval&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#ae89af0b795c19af32e5240e98df5eca2">end_time</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">qi::os::timeval&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#a881c9ccafce0c7af9121925b5ea45528">start_time</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#af689437654f007b5cde9a1412c3eaf4d">id</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#a89fcd96349ede9396b2acdbdf3716af0">id</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__timer.html#aedd63404f9be99052a5009cae0d3b023">limit</a></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Log time of existance on destruction. Throw an error, if the given upper limit is not satisfied. </p>
 
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00041">41</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__timer_8h_source.html#l00020">20</a> of file <a class="el" href="oruw__timer_8h_source.html">oruw_timer.h</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ab15693f5cc5eb3dfaacba35bd78cf792"></a><!-- doxytag: member="oruw_timer::oruw_timer" ref="ab15693f5cc5eb3dfaacba35bd78cf792" args="(const char *timer_id, const unsigned int timer_limit)" -->
+<a class="anchor" id="aa057b59b896b9499d52cc4a7278fc003"></a><!-- doxytag: member="oruw_timer::oruw_timer" ref="aa057b59b896b9499d52cc4a7278fc003" args="(const char *timer_id, const unsigned int timer_limit_ms)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -84,66 +85,69 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const unsigned int&#160;</td>
-          <td class="paramname"><em>timer_limit</em>&#160;</td>
+          <td class="paramname"><em>timer_limit_ms</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Create timer. </p>
+<p>Create a timer. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">timer_id</td><td>identifier of the timer </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">timer_limit</td><td>the upper limit </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timer_limit_ms</td><td>the upper limit </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="log__debug_8cpp_source.html#l00018">18</a> of file <a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a2f1074fa0d2331429d7b2e151571cf61"></a><!-- doxytag: member="oruw_timer::~oruw_timer" ref="a2f1074fa0d2331429d7b2e151571cf61" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">oruw_timer::~oruw_timer </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Destroy the timer: log time, throw an error if needed. </p>
-
-<p>Definition at line <a class="el" href="log__debug_8cpp_source.html#l00042">42</a> of file <a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oruw__timer_8h_source.html#l00029">29</a> of file <a class="el" href="oruw__timer_8h_source.html">oruw_timer.h</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="af093dd41192a206fbba0a68a7513c231"></a><!-- doxytag: member="oruw_timer::isLimitSatisfied" ref="af093dd41192a206fbba0a68a7513c231" args="()" -->
+<a class="anchor" id="a81b95ba187210d706389461556b28d69"></a><!-- doxytag: member="oruw_timer::check" ref="a81b95ba187210d706389461556b28d69" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool oruw_timer::isLimitSatisfied </td>
+          <td class="memname">bool oruw_timer::check </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8cpp_source.html#l00025">25</a> of file <a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a>.</p>
+<p>Checks if the limit is satisfied, logs a message. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>true if the limit is satisfied, false otherwise. </dd></dl>
+
+<p>Definition at line <a class="el" href="oruw__timer_8h_source.html#l00050">50</a> of file <a class="el" href="oruw__timer_8h_source.html">oruw_timer.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a69336948d4372d842de1b498d104dd7d"></a><!-- doxytag: member="oruw_timer::reset" ref="a69336948d4372d842de1b498d104dd7d" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void oruw_timer::reset </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Reset timer to the current time. </p>
+
+<p>Definition at line <a class="el" href="oruw__timer_8h_source.html#l00039">39</a> of file <a class="el" href="oruw__timer_8h_source.html">oruw_timer.h</a>.</p>
 
 </div>
 </div>
@@ -159,22 +163,22 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00050">50</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__timer_8h_source.html#l00061">61</a> of file <a class="el" href="oruw__timer_8h_source.html">oruw_timer.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="af689437654f007b5cde9a1412c3eaf4d"></a><!-- doxytag: member="oruw_timer::id" ref="af689437654f007b5cde9a1412c3eaf4d" args="" -->
+<a class="anchor" id="a89fcd96349ede9396b2acdbdf3716af0"></a><!-- doxytag: member="oruw_timer::id" ref="a89fcd96349ede9396b2acdbdf3716af0" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string <a class="el" href="classoruw__timer.html#af689437654f007b5cde9a1412c3eaf4d">oruw_timer::id</a><code> [private]</code></td>
+          <td class="memname">const char* <a class="el" href="classoruw__timer.html#a89fcd96349ede9396b2acdbdf3716af0">oruw_timer::id</a><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00053">53</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__timer_8h_source.html#l00064">64</a> of file <a class="el" href="oruw__timer_8h_source.html">oruw_timer.h</a>.</p>
 
 </div>
 </div>
@@ -189,7 +193,7 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00054">54</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__timer_8h_source.html#l00065">65</a> of file <a class="el" href="oruw__timer_8h_source.html">oruw_timer.h</a>.</p>
 
 </div>
 </div>
@@ -204,13 +208,12 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00051">51</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__timer_8h_source.html#l00062">62</a> of file <a class="el" href="oruw__timer_8h_source.html">oruw_timer.h</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/<a class="el" href="log__debug_8h_source.html">log_debug.h</a></li>
-<li>src/<a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a></li>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>src/<a class="el" href="oruw__timer_8h_source.html">oruw_timer.h</a></li>
 </ul>
 </div>
 <hr class="footer"/><address class="footer"><small>Generated by&#160;

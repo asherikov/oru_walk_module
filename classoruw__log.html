@@ -38,64 +38,49 @@
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a>  </div>
+<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
 <h1>oruw_log Class Reference</h1>  </div>
 </div>
 <div class="contents">
 <!-- doxytag: class="oruw_log" -->
-<p><code>#include &lt;<a class="el" href="log__debug_8h_source.html">log_debug.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>&gt;</code></p>
 
 <p><a href="classoruw__log-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a54398d5e9654d27c0fd77264e3ea414c">oruw_log</a> (const modelState &amp;, const unsigned int)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a56d860da9b0d8879445884cbdedba376">oruw_log</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a8731f242d90aae7149053743648d9824">~oruw_log</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#acf17253be24c4b03c3a8e16d255c7397">logJointValues</a> (const modelState &amp;, const modelState &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a1bd9b820377313b4ac4c58a693a0a17a">logCoM</a> (WMG *, modelState &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a98bbb42d5bfc10e3116b8a1c242f7591">logJointValues</a> (const jointState &amp;, const jointState &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#afe9ae1039fc6a6258faedb1fae958e00">logCoM</a> (smpc_parameters &amp;, nao_igm &amp;)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a2cb319e0d392d2daae6a4cacd21f138f">logFeet</a> (nao_igm &amp;nao)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a73e3afc7a14fdffcb1974dbbd6463f79">logNumConstraints</a> (const int)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a29f5f39402e3a9cee9c7ecbb99fa6148">logJointVelocities</a> (const modelState &amp;, const double)</td></tr>
-<tr><td colspan="2"><h2><a name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#aac3c712ac761157123ac6084d2e43228">FJointsLog</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#aa30a5fde6657528d4a100f708ee62eeb">FCoMLog</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#ae198b1ccbb87de4a297b683cd15cc1aa">FFeetLog</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#af9362340746893b5ee3d8a9bf9b0873e">FJointVelocities</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classavgFilter.html">avgFilter</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#ae23368f802ee98d212a86f3d3b2848cc">com_filter</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">modelState&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#ad76631c8c5285898d0523339a7685864">state_old</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a000046f9a8ca27b524ad24a1eb9973db">FMessages</a></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock">
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00083">83</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00026">26</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a54398d5e9654d27c0fd77264e3ea414c"></a><!-- doxytag: member="oruw_log::oruw_log" ref="a54398d5e9654d27c0fd77264e3ea414c" args="(const modelState &amp;, const unsigned int)" -->
+<a class="anchor" id="a56d860da9b0d8879445884cbdedba376"></a><!-- doxytag: member="oruw_log::oruw_log" ref="a56d860da9b0d8879445884cbdedba376" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">oruw_log::oruw_log </td>
           <td>(</td>
-          <td class="paramtype">const modelState &amp;&#160;</td>
-          <td class="paramname"><em>state_init</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">const unsigned int&#160;</td>
-          <td class="paramname"><em>filter_window_len</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8cpp_source.html#l00058">58</a> of file <a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8cpp_source.html#l00015">15</a> of file <a class="el" href="oruw__log_8cpp_source.html">oruw_log.cpp</a>.</p>
 
 </div>
 </div>
@@ -113,26 +98,26 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8cpp_source.html#l00068">68</a> of file <a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8cpp_source.html#l00024">24</a> of file <a class="el" href="oruw__log_8cpp_source.html">oruw_log.cpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a1bd9b820377313b4ac4c58a693a0a17a"></a><!-- doxytag: member="oruw_log::logCoM" ref="a1bd9b820377313b4ac4c58a693a0a17a" args="(WMG *, modelState &amp;)" -->
+<a class="anchor" id="afe9ae1039fc6a6258faedb1fae958e00"></a><!-- doxytag: member="oruw_log::logCoM" ref="afe9ae1039fc6a6258faedb1fae958e00" args="(smpc_parameters &amp;, nao_igm &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void oruw_log::logCoM </td>
           <td>(</td>
-          <td class="paramtype">WMG *&#160;</td>
-          <td class="paramname"><em>wmg</em>, </td>
+          <td class="paramtype">smpc_parameters &amp;&#160;</td>
+          <td class="paramname"><em>mpc</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">modelState &amp;&#160;</td>
-          <td class="paramname"><em>state_sensor</em>&#160;</td>
+          <td class="paramtype">nao_igm &amp;&#160;</td>
+          <td class="paramname"><em>nao</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -143,7 +128,7 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8cpp_source.html#l00099">99</a> of file <a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8cpp_source.html#l00052">52</a> of file <a class="el" href="oruw__log_8cpp_source.html">oruw_log.cpp</a>.</p>
 
 </div>
 </div>
@@ -162,24 +147,24 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8cpp_source.html#l00114">114</a> of file <a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8cpp_source.html#l00066">66</a> of file <a class="el" href="oruw__log_8cpp_source.html">oruw_log.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="acf17253be24c4b03c3a8e16d255c7397"></a><!-- doxytag: member="oruw_log::logJointValues" ref="acf17253be24c4b03c3a8e16d255c7397" args="(const modelState &amp;, const modelState &amp;)" -->
+<a class="anchor" id="a98bbb42d5bfc10e3116b8a1c242f7591"></a><!-- doxytag: member="oruw_log::logJointValues" ref="a98bbb42d5bfc10e3116b8a1c242f7591" args="(const jointState &amp;, const jointState &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void oruw_log::logJointValues </td>
           <td>(</td>
-          <td class="paramtype">const modelState &amp;&#160;</td>
+          <td class="paramtype">const jointState &amp;&#160;</td>
           <td class="paramname"><em>state_sensor</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const modelState &amp;&#160;</td>
+          <td class="paramtype">const jointState &amp;&#160;</td>
           <td class="paramname"><em>state_expected</em>&#160;</td>
         </tr>
         <tr>
@@ -191,86 +176,23 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8cpp_source.html#l00079">79</a> of file <a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a29f5f39402e3a9cee9c7ecbb99fa6148"></a><!-- doxytag: member="oruw_log::logJointVelocities" ref="a29f5f39402e3a9cee9c7ecbb99fa6148" args="(const modelState &amp;, const double)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void oruw_log::logJointVelocities </td>
-          <td>(</td>
-          <td class="paramtype">const modelState &amp;&#160;</td>
-          <td class="paramname"><em>state_current</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double&#160;</td>
-          <td class="paramname"><em>time</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="log__debug_8cpp_source.html#l00136">136</a> of file <a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a73e3afc7a14fdffcb1974dbbd6463f79"></a><!-- doxytag: member="oruw_log::logNumConstraints" ref="a73e3afc7a14fdffcb1974dbbd6463f79" args="(const int)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void oruw_log::logNumConstraints </td>
-          <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>num</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="log__debug_8cpp_source.html#l00147">147</a> of file <a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8cpp_source.html#l00033">33</a> of file <a class="el" href="oruw__log_8cpp_source.html">oruw_log.cpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="ae23368f802ee98d212a86f3d3b2848cc"></a><!-- doxytag: member="oruw_log::com_filter" ref="ae23368f802ee98d212a86f3d3b2848cc" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classavgFilter.html">avgFilter</a>* <a class="el" href="classoruw__log.html#ae23368f802ee98d212a86f3d3b2848cc">oruw_log::com_filter</a><code> [private]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00105">105</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="aa30a5fde6657528d4a100f708ee62eeb"></a><!-- doxytag: member="oruw_log::FCoMLog" ref="aa30a5fde6657528d4a100f708ee62eeb" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FILE* <a class="el" href="classoruw__log.html#aa30a5fde6657528d4a100f708ee62eeb">oruw_log::FCoMLog</a><code> [private]</code></td>
+          <td class="memname">FILE* <a class="el" href="classoruw__log.html#aa30a5fde6657528d4a100f708ee62eeb">oruw_log::FCoMLog</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00102">102</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00038">38</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -279,13 +201,13 @@ Private Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FILE* <a class="el" href="classoruw__log.html#ae198b1ccbb87de4a297b683cd15cc1aa">oruw_log::FFeetLog</a><code> [private]</code></td>
+          <td class="memname">FILE* <a class="el" href="classoruw__log.html#ae198b1ccbb87de4a297b683cd15cc1aa">oruw_log::FFeetLog</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00103">103</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00039">39</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -294,49 +216,34 @@ Private Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FILE* <a class="el" href="classoruw__log.html#aac3c712ac761157123ac6084d2e43228">oruw_log::FJointsLog</a><code> [private]</code></td>
+          <td class="memname">FILE* <a class="el" href="classoruw__log.html#aac3c712ac761157123ac6084d2e43228">oruw_log::FJointsLog</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00101">101</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00037">37</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="af9362340746893b5ee3d8a9bf9b0873e"></a><!-- doxytag: member="oruw_log::FJointVelocities" ref="af9362340746893b5ee3d8a9bf9b0873e" args="" -->
+<a class="anchor" id="a000046f9a8ca27b524ad24a1eb9973db"></a><!-- doxytag: member="oruw_log::FMessages" ref="a000046f9a8ca27b524ad24a1eb9973db" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FILE* <a class="el" href="classoruw__log.html#af9362340746893b5ee3d8a9bf9b0873e">oruw_log::FJointVelocities</a><code> [private]</code></td>
+          <td class="memname">FILE* <a class="el" href="classoruw__log.html#a000046f9a8ca27b524ad24a1eb9973db">oruw_log::FMessages</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00104">104</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad76631c8c5285898d0523339a7685864"></a><!-- doxytag: member="oruw_log::state_old" ref="ad76631c8c5285898d0523339a7685864" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">modelState <a class="el" href="classoruw__log.html#ad76631c8c5285898d0523339a7685864">oruw_log::state_old</a><code> [private]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="log__debug_8h_source.html#l00106">106</a> of file <a class="el" href="log__debug_8h_source.html">log_debug.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00040">40</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/<a class="el" href="log__debug_8h_source.html">log_debug.h</a></li>
-<li>src/<a class="el" href="log__debug_8cpp_source.html">log_debug.cpp</a></li>
+<li>src/<a class="el" href="oruw__log_8h_source.html">oruw_log.h</a></li>
+<li>src/<a class="el" href="oruw__log_8cpp_source.html">oruw_log.cpp</a></li>
 </ul>
 </div>
 <hr class="footer"/><address class="footer"><small>Generated by&#160;

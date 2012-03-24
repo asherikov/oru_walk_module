@@ -52,25 +52,28 @@
 <code>#include &lt;alcommon/almodule.h&gt;</code><br/>
 <code>#include &lt;alvalue/alvalue.h&gt;</code><br/>
 <code>#include &lt;alproxies/dcmproxy.h&gt;</code><br/>
+<code>#include &lt;alproxies/almemoryproxy.h&gt;</code><br/>
 <code>#include &lt;almemoryfastaccess/almemoryfastaccess.h&gt;</code><br/>
+<code>#include &lt;althread/almutex.h&gt;</code><br/>
 <code>#include &lt;boost/bind.hpp&gt;</code><br/>
+<code>#include &lt;boost/thread.hpp&gt;</code><br/>
+<code>#include &lt;althread/alcriticalsection.h&gt;</code><br/>
 <code>#include &quot;WMG.h&quot;</code><br/>
 <code>#include &quot;smpc_solver.h&quot;</code><br/>
 <code>#include &quot;joints_sensors_id.h&quot;</code><br/>
 <code>#include &quot;nao_igm.h&quot;</code><br/>
-<code>#include &quot;<a class="el" href="avg__filter_8h_source.html">avg_filter.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="walk__parameters_8h_source.html">walk_parameters.h</a>&quot;</code><br/>
 </div>
 <p><a href="oru__walk_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwalk__parameters.html">walk_parameters</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">A container for constant parameters.  <a href="classwalk__parameters.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html">oru_walk</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The main walking module class.  <a href="classoru__walk.html#_details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="define-members"></a>
 Defines</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="oru__walk_8h.html#a66fc4fc42a69a1548bc2cb0708430141">ORUW_HALT</a>(message)&#160;&#160;&#160;halt(message, __FUNCTION__)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="oru__walk_8h.html#a469f696eb5519209653cc7c5a2e4da63">ORUW_THROW</a>(message)&#160;&#160;&#160;throw ALERROR(getName(), __FUNCTION__, message)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="oru__walk_8h.html#a7107e64889b8a0f4628dea7ee22fb3cd">ORUW_THROW_ERROR</a>(message, error)&#160;&#160;&#160;throw ALERROR(getName(), __FUNCTION__, message + string (error.what()))</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><dl class="author"><dt><b>Author:</b></dt><dd>Antonio Paolillo </dd>
@@ -81,22 +84,51 @@ Alexander Sherikov </dd></dl>
 
 <p>Definition in file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 </div><hr/><h2>Define Documentation</h2>
-<a class="anchor" id="a66fc4fc42a69a1548bc2cb0708430141"></a><!-- doxytag: member="oru_walk.h::ORUW_HALT" ref="a66fc4fc42a69a1548bc2cb0708430141" args="(message)" -->
+<a class="anchor" id="a469f696eb5519209653cc7c5a2e4da63"></a><!-- doxytag: member="oru_walk.h::ORUW_THROW" ref="a469f696eb5519209653cc7c5a2e4da63" args="(message)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ORUW_HALT</td>
+          <td class="memname">#define ORUW_THROW</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">message</td><td>)</td>
-          <td>&#160;&#160;&#160;halt(message, __FUNCTION__)</td>
+          <td>&#160;&#160;&#160;throw ALERROR(getName(), __FUNCTION__, message)</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00059">59</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00065">65</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7107e64889b8a0f4628dea7ee22fb3cd"></a><!-- doxytag: member="oru_walk.h::ORUW_THROW_ERROR" ref="a7107e64889b8a0f4628dea7ee22fb3cd" args="(message, error)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ORUW_THROW_ERROR</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">message, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">error&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;throw ALERROR(getName(), __FUNCTION__, message + string (error.what()))</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00066">66</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>

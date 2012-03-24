@@ -57,50 +57,68 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a628c47832fd07bec0fa2dd2ffe3499bc">oru_walk</a> (ALPtr&lt; ALBroker &gt; broker, const string &amp;name)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a73e1efda58396a7f9fe1316cde05e48b">~oru_walk</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a9147adb41b26fa1c94377ea709837e68">init</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#aa959228f756cfb71edcc16f7dee8c933">stopWalking</a> (const string &amp;message=&quot;Stopped by request.&quot;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a888e856404651d0484904c97b1408c2a">stopWalkingRemote</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">An interface function that is called remotely to stop the execution.  <a href="#a888e856404651d0484904c97b1408c2a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a4f8daa94c4dfd3558badeb2689d99c05">initPosition</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a827dcbc2e0987e5d6308be3364314fdf">setStiffness</a> (const float &amp;)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set stiffness of joints.  <a href="#a827dcbc2e0987e5d6308be3364314fdf"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ab73f594764632fd56eff23e918329a89">walk</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a81b68ff85cf70cd9ff29e6da873a838e">setWalkParameters</a> (const float &amp;, const float &amp;, const float &amp;, const float &amp;, const float &amp;, const float &amp;)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes specified parameters.  <a href="#a81b68ff85cf70cd9ff29e6da873a838e"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct and initialize all necessary classes and register callback function.  <a href="#ab73f594764632fd56eff23e918329a89"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ad73180d70dd52980b1cc14cd7e80e9c0">initFastRead</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables, that are necessary for fast reading of data from memory.  <a href="#ad73180d70dd52980b1cc14cd7e80e9c0"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ad18356b16a915f2fef72d5db11d6c62b">initFastWrite</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables, that are necessary for fast sending of parameters to DCM.  <a href="#ad18356b16a915f2fef72d5db11d6c62b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#afe04beacd003648c7e1740f97bf9cdf6">initFastRead</a> (const vector&lt; string &gt; &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables, that are necessary for fast reading of data from memory.  <a href="#afe04beacd003648c7e1740f97bf9cdf6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a5c229b98b9f93cd450b14b691b7dfca3">initFastWrite</a> (const vector&lt; string &gt; &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes variables, that are necessary for fast sending of parameters to DCM.  <a href="#a5c229b98b9f93cd450b14b691b7dfca3"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#afc761b781ac7245477d9848887cfa796">initWalkCommands</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize commands, that will be sent to DCM.  <a href="#afc761b781ac7245477d9848887cfa796"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#adc2e4d55e1a2667b14c8fe96a23d4584">initJointAngles</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a61afda0dcd59f9297eece7c106e2cbe0">initWMG_NaoModel</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a29c51728d60d325f227bdf29808a4b3c">readSensors</a> (modelState &amp;)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Update joint angles in the NAO model.  <a href="#a29c51728d60d325f227bdf29808a4b3c"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#aed563126170ef6690aea8b8c7ca5cc0e">solveMPCProblem</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a9e3a73323cb524e16e4617ce1859d713">feedbackError</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Correct state and the model based on the sensor data.  <a href="#a9e3a73323cb524e16e4617ce1859d713"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a3321ce944231effb4d951b394799d546">halt</a> (const string &amp;, const char *)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#aecb14ca1ecd73a0cf59aab1c4678b427">callbackEveryCycle_walk</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#acd32a9095261699fe1425b1c9a023db6">initJointAngles</a> (ALValue &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a7eb5ad6b41ecfe01c1fdcff4049d237f">initWalkPattern</a> (WMG &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize selected walk pattern.  <a href="#a7eb5ad6b41ecfe01c1fdcff4049d237f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a0880e9351fe4c03e1513b1742b063bd4">initWalkPattern_Straight</a> (WMG &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes walk pattern.  <a href="#a0880e9351fe4c03e1513b1742b063bd4"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a42f88e1cc4b50b9050de1c4ecdb17790">initWalkPattern_Diagonal</a> (WMG &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes walk pattern.  <a href="#a42f88e1cc4b50b9050de1c4ecdb17790"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a8591759da43368b21190677d2c7c5575">initWalkPattern_Circular</a> (WMG &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes walk pattern.  <a href="#a8591759da43368b21190677d2c7c5575"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#af09457b94b790bf66d8ed9cd100122d1">readSensors</a> (jointState &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Update joint angles.  <a href="#af09457b94b790bf66d8ed9cd100122d1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ab2ee4b25d3e99f1340c172ddbe7b93ba">solveMPCProblem</a> (WMG &amp;, smpc_parameters &amp;, smpc::solver &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the MPC problem.  <a href="#ab2ee4b25d3e99f1340c172ddbe7b93ba"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#acb9a3c508a36b07499dca821c37f4ee5">solveIKsendCommands</a> (const smpc_parameters &amp;, const smpc::solver &amp;, const int, WMG &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve inverse kinematics and send commands to the controllers.  <a href="#acb9a3c508a36b07499dca821c37f4ee5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ad06c4eb9791ad60e35a11d6de4a91c9f">correctNextSupportPosition</a> (WMG &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The position of the next support foot may change from the targeted, this function moves it to the right place.  <a href="#ad06c4eb9791ad60e35a11d6de4a91c9f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#aa08aba0a7768ac19db63c84da9e1687c">feedbackError</a> (smpc::state_orig &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Correct state and the model based on the sensor data.  <a href="#aa08aba0a7768ac19db63c84da9e1687c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca">halt</a> (const char *, const char *)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Log a message, remove stiffness and die.  <a href="#a0fa623ad2f6ce35096997058bee67cca"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d">stopWalking</a> (const char *)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregister callback and log a message.  <a href="#a677d87b33f028a7afefa033e9226fb8d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#aa370c07844050df9aadd2e7b606b33a6">walkControl</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">A control loop, that is executed in separate thread.  <a href="#aa370c07844050df9aadd2e7b606b33a6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a0411b4d867694ee3a6d3b0a0fd335a03">dcmCallback</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Wake up walk control thread periodically.  <a href="#a0411b4d867694ee3a6d3b0a0fd335a03"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">ProcessSignalConnection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ae6a52763f400d8f704fa17f11ef4e33c">fDCMPostProcessConnection</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">ALPtr&lt; ALMemoryFastAccess &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a3b46d72d42eaecf3e67e0cc3bb09980f">accessSensorValues</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">ALPtr&lt; ALMemoryFastAccess &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a738e7c0f838986274cea221fd306323b">accessActuatorValues</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ae22141b04804fa10c3f7d55494e85fef">sensorValues</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">ALPtr&lt; DCMProxy &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a5060777652dccdda9ba85dc9a741310d">dcmProxy</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">ALValue&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ae7d2c23614b6b7bf4d56211274d3273f">walkCommands</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">WMG *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a2ddc7ff8f7e35bd388fd2f5446c52ef7">wmg</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">smpc::solver *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classavgFilter.html">avgFilter</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ab8a1a4e384fdd378cd80d96cffb6278e">com_filter</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ProcessSignalConnection&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a9335dafa3d02a62d92aa21764e2e29d3">dcm_callback_connection</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ALPtr&lt; ALMemoryFastAccess &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a21d1294bff42ab21ecc135ae47123382">access_sensor_values</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a72187d1210d0230f9279e231ffa4f51f">last_dcm_time_ms_ptr</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ALValue&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">joint_commands</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">nao_igm&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classwalk__parameters.html">walk_parameters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a60a32d88870aa1c0a34b572e8ba7743d">wp</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a7970598508f59c690b0668b0be6cd256">next_preview_len_ms</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a5eb8d7ebb15ab4058af71cf3de92cdf4">init_joint_angles</a> [JOINTS_NUM]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a757914463ded0b70cd2a7dde0c3dafcc">ref_joint_angles</a> [LOWER_JOINTS_NUM]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classwalkParameters.html">walkParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ada602960e24f4538b7699ab01adc602b">dcm_loop_counter</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a6cae6d81db7a7714cdabf9373d8a736e">last_dcm_time_ms</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ALPtr&lt; DCMProxy &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#ab59def3cd9b951e127ffb68dc16fd54f">dcm_proxy</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ALPtr&lt; ALMemoryProxy &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#aebad5e20e4bebefae8f26ce8ac47705e">memory_proxy</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boost::condition_variable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a250c6550716024e02a83e65e978bb630">walk_control_condition</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boost::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoru__walk.html#a4a00faf3f52eec26527edf30b45fd83e">walk_control_mutex</a></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The main walking module class. </p>
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00101">101</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00073">73</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a628c47832fd07bec0fa2dd2ffe3499bc"></a><!-- doxytag: member="oru_walk::oru_walk" ref="a628c47832fd07bec0fa2dd2ffe3499bc" args="(ALPtr&lt; ALBroker &gt; broker, const string &amp;name)" -->
 <div class="memitem">
@@ -135,7 +153,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="oru__walk_8cpp_source.html#l00016">16</a> of file <a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8cpp_source.html#l00018">18</a> of file <a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a>.</p>
 
 </div>
 </div>
@@ -154,17 +172,38 @@ Private Attributes</h2></td></tr>
 <div class="memdoc">
 <p>Destructor for <a class="el" href="classoru__walk.html" title="The main walking module class.">oru_walk</a> object </p>
 
-<p>Definition at line <a class="el" href="oru__walk_8cpp_source.html#l00058">58</a> of file <a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8cpp_source.html#l00046">46</a> of file <a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="aecb14ca1ecd73a0cf59aab1c4678b427"></a><!-- doxytag: member="oru_walk::callbackEveryCycle_walk" ref="aecb14ca1ecd73a0cf59aab1c4678b427" args="()" -->
+<a class="anchor" id="ad06c4eb9791ad60e35a11d6de4a91c9f"></a><!-- doxytag: member="oru_walk::correctNextSupportPosition" ref="ad06c4eb9791ad60e35a11d6de4a91c9f" args="(WMG &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void oru_walk::callbackEveryCycle_walk </td>
+          <td class="memname">void oru_walk::correctNextSupportPosition </td>
+          <td>(</td>
+          <td class="paramtype">WMG &amp;&#160;</td>
+          <td class="paramname"><em>wmg</em></td><td>)</td>
+          <td><code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>The position of the next support foot may change from the targeted, this function moves it to the right place. </p>
+
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00115">115</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0411b4d867694ee3a6d3b0a0fd335a03"></a><!-- doxytag: member="oru_walk::dcmCallback" ref="a0411b4d867694ee3a6d3b0a0fd335a03" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void oru_walk::dcmCallback </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td><code> [private]</code></td>
@@ -172,23 +211,22 @@ Private Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="attention"><dt><b>Attention:</b></dt><dd>REAL-TIME! </dd></dl>
 
-<p><dl class="attention"><dt><b>Attention:</b></dt><dd>hCoM is constant! </dd></dl>
-</p>
+<p>Wake up walk control thread periodically. </p>
 
-<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00114">114</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00095">95</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a9e3a73323cb524e16e4617ce1859d713"></a><!-- doxytag: member="oru_walk::feedbackError" ref="a9e3a73323cb524e16e4617ce1859d713" args="()" -->
+<a class="anchor" id="aa08aba0a7768ac19db63c84da9e1687c"></a><!-- doxytag: member="oru_walk::feedbackError" ref="aa08aba0a7768ac19db63c84da9e1687c" args="(smpc::state_orig &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void oru_walk::feedbackError </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">smpc::state_orig &amp;&#160;</td>
+          <td class="paramname"><em>init_state</em></td><td>)</td>
           <td><code> [private]</code></td>
         </tr>
       </table>
@@ -196,19 +234,25 @@ Private Attributes</h2></td></tr>
 <div class="memdoc">
 
 <p>Correct state and the model based on the sensor data. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">init_state</td><td>expected state </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00185">185</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00297">297</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a3321ce944231effb4d951b394799d546"></a><!-- doxytag: member="oru_walk::halt" ref="a3321ce944231effb4d951b394799d546" args="(const string &amp;, const char *)" -->
+<a class="anchor" id="a0fa623ad2f6ce35096997058bee67cca"></a><!-- doxytag: member="oru_walk::halt" ref="a0fa623ad2f6ce35096997058bee67cca" args="(const char *, const char *)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void oru_walk::halt </td>
           <td>(</td>
-          <td class="paramtype">const string &amp;&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>message</em>, </td>
         </tr>
         <tr>
@@ -226,7 +270,16 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00094">94</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+<p>Log a message, remove stiffness and die. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">message</td><td>a message </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">function</td><td>name of the calling function. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00402">402</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
 
 </div>
 </div>
@@ -244,18 +297,19 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8cpp_source.html#l00087">87</a> of file <a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8cpp_source.html#l00059">59</a> of file <a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad73180d70dd52980b1cc14cd7e80e9c0"></a><!-- doxytag: member="oru_walk::initFastRead" ref="ad73180d70dd52980b1cc14cd7e80e9c0" args="()" -->
+<a class="anchor" id="afe04beacd003648c7e1740f97bf9cdf6"></a><!-- doxytag: member="oru_walk::initFastRead" ref="afe04beacd003648c7e1740f97bf9cdf6" args="(const vector&lt; string &gt; &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void oru_walk::initFastRead </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>joint_names</em></td><td>)</td>
           <td><code> [private]</code></td>
         </tr>
       </table>
@@ -268,14 +322,15 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ad18356b16a915f2fef72d5db11d6c62b"></a><!-- doxytag: member="oru_walk::initFastWrite" ref="ad18356b16a915f2fef72d5db11d6c62b" args="()" -->
+<a class="anchor" id="a5c229b98b9f93cd450b14b691b7dfca3"></a><!-- doxytag: member="oru_walk::initFastWrite" ref="a5c229b98b9f93cd450b14b691b7dfca3" args="(const vector&lt; string &gt; &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void oru_walk::initFastWrite </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const vector&lt; string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>joint_names</em></td><td>)</td>
           <td><code> [private]</code></td>
         </tr>
       </table>
@@ -284,25 +339,26 @@ Private Attributes</h2></td></tr>
 
 <p>Initializes variables, that are necessary for fast sending of parameters to DCM. </p>
 
-<p>Definition at line <a class="el" href="oru__walk__init_8cpp_source.html#l00095">95</a> of file <a class="el" href="oru__walk__init_8cpp_source.html">oru_walk_init.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk__init_8cpp_source.html#l00040">40</a> of file <a class="el" href="oru__walk__init_8cpp_source.html">oru_walk_init.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="adc2e4d55e1a2667b14c8fe96a23d4584"></a><!-- doxytag: member="oru_walk::initJointAngles" ref="adc2e4d55e1a2667b14c8fe96a23d4584" args="()" -->
+<a class="anchor" id="acd32a9095261699fe1425b1c9a023db6"></a><!-- doxytag: member="oru_walk::initJointAngles" ref="acd32a9095261699fe1425b1c9a023db6" args="(ALValue &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void oru_walk::initJointAngles </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">ALValue &amp;&#160;</td>
+          <td class="paramname"><em>init_joint_angles</em></td><td>)</td>
           <td><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk__init_8cpp_source.html#l00242">242</a> of file <a class="el" href="oru__walk__init_8cpp_source.html">oru_walk_init.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk__init_8cpp_source.html#l00128">128</a> of file <a class="el" href="oru__walk__init_8cpp_source.html">oru_walk_init.cpp</a>.</p>
 
 </div>
 </div>
@@ -323,7 +379,7 @@ Private Attributes</h2></td></tr>
 <p><dl class="attention"><dt><b>Attention:</b></dt><dd>Hardcoded parameter! </dd></dl>
 </p>
 
-<p>Definition at line <a class="el" href="oru__walk_8cpp_source.html#l00179">179</a> of file <a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8cpp_source.html#l00196">196</a> of file <a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a>.</p>
 
 </div>
 </div>
@@ -343,47 +399,112 @@ Private Attributes</h2></td></tr>
 
 <p>Initialize commands, that will be sent to DCM. </p>
 
-<p>Definition at line <a class="el" href="oru__walk__init_8cpp_source.html#l00223">223</a> of file <a class="el" href="oru__walk__init_8cpp_source.html">oru_walk_init.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk__init_8cpp_source.html#l00109">109</a> of file <a class="el" href="oru__walk__init_8cpp_source.html">oru_walk_init.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a61afda0dcd59f9297eece7c106e2cbe0"></a><!-- doxytag: member="oru_walk::initWMG_NaoModel" ref="a61afda0dcd59f9297eece7c106e2cbe0" args="()" -->
+<a class="anchor" id="a7eb5ad6b41ecfe01c1fdcff4049d237f"></a><!-- doxytag: member="oru_walk::initWalkPattern" ref="a7eb5ad6b41ecfe01c1fdcff4049d237f" args="(WMG &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void oru_walk::initWMG_NaoModel </td>
+          <td class="memname">void oru_walk::initWalkPattern </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">WMG &amp;&#160;</td>
+          <td class="paramname"><em>wmg</em></td><td>)</td>
           <td><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="attention"><dt><b>Attention:</b></dt><dd>Hardcoded parameters. </dd></dl>
 
-<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00248">248</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+<p>Initialize selected walk pattern. </p>
+
+<p>Definition at line <a class="el" href="walk__patterns_8cpp_source.html#l00016">16</a> of file <a class="el" href="walk__patterns_8cpp_source.html">walk_patterns.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a29c51728d60d325f227bdf29808a4b3c"></a><!-- doxytag: member="oru_walk::readSensors" ref="a29c51728d60d325f227bdf29808a4b3c" args="(modelState &amp;)" -->
+<a class="anchor" id="a8591759da43368b21190677d2c7c5575"></a><!-- doxytag: member="oru_walk::initWalkPattern_Circular" ref="a8591759da43368b21190677d2c7c5575" args="(WMG &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void oru_walk::initWalkPattern_Circular </td>
+          <td>(</td>
+          <td class="paramtype">WMG &amp;&#160;</td>
+          <td class="paramname"><em>wmg</em></td><td>)</td>
+          <td><code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Initializes walk pattern. </p>
+
+<p>Definition at line <a class="el" href="walk__patterns_8cpp_source.html#l00147">147</a> of file <a class="el" href="walk__patterns_8cpp_source.html">walk_patterns.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a42f88e1cc4b50b9050de1c4ecdb17790"></a><!-- doxytag: member="oru_walk::initWalkPattern_Diagonal" ref="a42f88e1cc4b50b9050de1c4ecdb17790" args="(WMG &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void oru_walk::initWalkPattern_Diagonal </td>
+          <td>(</td>
+          <td class="paramtype">WMG &amp;&#160;</td>
+          <td class="paramname"><em>wmg</em></td><td>)</td>
+          <td><code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Initializes walk pattern. </p>
+
+<p>Definition at line <a class="el" href="walk__patterns_8cpp_source.html#l00096">96</a> of file <a class="el" href="walk__patterns_8cpp_source.html">walk_patterns.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0880e9351fe4c03e1513b1742b063bd4"></a><!-- doxytag: member="oru_walk::initWalkPattern_Straight" ref="a0880e9351fe4c03e1513b1742b063bd4" args="(WMG &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void oru_walk::initWalkPattern_Straight </td>
+          <td>(</td>
+          <td class="paramtype">WMG &amp;&#160;</td>
+          <td class="paramname"><em>wmg</em></td><td>)</td>
+          <td><code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Initializes walk pattern. </p>
+
+<p>Definition at line <a class="el" href="walk__patterns_8cpp_source.html#l00048">48</a> of file <a class="el" href="walk__patterns_8cpp_source.html">walk_patterns.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af09457b94b790bf66d8ed9cd100122d1"></a><!-- doxytag: member="oru_walk::readSensors" ref="af09457b94b790bf66d8ed9cd100122d1" args="(jointState &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void oru_walk::readSensors </td>
           <td>(</td>
-          <td class="paramtype">modelState &amp;&#160;</td>
-          <td class="paramname"><em>nao_state</em></td><td>)</td>
+          <td class="paramtype">jointState &amp;&#160;</td>
+          <td class="paramname"><em>joint_state</em></td><td>)</td>
           <td><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Update joint angles in the NAO model. </p>
+<p>Update joint angles. </p>
 
-<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00233">233</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00072">72</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
 
 </div>
 </div>
@@ -413,110 +534,152 @@ Private Attributes</h2></td></tr>
 <p><dl class="attention"><dt><b>Attention:</b></dt><dd>Hardcoded parameter! </dd></dl>
 </p>
 
-<p>Definition at line <a class="el" href="oru__walk_8cpp_source.html#l00130">130</a> of file <a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8cpp_source.html#l00144">144</a> of file <a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a81b68ff85cf70cd9ff29e6da873a838e"></a><!-- doxytag: member="oru_walk::setWalkParameters" ref="a81b68ff85cf70cd9ff29e6da873a838e" args="(const float &amp;, const float &amp;, const float &amp;, const float &amp;, const float &amp;, const float &amp;)" -->
+<a class="anchor" id="acb9a3c508a36b07499dca821c37f4ee5"></a><!-- doxytag: member="oru_walk::solveIKsendCommands" ref="acb9a3c508a36b07499dca821c37f4ee5" args="(const smpc_parameters &amp;, const smpc::solver &amp;, const int, WMG &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void oru_walk::setWalkParameters </td>
+          <td class="memname">void oru_walk::solveIKsendCommands </td>
           <td>(</td>
-          <td class="paramtype">const float &amp;&#160;</td>
-          <td class="paramname"><em>feedback_gain_</em>, </td>
+          <td class="paramtype">const smpc_parameters &amp;&#160;</td>
+          <td class="paramname"><em>mpc</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const float &amp;&#160;</td>
-          <td class="paramname"><em>feedback_threshold_</em>, </td>
+          <td class="paramtype">const smpc::solver &amp;&#160;</td>
+          <td class="paramname"><em>solver</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const float &amp;&#160;</td>
-          <td class="paramname"><em>mpc_alpha_</em>, </td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>control_loop_num</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const float &amp;&#160;</td>
-          <td class="paramname"><em>mpc_beta_</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float &amp;&#160;</td>
-          <td class="paramname"><em>mpc_gamma_</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const float &amp;&#160;</td>
-          <td class="paramname"><em>step_height_</em>&#160;</td>
+          <td class="paramtype">WMG &amp;&#160;</td>
+          <td class="paramname"><em>wmg</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Changes specified parameters. </p>
+<p>Solve inverse kinematics and send commands to the controllers. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">feedback_gain_</td><td>feedback gain </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">feedback_threshold_</td><td>feedback threshold </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mpc_alpha_</td><td>alpha gain for the QP objective </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mpc_beta_</td><td>beta gain for the QP objective </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mpc_gamma_</td><td>gamma gain for the QP objective </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">step_height_</td><td>height of a step </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mpc</td><td>MPC parameters </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">solver</td><td>MPC solver </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">control_loop_num</td><td>number of control loops in future (&gt;= 1). </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">wmg</td><td>WMG </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00021">21</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00234">234</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aed563126170ef6690aea8b8c7ca5cc0e"></a><!-- doxytag: member="oru_walk::solveMPCProblem" ref="aed563126170ef6690aea8b8c7ca5cc0e" args="()" -->
+<a class="anchor" id="ab2ee4b25d3e99f1340c172ddbe7b93ba"></a><!-- doxytag: member="oru_walk::solveMPCProblem" ref="ab2ee4b25d3e99f1340c172ddbe7b93ba" args="(WMG &amp;, smpc_parameters &amp;, smpc::solver &amp;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool oru_walk::solveMPCProblem </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [private]</code></td>
+          <td class="paramtype">WMG &amp;&#160;</td>
+          <td class="paramname"><em>wmg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">smpc_parameters &amp;&#160;</td>
+          <td class="paramname"><em>mpc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">smpc::solver &amp;&#160;</td>
+          <td class="paramname"><em>solver</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00349">349</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+<p>Solve the MPC problem. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">wmg</td><td>WMG </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">mpc</td><td>MPC parameters </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">solver</td><td>MPC solver</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>false if there is not enough steps, true otherwise. </dd></dl>
+
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00348">348</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa959228f756cfb71edcc16f7dee8c933"></a><!-- doxytag: member="oru_walk::stopWalking" ref="aa959228f756cfb71edcc16f7dee8c933" args="(const string &amp;message=&quot;Stopped by request.&quot;)" -->
+<a class="anchor" id="a677d87b33f028a7afefa033e9226fb8d"></a><!-- doxytag: member="oru_walk::stopWalking" ref="a677d87b33f028a7afefa033e9226fb8d" args="(const char *)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void oru_walk::stopWalking </td>
           <td>(</td>
-          <td class="paramtype">const string &amp;&#160;</td>
-          <td class="paramname"><em>message</em> = <code>&quot;Stopped&#160;by&#160;request.&quot;</code></td><td>)</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>message</em></td><td>)</td>
+          <td><code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Unregister callback and log a message. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">message</td><td>a message </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00387">387</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a888e856404651d0484904c97b1408c2a"></a><!-- doxytag: member="oru_walk::stopWalkingRemote" ref="a888e856404651d0484904c97b1408c2a" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void oru_walk::stopWalkingRemote </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00101">101</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+<p>An interface function that is called remotely to stop the execution. </p>
+
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00415">415</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
 
 </div>
 </div>
@@ -534,98 +697,151 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00041">41</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+<p>Construct and initialize all necessary classes and register callback function. </p>
+
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00017">17</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa370c07844050df9aadd2e7b606b33a6"></a><!-- doxytag: member="oru_walk::walkControl" ref="aa370c07844050df9aadd2e7b606b33a6" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void oru_walk::walkControl </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>A control loop, that is executed in separate thread. </p>
+<dl class="attention"><dt><b>Attention:</b></dt><dd>REAL-TIME! </dd></dl>
+
+<p>Definition at line <a class="el" href="walking_8cpp_source.html#l00128">128</a> of file <a class="el" href="walking_8cpp_source.html">walking.cpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="a738e7c0f838986274cea221fd306323b"></a><!-- doxytag: member="oru_walk::accessActuatorValues" ref="a738e7c0f838986274cea221fd306323b" args="" -->
+<a class="anchor" id="a21d1294bff42ab21ecc135ae47123382"></a><!-- doxytag: member="oru_walk::access_sensor_values" ref="a21d1294bff42ab21ecc135ae47123382" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ALPtr&lt;ALMemoryFastAccess&gt; <a class="el" href="classoru__walk.html#a738e7c0f838986274cea221fd306323b">oru_walk::accessActuatorValues</a><code> [private]</code></td>
+          <td class="memname">ALPtr&lt;ALMemoryFastAccess&gt; <a class="el" href="classoru__walk.html#a21d1294bff42ab21ecc135ae47123382">oru_walk::access_sensor_values</a><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00153">153</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00126">126</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a3b46d72d42eaecf3e67e0cc3bb09980f"></a><!-- doxytag: member="oru_walk::accessSensorValues" ref="a3b46d72d42eaecf3e67e0cc3bb09980f" args="" -->
+<a class="anchor" id="a9335dafa3d02a62d92aa21764e2e29d3"></a><!-- doxytag: member="oru_walk::dcm_callback_connection" ref="a9335dafa3d02a62d92aa21764e2e29d3" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ALPtr&lt;ALMemoryFastAccess&gt; <a class="el" href="classoru__walk.html#a3b46d72d42eaecf3e67e0cc3bb09980f">oru_walk::accessSensorValues</a><code> [private]</code></td>
+          <td class="memname">ProcessSignalConnection <a class="el" href="classoru__walk.html#a9335dafa3d02a62d92aa21764e2e29d3">oru_walk::dcm_callback_connection</a><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00152">152</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00123">123</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab8a1a4e384fdd378cd80d96cffb6278e"></a><!-- doxytag: member="oru_walk::com_filter" ref="ab8a1a4e384fdd378cd80d96cffb6278e" args="" -->
+<a class="anchor" id="ada602960e24f4538b7699ab01adc602b"></a><!-- doxytag: member="oru_walk::dcm_loop_counter" ref="ada602960e24f4538b7699ab01adc602b" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classavgFilter.html">avgFilter</a>* <a class="el" href="classoru__walk.html#ab8a1a4e384fdd378cd80d96cffb6278e">oru_walk::com_filter</a><code> [private]</code></td>
+          <td class="memname">int <a class="el" href="classoru__walk.html#ada602960e24f4538b7699ab01adc602b">oru_walk::dcm_loop_counter</a><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00166">166</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00138">138</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a5060777652dccdda9ba85dc9a741310d"></a><!-- doxytag: member="oru_walk::dcmProxy" ref="a5060777652dccdda9ba85dc9a741310d" args="" -->
+<a class="anchor" id="ab59def3cd9b951e127ffb68dc16fd54f"></a><!-- doxytag: member="oru_walk::dcm_proxy" ref="ab59def3cd9b951e127ffb68dc16fd54f" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ALPtr&lt;DCMProxy&gt; <a class="el" href="classoru__walk.html#a5060777652dccdda9ba85dc9a741310d">oru_walk::dcmProxy</a><code> [private]</code></td>
+          <td class="memname">ALPtr&lt;DCMProxy&gt; <a class="el" href="classoru__walk.html#ab59def3cd9b951e127ffb68dc16fd54f">oru_walk::dcm_proxy</a><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00157">157</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00141">141</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae6a52763f400d8f704fa17f11ef4e33c"></a><!-- doxytag: member="oru_walk::fDCMPostProcessConnection" ref="ae6a52763f400d8f704fa17f11ef4e33c" args="" -->
+<a class="anchor" id="a71c2e6bf2a49d998d541e2700f4249e1"></a><!-- doxytag: member="oru_walk::joint_commands" ref="a71c2e6bf2a49d998d541e2700f4249e1" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ProcessSignalConnection <a class="el" href="classoru__walk.html#ae6a52763f400d8f704fa17f11ef4e33c">oru_walk::fDCMPostProcessConnection</a><code> [private]</code></td>
+          <td class="memname">ALValue <a class="el" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">oru_walk::joint_commands</a><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00149">149</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00130">130</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a5eb8d7ebb15ab4058af71cf3de92cdf4"></a><!-- doxytag: member="oru_walk::init_joint_angles" ref="a5eb8d7ebb15ab4058af71cf3de92cdf4" args="[JOINTS_NUM]" -->
+<a class="anchor" id="a6cae6d81db7a7714cdabf9373d8a736e"></a><!-- doxytag: member="oru_walk::last_dcm_time_ms" ref="a6cae6d81db7a7714cdabf9373d8a736e" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double <a class="el" href="classoru__walk.html#a5eb8d7ebb15ab4058af71cf3de92cdf4">oru_walk::init_joint_angles</a>[JOINTS_NUM]<code> [private]</code></td>
+          <td class="memname">int <a class="el" href="classoru__walk.html#a6cae6d81db7a7714cdabf9373d8a736e">oru_walk::last_dcm_time_ms</a><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00172">172</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00139">139</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a72187d1210d0230f9279e231ffa4f51f"></a><!-- doxytag: member="oru_walk::last_dcm_time_ms_ptr" ref="a72187d1210d0230f9279e231ffa4f51f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* <a class="el" href="classoru__walk.html#a72187d1210d0230f9279e231ffa4f51f">oru_walk::last_dcm_time_ms_ptr</a><code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00127">127</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aebad5e20e4bebefae8f26ce8ac47705e"></a><!-- doxytag: member="oru_walk::memory_proxy" ref="aebad5e20e4bebefae8f26ce8ac47705e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ALPtr&lt;ALMemoryProxy&gt; <a class="el" href="classoru__walk.html#aebad5e20e4bebefae8f26ce8ac47705e">oru_walk::memory_proxy</a><code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00142">142</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
@@ -640,97 +856,67 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00167">167</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00133">133</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7970598508f59c690b0668b0be6cd256"></a><!-- doxytag: member="oru_walk::next_preview_len_ms" ref="a7970598508f59c690b0668b0be6cd256" args="" -->
+<a class="anchor" id="a757914463ded0b70cd2a7dde0c3dafcc"></a><!-- doxytag: member="oru_walk::ref_joint_angles" ref="a757914463ded0b70cd2a7dde0c3dafcc" args="[LOWER_JOINTS_NUM]" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classoru__walk.html#a7970598508f59c690b0668b0be6cd256">oru_walk::next_preview_len_ms</a><code> [private]</code></td>
+          <td class="memname">double <a class="el" href="classoru__walk.html#a757914463ded0b70cd2a7dde0c3dafcc">oru_walk::ref_joint_angles</a>[LOWER_JOINTS_NUM]<code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00170">170</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00134">134</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae22141b04804fa10c3f7d55494e85fef"></a><!-- doxytag: member="oru_walk::sensorValues" ref="ae22141b04804fa10c3f7d55494e85fef" args="" -->
+<a class="anchor" id="a250c6550716024e02a83e65e978bb630"></a><!-- doxytag: member="oru_walk::walk_control_condition" ref="a250c6550716024e02a83e65e978bb630" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">vector&lt;float&gt; <a class="el" href="classoru__walk.html#ae22141b04804fa10c3f7d55494e85fef">oru_walk::sensorValues</a><code> [private]</code></td>
+          <td class="memname">boost::condition_variable <a class="el" href="classoru__walk.html#a250c6550716024e02a83e65e978bb630">oru_walk::walk_control_condition</a><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00156">156</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00144">144</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac1c7fa98028cd1603403b2079853adf5"></a><!-- doxytag: member="oru_walk::solver" ref="ac1c7fa98028cd1603403b2079853adf5" args="" -->
+<a class="anchor" id="a4a00faf3f52eec26527edf30b45fd83e"></a><!-- doxytag: member="oru_walk::walk_control_mutex" ref="a4a00faf3f52eec26527edf30b45fd83e" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">smpc::solver* <a class="el" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">oru_walk::solver</a><code> [private]</code></td>
+          <td class="memname">boost::mutex <a class="el" href="classoru__walk.html#a4a00faf3f52eec26527edf30b45fd83e">oru_walk::walk_control_mutex</a><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00165">165</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00145">145</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae7d2c23614b6b7bf4d56211274d3273f"></a><!-- doxytag: member="oru_walk::walkCommands" ref="ae7d2c23614b6b7bf4d56211274d3273f" args="" -->
+<a class="anchor" id="a504dd203b278a955da412277d76aa91b"></a><!-- doxytag: member="oru_walk::wp" ref="a504dd203b278a955da412277d76aa91b" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ALValue <a class="el" href="classoru__walk.html#ae7d2c23614b6b7bf4d56211274d3273f">oru_walk::walkCommands</a><code> [private]</code></td>
+          <td class="memname"><a class="el" href="classwalkParameters.html">walkParameters</a> <a class="el" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">oru_walk::wp</a><code> [private]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00160">160</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a2ddc7ff8f7e35bd388fd2f5446c52ef7"></a><!-- doxytag: member="oru_walk::wmg" ref="a2ddc7ff8f7e35bd388fd2f5446c52ef7" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">WMG* <a class="el" href="classoru__walk.html#a2ddc7ff8f7e35bd388fd2f5446c52ef7">oru_walk::wmg</a><code> [private]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00164">164</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a60a32d88870aa1c0a34b572e8ba7743d"></a><!-- doxytag: member="oru_walk::wp" ref="a60a32d88870aa1c0a34b572e8ba7743d" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classwalk__parameters.html">walk_parameters</a> <a class="el" href="classoru__walk.html#a60a32d88870aa1c0a34b572e8ba7743d">oru_walk::wp</a><code> [private]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00169">169</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
+<p>Definition at line <a class="el" href="oru__walk_8h_source.html#l00136">136</a> of file <a class="el" href="oru__walk_8h_source.html">oru_walk.h</a>.</p>
 
 </div>
 </div>
@@ -738,6 +924,7 @@ Private Attributes</h2></td></tr>
 <li>src/<a class="el" href="oru__walk_8h_source.html">oru_walk.h</a></li>
 <li>src/<a class="el" href="oru__walk_8cpp_source.html">oru_walk.cpp</a></li>
 <li>src/<a class="el" href="oru__walk__init_8cpp_source.html">oru_walk_init.cpp</a></li>
+<li>src/<a class="el" href="walk__patterns_8cpp_source.html">walk_patterns.cpp</a></li>
 <li>src/<a class="el" href="walking_8cpp_source.html">walking.cpp</a></li>
 </ul>
 </div>

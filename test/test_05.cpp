@@ -143,12 +143,13 @@ int main(int argc, char **argv)
         //-----------------------------------------------------------
         if (tdata.nao.support_foot == IGM_SUPPORT_RIGHT)
         {
-            drawSDL(100, x_coord, y_coord, angle_rot, tdata.nao.support_foot, tdata.nao.state_model.q, tdata.nao.right_foot_posture);
+            drawSDL(0, x_coord, y_coord, angle_rot, tdata.nao.support_foot, tdata.nao.state_model.q, tdata.nao.right_foot_posture);
         }
         else
         {
-            drawSDL(100, x_coord, y_coord, angle_rot, tdata.nao.support_foot, tdata.nao.state_model.q, tdata.nao.left_foot_posture);
+            drawSDL(0, x_coord, y_coord, angle_rot, tdata.nao.support_foot, tdata.nao.state_model.q, tdata.nao.left_foot_posture);
         }
+        usleep (100000);
     }
 
     // keep the visualization active (until ESC is pressed)

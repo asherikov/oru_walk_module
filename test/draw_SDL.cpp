@@ -34,6 +34,9 @@ SDL_Event event;
 SDL_Surface *screen;
 
 int isRunning;
+
+
+// ----------------------
 int screenWidth=800;
 int screenHeight=600;
 
@@ -44,6 +47,39 @@ float roty = 0.0;
 float rotz = 90.0;
 float transx = 0.0;
 float transy = 0.0;
+Uint32 sdl_flags = SDL_SWSURFACE | SDL_OPENGL | SDL_RESIZABLE;
+// ----------------------
+
+// ----------------------
+/*
+int screenWidth=1280;
+int screenHeight=900;
+
+// initial view
+float zoom = 10.0;
+float rotx = -65.0;
+float roty = 0.0;
+float rotz = 180.0;
+float transx = 2.0;
+float transy = 0.0;
+Uint32 sdl_flags = SDL_SWSURFACE | SDL_OPENGL | SDL_RESIZABLE;
+*/
+// ----------------------
+
+// ----------------------
+/*
+int screenWidth=1280;
+int screenHeight=900;
+
+// initial view
+float zoom = 11.0;
+float rotx = -75.0;
+float roty = 0.0;
+float rotz = -90.0;
+float transx = 0.0;
+float transy = 0.0;
+Uint32 sdl_flags = SDL_SWSURFACE | SDL_OPENGL | SDL_RESIZABLE;
+*/
 // ----------------------
 
 
@@ -165,7 +201,8 @@ void initSDL()
     }
     atexit(SDL_Quit);
 
-    screen = SDL_SetVideoMode(screenWidth, screenHeight, 32, SDL_SWSURFACE | SDL_OPENGL | SDL_RESIZABLE);
+    screen = SDL_SetVideoMode(screenWidth, screenHeight, 32, sdl_flags);
+//    SDL_ShowCursor(SDL_DISABLE);
     if (!screen)
     {
         fprintf(stderr, "Couldn't set video mode: %s\n", SDL_GetError());

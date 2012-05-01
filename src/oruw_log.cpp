@@ -83,4 +83,34 @@ void oruw_log::logFeet(nao_igm& nao)
             r_expected[0], r_expected[1], r_expected[2],
             r_real[0], r_real[1], r_real[2]);
 }
+
+
+void oruw_log::logSolverInfo (smpc::solver *solver, int mpc_solver_type)
+{
+    if (solver != NULL)
+    {
+        if (mpc_solver_type == SOLVER_TYPE_AS)
+        {
+            smpc::solver_as * solver_ptr = dynamic_cast<smpc::solver_as *>(solver);
+            if (solver_ptr != NULL)
+            {
+                fprintf(oruw_log_instance->FMessages, "AS size = %i // Added = %i // Removed = %i\n",
+                        solver_ptr->active_set_size,
+                        solver_ptr->added_constraints_num,
+                        solver_ptr->removed_constraints_num);
+            }
+        }
+        else if (mpc_solver_type == SOLVER_TYPE_IP)
+        {
+            smpc::solver_ip * solver_ptr = dynamic_cast<smpc::solver_ip *>(solver);
+            if (solver_ptr != NULL)
+            {
+                fprintf(oruw_log_instance->FMessages, "ext loops = %d // int loops = %d // bs loops = %d\n",
+                        solver_ptr->ext_loop_iterations,
+                        solver_ptr->int_loop_iterations,
+                        solver_ptr->bt_search_iterations);
+            }
+        }
+    }
+}
 #endif // ORUW_LOG_ENABLE

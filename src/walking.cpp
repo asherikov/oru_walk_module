@@ -405,6 +405,7 @@ bool oru_walk::solveMPCProblem (
     //------------------------------------------------------
 
 
+    ORUW_LOG_SOLVER_INFO;
     if (!timer.check()) 
     {
         halt("Time limit is violated!\n", __FUNCTION__);

@@ -19,8 +19,10 @@
 #include <qi/log.hpp>
 
 #include "nao_igm.h"
+#include "smpc_solver.h"
 #include "WMG.h"
 #include "joints_sensors_id.h"
+#include "walk_parameters.h"
 
 
 class oruw_log
@@ -32,6 +34,7 @@ class oruw_log
         void logJointValues (const jointState&, const jointState&);
         void logCoM (smpc_parameters&, nao_igm&);
         void logFeet (nao_igm& nao);
+        void logSolverInfo (smpc::solver *, int);
 
 
         FILE *FJointsLog;
@@ -62,6 +65,9 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_MESSAGE(...) \
     if ORUW_LOG_IS_OPEN {fprintf(oruw_log_instance->FMessages, __VA_ARGS__);}
 
+#define ORUW_LOG_SOLVER_INFO \
+    if ORUW_LOG_IS_OPEN {oruw_log_instance->logSolverInfo(solver, wp.mpc_solver_type);}
+
 #define ORUW_LOG_STEPS(wmg) \
     if ORUW_LOG_IS_OPEN {wmg.FS2file("oru_steps_m.log", false);}
 
@@ -76,6 +82,7 @@ extern oruw_log *oruw_log_instance;
 #define ORUW_LOG_FEET(nao)
 #define ORUW_LOG_MESSAGE(...)
 #define ORUW_LOG_STEPS(wmg)
+#define ORUW_LOG_SOLVER_INFO
 
 
 #endif // ORUW_LOG_ENABLE

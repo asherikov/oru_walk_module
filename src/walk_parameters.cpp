@@ -217,9 +217,9 @@ void walkParameters::readParameters()
         }
         if (preferences[i][2].isInt())
         {
-            if(preferences[i][0] == param_names[MPC_SOLVER_TYPE])     { mpc_solver_type      = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_IP_MAX_ITER])     { mpc_ip_max_iter      = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_AS_MAX_ACTIVATE]) { mpc_as_max_activate  = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_SOLVER_TYPE])     { mpc_solver_type     =  preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_MAX_ITER])     { mpc_ip_max_iter     = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_AS_MAX_ACTIVATE]) { mpc_as_max_activate = preferences[i][2]; }
 
             if(preferences[i][0] == param_names[LOOP_TIME_LIMIT_MS])  { loop_time_limit_ms  = preferences[i][2]; }
             if(preferences[i][0] == param_names[DCM_TIME_SHIFT_MS])   { dcm_time_shift_ms   = preferences[i][2]; }
@@ -243,8 +243,8 @@ void walkParameters::readParameters()
         }
         if (preferences[i][2].isBool())
         {
-            if(preferences[i][0] == param_names[MPC_AS_USE_DOWNDATE]) { mpc_as_use_downdate  = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_IP_USE_BS])       { mpc_ip_use_bs        = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_AS_USE_DOWNDATE]) { mpc_as_use_downdate = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_USE_BS])       { mpc_ip_use_bs       = preferences[i][2]; }
         }
     }
 }

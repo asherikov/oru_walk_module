@@ -47,10 +47,10 @@ enum parametersNames
 {
     FEEDBACK_GAIN               ,
     FEEDBACK_THRESHOLD          ,
-    MPC_ALPHA                   ,
-    MPC_BETA                    ,
-    MPC_GAMMA                   ,
-    MPC_REGULARIZATION          ,
+    MPC_GAIN_POSITION           ,
+    MPC_GAIN_VELOCITY           ,
+    MPC_GAIN_ACCELERATION       ,
+    MPC_GAIN_JERK               ,
     MPC_TOLERANCE               ,
     IGM_MU                      ,
     STEP_HEIGHT                 ,
@@ -87,10 +87,10 @@ class walkParameters
         double feedback_gain;
         double feedback_threshold;
 
-        double mpc_alpha;
-        double mpc_beta;
-        double mpc_gamma;
-        double mpc_regularization;
+        double mpc_gain_position;
+        double mpc_gain_velocity;
+        double mpc_gain_acceleration;
+        double mpc_gain_jerk;
         double mpc_tolerance;
 
         double step_height;

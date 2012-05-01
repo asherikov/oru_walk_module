@@ -130,12 +130,12 @@ void oru_walk::walkControl()
     oruw_timer timer(__FUNCTION__, wp.loop_time_limit_ms);
 
 
-    smpc::solver solver(
+    smpc::solver_as solver(
             wp.preview_window_size,
-            wp.mpc_alpha,
-            wp.mpc_beta,
-            wp.mpc_gamma,
-            wp.mpc_regularization,
+            wp.mpc_gain_position,
+            wp.mpc_gain_velocity,
+            wp.mpc_gain_acceleration,
+            wp.mpc_gain_jerk,
             wp.mpc_tolerance);
 //    solver.enable_fexceptions();
 
@@ -149,6 +149,10 @@ void oru_walk::walkControl()
             wp.bezier_inclination_2);
     wmg.T_ms[0] = wp.control_sampling_time_ms;
     wmg.T_ms[1] = wp.control_sampling_time_ms;
+
+
+    smpc::state_com CoM;
+
 
     try
     {
@@ -197,9 +201,11 @@ void oru_walk::walkControl()
                 }
 
                 // the old solution from is an initial guess;
-                solveIKsendCommands (mpc, solver, 1, wmg);
+                solver.get_state(CoM, 0);
+                solveIKsendCommands (mpc, CoM, 1, wmg);
                 target_joint_state = nao.state_model;
-                solveIKsendCommands (mpc, solver, 2, wmg);
+                solver.get_state(CoM, 1);
+                solveIKsendCommands (mpc, CoM, 2, wmg);
             }
             else
             {
@@ -227,19 +233,16 @@ void oru_walk::walkControl()
  * @brief Solve inverse kinematics and send commands to the controllers.
  *
  * @param[in] mpc MPC parameters
- * @param[in] solver MPC solver
+ * @param[in] CoM  CoM position
  * @param[in] control_loop_num number of control loops in future (>= 1).
  * @param[in,out] wmg WMG
  */
 void oru_walk::solveIKsendCommands (
         const smpc_parameters &mpc,
-        const smpc::solver &solver,
+        const smpc::state_com &CoM,
         const int control_loop_num,
         WMG &wmg)
 {
-    smpc::state_orig CoM;
-    CoM.get_state(solver, control_loop_num-1);
-
     // hCoM is constant!
     nao.setCoM(CoM.x(), CoM.y(), mpc.hCoM);
 
@@ -294,12 +297,12 @@ void oru_walk::solveIKsendCommands (
  *
  * @param[in,out] init_state expected state
  */
-void oru_walk::feedbackError (smpc::state_orig &init_state)
+void oru_walk::feedbackError (smpc::state_com &init_state)
 {
     nao.getCoM (nao.state_sensor, nao.CoM_position);
 
 
-    smpc::state_orig state_error;
+    smpc::state_com state_error;
     state_error.set (
             init_state.x() - nao.CoM_position[0],
             init_state.y() - nao.CoM_position[1]);
@@ -358,20 +361,19 @@ bool oru_walk::solveMPCProblem (
         return (false);
     }
 
-
     //------------------------------------------------------
     solver.set_parameters (mpc.T, mpc.h, mpc.h[0], mpc.angle, mpc.zref_x, mpc.zref_y, mpc.lb, mpc.ub);
     solver.form_init_fp (mpc.fp_x, mpc.fp_y, mpc.init_state, mpc.X);
-    int num_iq_constr = solver.solve();
-    mpc.init_state.get_next_state(solver);
+    solver.solve();
+    solver.get_next_state(mpc.init_state);
     //------------------------------------------------------
 
 
-    ORUW_LOG_MESSAGE("Num of active constraints: %d\n", num_iq_constr);
     if (!timer.check()) 
     {
         halt("Time limit is violated!\n", __FUNCTION__);
     }
+
     return (true);
 }
 

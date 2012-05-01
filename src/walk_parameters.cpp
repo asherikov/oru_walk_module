@@ -29,10 +29,10 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
 
 
 // parameters of the MPC solver
-    mpc_alpha = 1.0;    // penalty for the velocity
-    mpc_beta = 8000.0;  // closeness to the reference ZMP points 
-    mpc_gamma = 1.0;    // penalty for the jerk
-    mpc_regularization = 0.01;
+    mpc_gain_position = 8000.0;   // closeness to the reference ZMP points 
+    mpc_gain_acceleration = 0.02; // penalty for the acceleration
+    mpc_gain_velocity = 1.0;      // penalty for the velocity
+    mpc_gain_jerk = 1.0;          // penalty for the jerk
     mpc_tolerance = 1e-7;
 
 
@@ -107,10 +107,10 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     param_names[FEEDBACK_GAIN]            = "feedback_gain";
     param_names[FEEDBACK_THRESHOLD]       = "feedback_threshold";
 
-    param_names[MPC_ALPHA]                = "mpc_alpha";
-    param_names[MPC_BETA]                 = "mpc_beta";
-    param_names[MPC_GAMMA]                = "mpc_gamma";
-    param_names[MPC_REGULARIZATION]       = "mpc_regularization";
+    param_names[MPC_GAIN_VELOCITY]        = "mpc_gain_velocity";
+    param_names[MPC_GAIN_POSITION]        = "mpc_gain_position";
+    param_names[MPC_GAIN_JERK]            = "mpc_gain_jerk";
+    param_names[MPC_GAIN_ACCELERATION]    = "mpc_gain_acceleration";
     param_names[MPC_TOLERANCE]            = "mpc_tolerance";
 
     param_names[IGM_MU]                   = "igm_mu";
@@ -167,20 +167,20 @@ void walkParameters::readParameters()
     {
         if (preferences[i][2].isFloat())
         {
-            if(preferences[i][0] == param_names[FEEDBACK_GAIN])       { feedback_gain        = preferences[i][2]; }
-            if(preferences[i][0] == param_names[FEEDBACK_THRESHOLD])  { feedback_threshold   = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_ALPHA])           { mpc_alpha            = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_BETA])            { mpc_beta             = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_GAMMA])           { mpc_gamma            = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_REGULARIZATION])  { mpc_regularization   = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_TOLERANCE])       { mpc_tolerance        = preferences[i][2]; }
-            if(preferences[i][0] == param_names[IGM_MU])              { igm_mu               = preferences[i][2]; }
-            if(preferences[i][0] == param_names[STEP_HEIGHT])         { step_height          = preferences[i][2]; }
-            if(preferences[i][0] == param_names[STEP_LENGTH])         { step_length          = preferences[i][2]; }
-            if(preferences[i][0] == param_names[BEZIER_WEIGHT_1])     { bezier_weight_1      = preferences[i][2]; }
-            if(preferences[i][0] == param_names[BEZIER_WEIGHT_2])     { bezier_weight_2      = preferences[i][2]; }
-            if(preferences[i][0] == param_names[BEZIER_INCLINATION_1]){ bezier_inclination_1 = preferences[i][2]; }
-            if(preferences[i][0] == param_names[BEZIER_INCLINATION_2]){ bezier_inclination_2 = preferences[i][2]; }
+            if(preferences[i][0] == param_names[FEEDBACK_GAIN])        { feedback_gain        = preferences[i][2]; }
+            if(preferences[i][0] == param_names[FEEDBACK_THRESHOLD])   { feedback_threshold   = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_GAIN_POSITION])    { mpc_gain_position    = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_GAIN_VELOCITY])    { mpc_gain_velocity    = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_GAIN_ACCELERATION]){ mpc_gain_acceleration= preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_GAIN_JERK])        { mpc_gain_jerk        = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_TOLERANCE])        { mpc_tolerance        = preferences[i][2]; }
+            if(preferences[i][0] == param_names[IGM_MU])               { igm_mu               = preferences[i][2]; }
+            if(preferences[i][0] == param_names[STEP_HEIGHT])          { step_height          = preferences[i][2]; }
+            if(preferences[i][0] == param_names[STEP_LENGTH])          { step_length          = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_WEIGHT_1])      { bezier_weight_1      = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_WEIGHT_2])      { bezier_weight_2      = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_INCLINATION_1]) { bezier_inclination_1 = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_INCLINATION_2]) { bezier_inclination_2 = preferences[i][2]; }
         }
         if (preferences[i][2].isInt())
         {
@@ -228,10 +228,10 @@ void walkParameters::writeParameters()
     preferences[FEEDBACK_GAIN][1]            = "";
     preferences[FEEDBACK_THRESHOLD][1]       = "";
 
-    preferences[MPC_ALPHA][1]                = "";
-    preferences[MPC_BETA][1]                 = "";
-    preferences[MPC_GAMMA][1]                = "";
-    preferences[MPC_REGULARIZATION][1]       = "";
+    preferences[MPC_GAIN_POSITION][1]        = "";
+    preferences[MPC_GAIN_VELOCITY][1]        = "";
+    preferences[MPC_GAIN_ACCELERATION][1]    = "";
+    preferences[MPC_GAIN_JERK][1]            = "";
     preferences[MPC_TOLERANCE][1]            = "";
 
     preferences[IGM_MU][1]                   = "";
@@ -260,10 +260,10 @@ void walkParameters::writeParameters()
     preferences[FEEDBACK_GAIN][2]            = feedback_gain;
     preferences[FEEDBACK_THRESHOLD][2]       = feedback_threshold;
 
-    preferences[MPC_ALPHA][2]                = mpc_alpha;
-    preferences[MPC_BETA][2]                 = mpc_beta;
-    preferences[MPC_GAMMA][2]                = mpc_gamma;
-    preferences[MPC_REGULARIZATION][2]       = mpc_regularization;
+    preferences[MPC_GAIN_POSITION][2]        = mpc_gain_position;
+    preferences[MPC_GAIN_VELOCITY][2]        = mpc_gain_velocity;
+    preferences[MPC_GAIN_ACCELERATION][2]    = mpc_gain_acceleration;
+    preferences[MPC_GAIN_JERK][2]            = mpc_gain_jerk;
     preferences[MPC_TOLERANCE][2]            = mpc_tolerance;
 
     preferences[IGM_MU][2]                   = igm_mu;

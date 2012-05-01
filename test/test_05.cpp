@@ -124,7 +124,7 @@ int main(int argc, char **argv)
                 tdata.nao.right_foot_posture.data());
 
         // position of CoM
-        smpc::state_orig next_CoM;
+        smpc::state_com next_CoM;
         solver.get_state (next_CoM, 1);
         tdata.nao.setCoM(next_CoM.x(), next_CoM.y(), tdata.par->hCoM); 
 

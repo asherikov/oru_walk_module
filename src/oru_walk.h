@@ -106,10 +106,10 @@ private:
     // walking
     void readSensors (jointState&);
     bool solveMPCProblem (WMG&, smpc_parameters&, smpc::solver &);
-    void solveIKsendCommands (const smpc_parameters&, const smpc::solver &, const int, WMG&);
+    void solveIKsendCommands (const smpc_parameters&, const smpc::state_com &, const int, WMG&);
 
     void correctNextSupportPosition(WMG &);
-    void feedbackError (smpc::state_orig &);
+    void feedbackError (smpc::state_com &);
 
     void halt(const char*, const char *);
     void stopWalking(const char*);

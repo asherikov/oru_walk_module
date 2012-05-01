@@ -29,6 +29,8 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
 
 
 // parameters of the MPC solver
+    solver_type = SOLVER_TYPE_AS;
+
     mpc_gain_position = 8000.0;   // closeness to the reference ZMP points 
     mpc_gain_acceleration = 0.02; // penalty for the acceleration
     mpc_gain_velocity = 1.0;      // penalty for the velocity
@@ -107,6 +109,8 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     param_names[FEEDBACK_GAIN]            = "feedback_gain";
     param_names[FEEDBACK_THRESHOLD]       = "feedback_threshold";
 
+    param_names[MPC_SOLVER_TYPE]          = "mpc_solver_type";
+
     param_names[MPC_GAIN_VELOCITY]        = "mpc_gain_velocity";
     param_names[MPC_GAIN_POSITION]        = "mpc_gain_position";
     param_names[MPC_GAIN_JERK]            = "mpc_gain_jerk";
@@ -169,6 +173,7 @@ void walkParameters::readParameters()
         {
             if(preferences[i][0] == param_names[FEEDBACK_GAIN])        { feedback_gain        = preferences[i][2]; }
             if(preferences[i][0] == param_names[FEEDBACK_THRESHOLD])   { feedback_threshold   = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_SOLVER_TYPE])      { solver_type          = preferences[i][2]; }
             if(preferences[i][0] == param_names[MPC_GAIN_POSITION])    { mpc_gain_position    = preferences[i][2]; }
             if(preferences[i][0] == param_names[MPC_GAIN_VELOCITY])    { mpc_gain_velocity    = preferences[i][2]; }
             if(preferences[i][0] == param_names[MPC_GAIN_ACCELERATION]){ mpc_gain_acceleration= preferences[i][2]; }
@@ -228,6 +233,8 @@ void walkParameters::writeParameters()
     preferences[FEEDBACK_GAIN][1]            = "";
     preferences[FEEDBACK_THRESHOLD][1]       = "";
 
+    preferences[MPC_SOLVER_TYPE][1]          = "";
+
     preferences[MPC_GAIN_POSITION][1]        = "";
     preferences[MPC_GAIN_VELOCITY][1]        = "";
     preferences[MPC_GAIN_ACCELERATION][1]    = "";
@@ -259,6 +266,8 @@ void walkParameters::writeParameters()
     // values
     preferences[FEEDBACK_GAIN][2]            = feedback_gain;
     preferences[FEEDBACK_THRESHOLD][2]       = feedback_threshold;
+
+    preferences[MPC_SOLVER_TYPE][2]          = solver_type;
 
     preferences[MPC_GAIN_POSITION][2]        = mpc_gain_position;
     preferences[MPC_GAIN_VELOCITY][2]        = mpc_gain_velocity;

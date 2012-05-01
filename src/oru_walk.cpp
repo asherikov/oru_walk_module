@@ -36,6 +36,8 @@ oru_walk::oru_walk(ALPtr<ALBroker> broker, const string& name) :
 
     functionName( "stopWalking", getName() , "stopWalking");
     BIND_METHOD( oru_walk::stopWalkingRemote );
+
+    solver = NULL;
 }
 
 
@@ -48,6 +50,11 @@ oru_walk::~oru_walk()
     setStiffness(0.0f);
     // Remove the postProcess call back connection
     stopWalking ("Module destroyed.\n");
+    if (solver != NULL)
+    {
+        delete solver;
+        solver = NULL;
+    }
 }
 
 

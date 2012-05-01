@@ -120,6 +120,39 @@ void oru_walk::correctNextSupportPosition(WMG &wmg)
 }
 
 
+/**
+ * @brief Initialize solver
+ */
+void oru_walk::initSolver()
+{
+    if (solver != NULL)
+    {
+        delete solver;
+        solver = NULL;
+    }
+    if (wp.solver_type == SOLVER_TYPE_AS)
+    {
+        solver = new smpc::solver_as (
+                wp.preview_window_size,
+                wp.mpc_gain_position,
+                wp.mpc_gain_velocity,
+                wp.mpc_gain_acceleration,
+                wp.mpc_gain_jerk,
+                wp.mpc_tolerance);
+    }
+    else if (wp.solver_type == SOLVER_TYPE_IP)
+    {
+        solver = new smpc::solver_ip (
+                wp.preview_window_size,
+                wp.mpc_gain_position,
+                wp.mpc_gain_velocity,
+                wp.mpc_gain_acceleration,
+                wp.mpc_gain_jerk);
+    }
+//    smpc::enable_fexceptions();
+}
+
+
 
 /**
  * @brief A control loop, that is executed in separate thread.
@@ -130,14 +163,7 @@ void oru_walk::walkControl()
     oruw_timer timer(__FUNCTION__, wp.loop_time_limit_ms);
 
 
-    smpc::solver_as solver(
-            wp.preview_window_size,
-            wp.mpc_gain_position,
-            wp.mpc_gain_velocity,
-            wp.mpc_gain_acceleration,
-            wp.mpc_gain_jerk,
-            wp.mpc_tolerance);
-//    solver.enable_fexceptions();
+    initSolver();
 
 
     WMG wmg(wp.preview_window_size,
@@ -192,7 +218,7 @@ void oru_walk::walkControl()
         {
             feedbackError (mpc.init_state);
 
-            if (solveMPCProblem (wmg, mpc, solver))  // solve MPC
+            if (solveMPCProblem (wmg, mpc))  // solve MPC
             {
                 if (wmg.isSupportSwitchNeeded())
                 {
@@ -201,10 +227,10 @@ void oru_walk::walkControl()
                 }
 
                 // the old solution from is an initial guess;
-                solver.get_state(CoM, 0);
+                solver->get_state(CoM, 0);
                 solveIKsendCommands (mpc, CoM, 1, wmg);
                 target_joint_state = nao.state_model;
-                solver.get_state(CoM, 1);
+                solver->get_state(CoM, 1);
                 solveIKsendCommands (mpc, CoM, 2, wmg);
             }
             else
@@ -344,14 +370,12 @@ void oru_walk::feedbackError (smpc::state_com &init_state)
  *
  * @param[in,out] wmg WMG
  * @param[in,out] mpc MPC parameters
- * @param[in,out] solver MPC solver
  *
  * @return false if there is not enough steps, true otherwise.
  */
 bool oru_walk::solveMPCProblem (
         WMG &wmg,
-        smpc_parameters &mpc,
-        smpc::solver &solver)
+        smpc_parameters &mpc)
 {
     oruw_timer timer(__FUNCTION__, wp.loop_time_limit_ms);
 
@@ -362,10 +386,10 @@ bool oru_walk::solveMPCProblem (
     }
 
     //------------------------------------------------------
-    solver.set_parameters (mpc.T, mpc.h, mpc.h[0], mpc.angle, mpc.zref_x, mpc.zref_y, mpc.lb, mpc.ub);
-    solver.form_init_fp (mpc.fp_x, mpc.fp_y, mpc.init_state, mpc.X);
-    solver.solve();
-    solver.get_next_state(mpc.init_state);
+    solver->set_parameters (mpc.T, mpc.h, mpc.h[0], mpc.angle, mpc.zref_x, mpc.zref_y, mpc.lb, mpc.ub);
+    solver->form_init_fp (mpc.fp_x, mpc.fp_y, mpc.init_state, mpc.X);
+    solver->solve();
+    solver->get_next_state(mpc.init_state);
     //------------------------------------------------------
 
 

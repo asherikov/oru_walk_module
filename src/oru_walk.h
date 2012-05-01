@@ -101,11 +101,12 @@ private:
     void initWalkPattern_Straight(WMG &);
     void initWalkPattern_Diagonal(WMG &);
     void initWalkPattern_Circular(WMG &);
+    void initSolver();
 
 
     // walking
     void readSensors (jointState&);
-    bool solveMPCProblem (WMG&, smpc_parameters&, smpc::solver &);
+    bool solveMPCProblem (WMG&, smpc_parameters&);
     void solveIKsendCommands (const smpc_parameters&, const smpc::state_com &, const int, WMG&);
 
     void correctNextSupportPosition(WMG &);
@@ -134,6 +135,7 @@ private:
     double ref_joint_angles[LOWER_JOINTS_NUM];
 
     walkParameters wp;
+    smpc::solver *solver;
 
     int dcm_loop_counter;
     int last_dcm_time_ms;

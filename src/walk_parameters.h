@@ -43,10 +43,18 @@ enum walkPatterns
 };
 
 
+enum solverTypes
+{
+    SOLVER_TYPE_AS = 0,
+    SOLVER_TYPE_IP = 1,
+};
+
+
 enum parametersNames
 {
     FEEDBACK_GAIN               ,
     FEEDBACK_THRESHOLD          ,
+    MPC_SOLVER_TYPE             ,
     MPC_GAIN_POSITION           ,
     MPC_GAIN_VELOCITY           ,
     MPC_GAIN_ACCELERATION       ,
@@ -87,11 +95,13 @@ class walkParameters
         double feedback_gain;
         double feedback_threshold;
 
+        int solver_type;
         double mpc_gain_position;
         double mpc_gain_velocity;
         double mpc_gain_acceleration;
         double mpc_gain_jerk;
         double mpc_tolerance;
+
 
         double step_height;
         double step_length;

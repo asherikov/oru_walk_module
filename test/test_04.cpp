@@ -41,12 +41,12 @@ int main(int argc, char **argv)
     init_08 tdata("test_04", preview_sampling_time_ms, false);
 
 
-    smpc::solver solver(
+    smpc::solver_as solver(
             tdata.wmg->N, // size of the preview window
-            1.0,  // Alpha
             8000.0,  // Beta
+            1.0,    // Alpha
+            0.02,   // regularization
             1.0,    // Gamma
-            0.01,   // regularization
             1e-7);  // tolerance
     //-----------------------------------------------------------
 
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
         solver.solve();
         //-----------------------------------------------------------
         // update state
-        tdata.par->init_state.get_next_state (solver);
+        solver.get_next_state(tdata.par->init_state);
         //-----------------------------------------------------------
 
 
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
             next_preview_len_ms = preview_sampling_time_ms;
 
             log.addZMPpoint (tdata.X_tilde.x(), tdata.X_tilde.y());
-            tdata.X_tilde.get_next_state (solver);
+            solver.get_next_state(tdata.X_tilde);
         }
         log.addCoMpoint (tdata.par->init_state.x(), tdata.par->init_state.y());
 
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 
         // position of CoM
         smpc::state_orig next_CoM;
-        next_CoM.get_state(solver, 1);
+        solver.get_state(next_CoM, 1);
         tdata.nao.setCoM(next_CoM.x(), next_CoM.y(), tdata.par->hCoM); 
 
 

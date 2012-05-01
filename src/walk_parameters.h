@@ -46,7 +46,7 @@ enum walkPatterns
 enum solverTypes
 {
     SOLVER_TYPE_AS = 0,
-    SOLVER_TYPE_IP = 1,
+    SOLVER_TYPE_IP = 1
 };
 
 
@@ -54,19 +54,35 @@ enum parametersNames
 {
     FEEDBACK_GAIN               ,
     FEEDBACK_THRESHOLD          ,
+
     MPC_SOLVER_TYPE             ,
     MPC_GAIN_POSITION           ,
     MPC_GAIN_VELOCITY           ,
     MPC_GAIN_ACCELERATION       ,
     MPC_GAIN_JERK               ,
-    MPC_TOLERANCE               ,
+
+    MPC_AS_TOLERANCE            ,
+    MPC_AS_MAX_ACTIVATE         ,
+    MPC_AS_USE_DOWNDATE         ,
+
+    MPC_IP_TOLERANCE_INT        ,
+    MPC_IP_TOLERANCE_EXT        ,
+    MPC_IP_T                    ,
+    MPC_IP_MU                   ,
+    MPC_IP_BS_ALPHA             ,
+    MPC_IP_BS_BETA              ,
+    MPC_IP_MAX_ITER             ,
+    MPC_IP_USE_BS               ,
+
     IGM_MU                      ,
+
     STEP_HEIGHT                 ,
     STEP_LENGTH                 ,
     BEZIER_WEIGHT_1             ,
     BEZIER_WEIGHT_2             ,
     BEZIER_INCLINATION_1        ,
     BEZIER_INCLINATION_2        ,
+
     LOOP_TIME_LIMIT_MS          ,
     DCM_TIME_SHIFT_MS           ,
     PREVIEW_SAMPLING_TIME_MS    ,
@@ -74,6 +90,7 @@ enum parametersNames
     SS_CONTROL_LOOPS            ,
     DS_CONTROL_LOOPS            ,
     DS_NUMBER                   ,
+
     STEP_PAIRS_NUMBER           ,
     WALK_PATTERN                ,
 
@@ -95,12 +112,25 @@ class walkParameters
         double feedback_gain;
         double feedback_threshold;
 
-        int solver_type;
+        int mpc_solver_type;
+
         double mpc_gain_position;
         double mpc_gain_velocity;
         double mpc_gain_acceleration;
         double mpc_gain_jerk;
-        double mpc_tolerance;
+
+        double mpc_as_tolerance;
+        int mpc_as_max_activate;
+        bool mpc_as_use_downdate;
+        
+        double mpc_ip_tolerance_int;
+        double mpc_ip_tolerance_ext;
+        double mpc_ip_t;
+        double mpc_ip_mu;
+        double mpc_ip_bs_alpha;
+        double mpc_ip_bs_beta;
+        int mpc_ip_max_iter;
+        bool mpc_ip_use_bs;
 
 
         double step_height;

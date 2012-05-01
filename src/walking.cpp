@@ -130,7 +130,7 @@ void oru_walk::initSolver()
         delete solver;
         solver = NULL;
     }
-    if (wp.solver_type == SOLVER_TYPE_AS)
+    if (wp.mpc_solver_type == SOLVER_TYPE_AS)
     {
         solver = new smpc::solver_as (
                 wp.preview_window_size,
@@ -138,16 +138,28 @@ void oru_walk::initSolver()
                 wp.mpc_gain_velocity,
                 wp.mpc_gain_acceleration,
                 wp.mpc_gain_jerk,
-                wp.mpc_tolerance);
+                wp.mpc_as_tolerance,
+                wp.mpc_as_max_activate,
+                wp.mpc_as_use_downdate,
+                false); // objective
     }
-    else if (wp.solver_type == SOLVER_TYPE_IP)
+    else if (wp.mpc_solver_type == SOLVER_TYPE_IP)
     {
         solver = new smpc::solver_ip (
                 wp.preview_window_size,
                 wp.mpc_gain_position,
                 wp.mpc_gain_velocity,
                 wp.mpc_gain_acceleration,
-                wp.mpc_gain_jerk);
+                wp.mpc_gain_jerk,
+                wp.mpc_ip_tolerance_int,
+                wp.mpc_ip_tolerance_ext,
+                wp.mpc_ip_t,
+                wp.mpc_ip_mu,
+                wp.mpc_ip_bs_alpha,
+                wp.mpc_ip_bs_beta,
+                wp.mpc_ip_max_iter,
+                wp.mpc_ip_use_bs,
+                false); // objective
     }
 //    smpc::enable_fexceptions();
 }

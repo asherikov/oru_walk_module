@@ -29,13 +29,25 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
 
 
 // parameters of the MPC solver
-    solver_type = SOLVER_TYPE_AS;
+    mpc_solver_type = SOLVER_TYPE_AS;
 
     mpc_gain_position = 8000.0;   // closeness to the reference ZMP points 
     mpc_gain_acceleration = 0.02; // penalty for the acceleration
     mpc_gain_velocity = 1.0;      // penalty for the velocity
     mpc_gain_jerk = 1.0;          // penalty for the jerk
-    mpc_tolerance = 1e-7;
+
+    mpc_as_tolerance = 1e-7;
+    mpc_as_max_activate = 20;
+    mpc_as_use_downdate = true;
+    
+    mpc_ip_tolerance_int = 1e-1;
+    mpc_ip_tolerance_ext = 1e+4;
+    mpc_ip_t = 1e-1;
+    mpc_ip_mu = 1.0;
+    mpc_ip_bs_alpha = 0.01;
+    mpc_ip_bs_beta = 0.9;
+    mpc_ip_max_iter = 5;
+    mpc_ip_use_bs = true;
 
 
 // parameters of the walking pattern generator
@@ -115,8 +127,20 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     param_names[MPC_GAIN_POSITION]        = "mpc_gain_position";
     param_names[MPC_GAIN_JERK]            = "mpc_gain_jerk";
     param_names[MPC_GAIN_ACCELERATION]    = "mpc_gain_acceleration";
-    param_names[MPC_TOLERANCE]            = "mpc_tolerance";
 
+    param_names[MPC_AS_TOLERANCE]         = "mpc_as_tolerance";
+    param_names[MPC_AS_MAX_ACTIVATE]      = "mpc_as_max_activate";
+    param_names[MPC_AS_USE_DOWNDATE]      = "mpc_as_use_downdate";
+                                             
+    param_names[MPC_IP_TOLERANCE_INT]     = "mpc_ip_tolerance_int";
+    param_names[MPC_IP_TOLERANCE_EXT]     = "mpc_ip_tolerance_ext";
+    param_names[MPC_IP_T]                 = "mpc_ip_t";
+    param_names[MPC_IP_MU]                = "mpc_ip_mu";
+    param_names[MPC_IP_BS_ALPHA]          = "mpc_ip_bs_alpha";
+    param_names[MPC_IP_BS_BETA]           = "mpc_ip_bs_beta";
+    param_names[MPC_IP_MAX_ITER]          = "mpc_ip_max_iter";
+    param_names[MPC_IP_USE_BS]            = "mpc_ip_use_bs";            
+                                            
     param_names[IGM_MU]                   = "igm_mu";
 
     param_names[STEP_HEIGHT]              = "step_height";
@@ -166,29 +190,37 @@ void walkParameters::readParameters()
         return;
     }
 
-
     for (int i = 0; i < preferences.getSize(); i++)
     {
         if (preferences[i][2].isFloat())
         {
-            if(preferences[i][0] == param_names[FEEDBACK_GAIN])        { feedback_gain        = preferences[i][2]; }
-            if(preferences[i][0] == param_names[FEEDBACK_THRESHOLD])   { feedback_threshold   = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_SOLVER_TYPE])      { solver_type          = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_GAIN_POSITION])    { mpc_gain_position    = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_GAIN_VELOCITY])    { mpc_gain_velocity    = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_GAIN_ACCELERATION]){ mpc_gain_acceleration= preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_GAIN_JERK])        { mpc_gain_jerk        = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_TOLERANCE])        { mpc_tolerance        = preferences[i][2]; }
-            if(preferences[i][0] == param_names[IGM_MU])               { igm_mu               = preferences[i][2]; }
-            if(preferences[i][0] == param_names[STEP_HEIGHT])          { step_height          = preferences[i][2]; }
-            if(preferences[i][0] == param_names[STEP_LENGTH])          { step_length          = preferences[i][2]; }
-            if(preferences[i][0] == param_names[BEZIER_WEIGHT_1])      { bezier_weight_1      = preferences[i][2]; }
-            if(preferences[i][0] == param_names[BEZIER_WEIGHT_2])      { bezier_weight_2      = preferences[i][2]; }
-            if(preferences[i][0] == param_names[BEZIER_INCLINATION_1]) { bezier_inclination_1 = preferences[i][2]; }
-            if(preferences[i][0] == param_names[BEZIER_INCLINATION_2]) { bezier_inclination_2 = preferences[i][2]; }
+            if(preferences[i][0] == param_names[FEEDBACK_GAIN])         { feedback_gain        = preferences[i][2]; }
+            if(preferences[i][0] == param_names[FEEDBACK_THRESHOLD])    { feedback_threshold   = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_GAIN_POSITION])     { mpc_gain_position    = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_GAIN_VELOCITY])     { mpc_gain_velocity    = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_GAIN_ACCELERATION]) { mpc_gain_acceleration= preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_GAIN_JERK])         { mpc_gain_jerk        = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_AS_TOLERANCE])      { mpc_as_tolerance     = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_TOLERANCE_INT])  { mpc_ip_tolerance_int = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_TOLERANCE_EXT])  { mpc_ip_tolerance_ext = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_T])              { mpc_ip_t             = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_MU])             { mpc_ip_mu            = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_BS_ALPHA])       { mpc_ip_bs_alpha      = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_BS_BETA])        { mpc_ip_bs_beta       = preferences[i][2]; }
+            if(preferences[i][0] == param_names[IGM_MU])                { igm_mu               = preferences[i][2]; }
+            if(preferences[i][0] == param_names[STEP_HEIGHT])           { step_height          = preferences[i][2]; }
+            if(preferences[i][0] == param_names[STEP_LENGTH])           { step_length          = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_WEIGHT_1])       { bezier_weight_1      = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_WEIGHT_2])       { bezier_weight_2      = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_INCLINATION_1])  { bezier_inclination_1 = preferences[i][2]; }
+            if(preferences[i][0] == param_names[BEZIER_INCLINATION_2])  { bezier_inclination_2 = preferences[i][2]; }
         }
         if (preferences[i][2].isInt())
         {
+            if(preferences[i][0] == param_names[MPC_SOLVER_TYPE])     { mpc_solver_type      = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_MAX_ITER])     { mpc_ip_max_iter      = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_AS_MAX_ACTIVATE]) { mpc_as_max_activate  = preferences[i][2]; }
+
             if(preferences[i][0] == param_names[LOOP_TIME_LIMIT_MS])  { loop_time_limit_ms  = preferences[i][2]; }
             if(preferences[i][0] == param_names[DCM_TIME_SHIFT_MS])   { dcm_time_shift_ms   = preferences[i][2]; }
             if(preferences[i][0] == param_names[PREVIEW_WINDOW_SIZE]) { preview_window_size = preferences[i][2]; }
@@ -208,6 +240,11 @@ void walkParameters::readParameters()
 
             if(preferences[i][0] == param_names[DS_CONTROL_LOOPS])
                 {ds_time_ms = control_sampling_time_ms * (int) preferences[i][2];}
+        }
+        if (preferences[i][2].isBool())
+        {
+            if(preferences[i][0] == param_names[MPC_AS_USE_DOWNDATE]) { mpc_as_use_downdate  = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_USE_BS])       { mpc_ip_use_bs        = preferences[i][2]; }
         }
     }
 }
@@ -239,7 +276,19 @@ void walkParameters::writeParameters()
     preferences[MPC_GAIN_VELOCITY][1]        = "";
     preferences[MPC_GAIN_ACCELERATION][1]    = "";
     preferences[MPC_GAIN_JERK][1]            = "";
-    preferences[MPC_TOLERANCE][1]            = "";
+    
+    preferences[MPC_AS_TOLERANCE][1]         = "";
+    preferences[MPC_AS_MAX_ACTIVATE][1]      = "";
+    preferences[MPC_AS_USE_DOWNDATE][1]      = "";
+                    
+    preferences[MPC_IP_TOLERANCE_INT][1]     = "";
+    preferences[MPC_IP_TOLERANCE_EXT][1]     = "";
+    preferences[MPC_IP_T][1]                 = "";
+    preferences[MPC_IP_MU][1]                = "";
+    preferences[MPC_IP_BS_ALPHA][1]          = "";
+    preferences[MPC_IP_BS_BETA][1]           = "";
+    preferences[MPC_IP_MAX_ITER][1]          = "";
+    preferences[MPC_IP_USE_BS][1]            = "";
 
     preferences[IGM_MU][1]                   = "";
 
@@ -267,13 +316,25 @@ void walkParameters::writeParameters()
     preferences[FEEDBACK_GAIN][2]            = feedback_gain;
     preferences[FEEDBACK_THRESHOLD][2]       = feedback_threshold;
 
-    preferences[MPC_SOLVER_TYPE][2]          = solver_type;
+    preferences[MPC_SOLVER_TYPE][2]          = mpc_solver_type;
 
     preferences[MPC_GAIN_POSITION][2]        = mpc_gain_position;
     preferences[MPC_GAIN_VELOCITY][2]        = mpc_gain_velocity;
     preferences[MPC_GAIN_ACCELERATION][2]    = mpc_gain_acceleration;
     preferences[MPC_GAIN_JERK][2]            = mpc_gain_jerk;
-    preferences[MPC_TOLERANCE][2]            = mpc_tolerance;
+
+    preferences[MPC_AS_TOLERANCE][2]         = mpc_as_tolerance;
+    preferences[MPC_AS_MAX_ACTIVATE][2]      = mpc_as_max_activate;
+    preferences[MPC_AS_USE_DOWNDATE][2]      = mpc_as_use_downdate;
+
+    preferences[MPC_IP_TOLERANCE_INT][2]     = mpc_ip_tolerance_int;
+    preferences[MPC_IP_TOLERANCE_EXT][2]     = mpc_ip_tolerance_ext;
+    preferences[MPC_IP_T][2]                 = mpc_ip_t;
+    preferences[MPC_IP_MU][2]                = mpc_ip_mu;
+    preferences[MPC_IP_BS_ALPHA][2]          = mpc_ip_bs_alpha;
+    preferences[MPC_IP_BS_BETA][2]           = mpc_ip_bs_beta;
+    preferences[MPC_IP_MAX_ITER][2]          = mpc_ip_max_iter;
+    preferences[MPC_IP_USE_BS][2]            = mpc_ip_use_bs;
 
     preferences[IGM_MU][2]                   = igm_mu;
 

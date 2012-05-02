@@ -158,7 +158,7 @@ void oru_walk::initSolver()
                 wp.mpc_ip_bs_alpha,
                 wp.mpc_ip_bs_beta,
                 wp.mpc_ip_max_iter,
-                wp.mpc_ip_use_bs,
+                (smpc::backtrackingSearchType) wp.mpc_ip_bs_type,
                 false); // objective
     }
 //    smpc::enable_fexceptions();

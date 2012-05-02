@@ -4,6 +4,7 @@
  */
 
 #include "walk_parameters.h"
+#include "smpc_solver.h"
 
 
 
@@ -47,7 +48,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     mpc_ip_bs_alpha = 0.01;
     mpc_ip_bs_beta = 0.9;
     mpc_ip_max_iter = 5;
-    mpc_ip_use_bs = true;
+    mpc_ip_bs_type = smpc::SMPC_IP_BS_LOGBAR;
 
 
 // parameters of the walking pattern generator
@@ -139,7 +140,7 @@ walkParameters::walkParameters(ALPtr<ALBroker> broker) :
     param_names[MPC_IP_BS_ALPHA]          = "mpc_ip_bs_alpha";
     param_names[MPC_IP_BS_BETA]           = "mpc_ip_bs_beta";
     param_names[MPC_IP_MAX_ITER]          = "mpc_ip_max_iter";
-    param_names[MPC_IP_USE_BS]            = "mpc_ip_use_bs";            
+    param_names[MPC_IP_BS_TYPE]           = "mpc_ip_bs_type";
                                             
     param_names[IGM_MU]                   = "igm_mu";
 
@@ -217,8 +218,9 @@ void walkParameters::readParameters()
         }
         if (preferences[i][2].isInt())
         {
-            if(preferences[i][0] == param_names[MPC_SOLVER_TYPE])     { mpc_solver_type     =  preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_SOLVER_TYPE])     { mpc_solver_type     = preferences[i][2]; }
             if(preferences[i][0] == param_names[MPC_IP_MAX_ITER])     { mpc_ip_max_iter     = preferences[i][2]; }
+            if(preferences[i][0] == param_names[MPC_IP_BS_TYPE])      { mpc_ip_bs_type      = preferences[i][2]; }
             if(preferences[i][0] == param_names[MPC_AS_MAX_ACTIVATE]) { mpc_as_max_activate = preferences[i][2]; }
 
             if(preferences[i][0] == param_names[LOOP_TIME_LIMIT_MS])  { loop_time_limit_ms  = preferences[i][2]; }
@@ -244,7 +246,6 @@ void walkParameters::readParameters()
         if (preferences[i][2].isBool())
         {
             if(preferences[i][0] == param_names[MPC_AS_USE_DOWNDATE]) { mpc_as_use_downdate = preferences[i][2]; }
-            if(preferences[i][0] == param_names[MPC_IP_USE_BS])       { mpc_ip_use_bs       = preferences[i][2]; }
         }
     }
 }
@@ -288,7 +289,7 @@ void walkParameters::writeParameters()
     preferences[MPC_IP_BS_ALPHA][1]          = "";
     preferences[MPC_IP_BS_BETA][1]           = "";
     preferences[MPC_IP_MAX_ITER][1]          = "";
-    preferences[MPC_IP_USE_BS][1]            = "";
+    preferences[MPC_IP_BS_TYPE][1]           = "";
 
     preferences[IGM_MU][1]                   = "";
 
@@ -334,7 +335,7 @@ void walkParameters::writeParameters()
     preferences[MPC_IP_BS_ALPHA][2]          = mpc_ip_bs_alpha;
     preferences[MPC_IP_BS_BETA][2]           = mpc_ip_bs_beta;
     preferences[MPC_IP_MAX_ITER][2]          = mpc_ip_max_iter;
-    preferences[MPC_IP_USE_BS][2]            = mpc_ip_use_bs;
+    preferences[MPC_IP_BS_TYPE][2]           = mpc_ip_bs_type;
 
     preferences[IGM_MU][2]                   = igm_mu;
 

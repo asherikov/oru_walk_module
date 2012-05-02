@@ -25,7 +25,6 @@
 
 
 
-
 //----------------------------------------
 // DEFINITIONS
 //----------------------------------------
@@ -72,7 +71,7 @@ enum parametersNames
     MPC_IP_BS_ALPHA             ,
     MPC_IP_BS_BETA              ,
     MPC_IP_MAX_ITER             ,
-    MPC_IP_USE_BS               ,
+    MPC_IP_BS_TYPE              ,
 
     IGM_MU                      ,
 
@@ -130,7 +129,7 @@ class walkParameters
         double mpc_ip_bs_alpha;
         double mpc_ip_bs_beta;
         int mpc_ip_max_iter;
-        bool mpc_ip_use_bs;
+        int mpc_ip_bs_type;
 
 
         double step_height;

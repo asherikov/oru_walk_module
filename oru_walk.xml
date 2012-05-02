@@ -17,7 +17,7 @@
     <Preference name="mpc_ip_bs_alpha" description="" value="0.01" type="float" />
     <Preference name="mpc_ip_bs_beta" description="" value="0.9" type="float" />
     <Preference name="mpc_ip_max_iter" description="" value="5" type="int" />
-    <Preference name="mpc_ip_use_bs" description="" value="true" type="bool" />
+    <Preference name="mpc_ip_bs_type" description="" value="1" type="int" />
     <Preference name="igm_mu" description="" value="1" type="float" />
     <Preference name="step_height" description="" value="0.02" type="float" />
     <Preference name="step_length" description="" value="0.04" type="float" />

@@ -267,11 +267,6 @@
  * @todo Use a fan to produce disturbances.
  *
  * @todo Make a demo with variable height of the CoM.
- *
- * @todo It might be helpful to use interior point method instead of active
- * set method, since in the former case we may implement a mechanism to limit 
- * the time available for solution. Alternatively, we can limit the number of
- * activated constraints or execution time of active set method.
  */
 #endif /*DOXYGEN_H*/
  

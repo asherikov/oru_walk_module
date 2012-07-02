@@ -325,3 +325,68 @@ class init_10 : public test_init_base
             }
         }
 };
+
+
+
+class init_11 : public test_init_base
+{
+    public:
+        init_11 (
+                const string & test_name, 
+                const int preview_sampling_time_ms,
+                const bool plot_ds_ = true) :
+            test_init_base (test_name, plot_ds_)
+        {
+            initNaoModel (nao, ref_angles);
+            // support foot position and orientation
+            nao.init (
+                    IGM_SUPPORT_LEFT,
+                    0.0, 0.05, 0.0,
+                    0.0, 0.0, 0.0);
+            nao.getCoM(nao.state_sensor, nao.CoM_position);
+
+            wmg = new WMG (40, preview_sampling_time_ms, 0.02);
+            par = new smpc_parameters (wmg->N, nao.CoM_position[2]);
+            int ss_time_ms = 400;
+            int ds_time_ms = 40;
+            int ds_number = 3;
+
+            // each step is defined relatively to the previous step
+            double step_x = 0.04;      // relative X position
+            double step_y = wmg->def_constraints.support_distance_y;       // relative Y position
+
+
+            wmg->setFootstepParametersMS(0, 0, 0);
+            wmg->addFootstep(0.0, step_y/2, 0.0, FS_TYPE_SS_L);
+
+            // Initial double support
+            wmg->setFootstepParametersMS(3*ss_time_ms, 0, 0);
+            wmg->addFootstep(0.0, -step_y/2, 0.0, FS_TYPE_DS);
+
+
+            // all subsequent steps have normal feet size
+            wmg->setFootstepParametersMS(ss_time_ms, 0, 0);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0);
+            wmg->setFootstepParametersMS(ss_time_ms, ds_time_ms, ds_number);
+            wmg->addFootstep(step_x,  step_y,   0.0);
+
+            for (int i = 0; i < 2; i++)
+            {
+                wmg->addFootstep(step_x, -step_y, 0.0);
+                wmg->addFootstep(step_x,  step_y, 0.0);
+            }
+
+            // here we give many reference points, since otherwise we 
+            // would not have enough steps in preview window to reach 
+            // the last footsteps
+            wmg->setFootstepParametersMS(5*ss_time_ms, 0, 0);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_DS);
+            wmg->setFootstepParametersMS(0, 0, 0);
+            wmg->addFootstep(0.0   , -step_y/2, 0.0, FS_TYPE_SS_R);
+
+            if (!name.empty())
+            {
+                wmg->FS2file(fs_out_filename, plot_ds);
+            }
+        }
+};

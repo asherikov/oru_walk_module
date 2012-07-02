@@ -107,7 +107,7 @@ class test_log
         }
         void flushZMPref ()
         {
-            printVectors (file_op, ZMPref_x, ZMPref_y, "ZMPref", "x");
+            printVectors (file_op, ZMPref_x, ZMPref_y, "ZMPref", "ko");
         }
         void flushCoM ()
         {

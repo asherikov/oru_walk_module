@@ -6,7 +6,10 @@ CXXFLAGS += -I/usr/local/include/eigen2/ -I/usr/include/eigen2/
 
 TESTS=\
 	test_04 \
-	test_07 
+	test_07 \
+	test_08 \
+	test_09 \
+	test_10
 
 TESTS_GL=\
 	test_05 \

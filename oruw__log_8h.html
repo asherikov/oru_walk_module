@@ -63,8 +63,10 @@
 <div class="textblock"><code>#include &lt;cstdio&gt;</code><br/>
 <code>#include &lt;qi/log.hpp&gt;</code><br/>
 <code>#include &quot;nao_igm.h&quot;</code><br/>
+<code>#include &quot;smpc_solver.h&quot;</code><br/>
 <code>#include &quot;WMG.h&quot;</code><br/>
 <code>#include &quot;joints_sensors_id.h&quot;</code><br/>
+<code>#include &quot;<a class="el" href="walk__parameters_8h_source.html">walk_parameters.h</a>&quot;</code><br/>
 </div>
 <p><a href="oruw__log_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -81,6 +83,7 @@ Defines</h2></td></tr>
 <tr class="memitem:a9b5510f98b766bece18434d9f60f0aa0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="oruw__log_8h.html#a9b5510f98b766bece18434d9f60f0aa0">ORUW_LOG_COM</a>(mpc, nao)&#160;&#160;&#160;if <a class="el" href="oruw__log_8h.html#a4f62c3b3c6037784000f392ad647ee54">ORUW_LOG_IS_OPEN</a> {<a class="el" href="oruw__log_8h.html#aedc001350e6854eb5c98a54381861734">oruw_log_instance</a>-&gt;logCoM(mpc,nao);}</td></tr>
 <tr class="memitem:a71e6bab30f4943c9605e1d8ea556729c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="oruw__log_8h.html#a71e6bab30f4943c9605e1d8ea556729c">ORUW_LOG_FEET</a>(nao)&#160;&#160;&#160;if <a class="el" href="oruw__log_8h.html#a4f62c3b3c6037784000f392ad647ee54">ORUW_LOG_IS_OPEN</a> {<a class="el" href="oruw__log_8h.html#aedc001350e6854eb5c98a54381861734">oruw_log_instance</a>-&gt;logFeet(nao);}</td></tr>
 <tr class="memitem:acec7a007b9493649fba8c0e706fd6a0b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">ORUW_LOG_MESSAGE</a>(...)&#160;&#160;&#160;if <a class="el" href="oruw__log_8h.html#a4f62c3b3c6037784000f392ad647ee54">ORUW_LOG_IS_OPEN</a> {fprintf(<a class="el" href="oruw__log_8h.html#aedc001350e6854eb5c98a54381861734">oruw_log_instance</a>-&gt;FMessages, __VA_ARGS__);}</td></tr>
+<tr class="memitem:a155149e44f3d8e231f506a2b826784c7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="oruw__log_8h.html#a155149e44f3d8e231f506a2b826784c7">ORUW_LOG_SOLVER_INFO</a>&#160;&#160;&#160;if <a class="el" href="oruw__log_8h.html#a4f62c3b3c6037784000f392ad647ee54">ORUW_LOG_IS_OPEN</a> {<a class="el" href="oruw__log_8h.html#aedc001350e6854eb5c98a54381861734">oruw_log_instance</a>-&gt;logSolverInfo(solver, wp.mpc_solver_type);}</td></tr>
 <tr class="memitem:a3bd715a39e2550aabd8ca098b9c15f45"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="oruw__log_8h.html#a3bd715a39e2550aabd8ca098b9c15f45">ORUW_LOG_STEPS</a>(wmg)&#160;&#160;&#160;if <a class="el" href="oruw__log_8h.html#a4f62c3b3c6037784000f392ad647ee54">ORUW_LOG_IS_OPEN</a> {wmg.FS2file(&quot;oru_steps_m.log&quot;, false);}</td></tr>
 <tr><td colspan="2"><h2><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -103,7 +106,7 @@ Variables</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00050">50</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00053">53</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -132,7 +135,7 @@ Variables</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00056">56</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00059">59</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -167,7 +170,7 @@ Variables</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00059">59</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00062">62</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -182,7 +185,7 @@ Variables</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00047">47</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00050">50</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -211,7 +214,7 @@ Variables</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00053">53</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00056">56</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -230,7 +233,7 @@ Variables</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00062">62</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00065">65</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -245,7 +248,22 @@ Variables</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00048">48</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00051">51</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a155149e44f3d8e231f506a2b826784c7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define <a class="el" href="oruw__log_8h.html#a155149e44f3d8e231f506a2b826784c7">ORUW_LOG_SOLVER_INFO</a>&#160;&#160;&#160;if <a class="el" href="oruw__log_8h.html#a4f62c3b3c6037784000f392ad647ee54">ORUW_LOG_IS_OPEN</a> {<a class="el" href="oruw__log_8h.html#aedc001350e6854eb5c98a54381861734">oruw_log_instance</a>-&gt;logSolverInfo(solver, wp.mpc_solver_type);}</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00068">68</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -264,7 +282,7 @@ Variables</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00065">65</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00071">71</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>

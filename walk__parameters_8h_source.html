@@ -83,114 +83,153 @@
 <a name="l00025"></a>00025 
 <a name="l00026"></a>00026 
 <a name="l00027"></a>00027 
-<a name="l00028"></a>00028 
-<a name="l00029"></a>00029 <span class="comment">//----------------------------------------</span>
-<a name="l00030"></a>00030 <span class="comment">// DEFINITIONS</span>
-<a name="l00031"></a>00031 <span class="comment">//----------------------------------------</span>
+<a name="l00028"></a>00028 <span class="comment">//----------------------------------------</span>
+<a name="l00029"></a>00029 <span class="comment">// DEFINITIONS</span>
+<a name="l00030"></a>00030 <span class="comment">//----------------------------------------</span>
+<a name="l00031"></a>00031 
 <a name="l00032"></a>00032 
-<a name="l00033"></a>00033 
-<a name="l00034"></a>00034 <span class="keyword">using namespace </span>AL;
-<a name="l00035"></a>00035 <span class="keyword">using namespace </span>std;
+<a name="l00033"></a>00033 <span class="keyword">using namespace </span>AL;
+<a name="l00034"></a>00034 <span class="keyword">using namespace </span>std;
+<a name="l00035"></a>00035 
 <a name="l00036"></a>00036 
-<a name="l00037"></a>00037 
-<a name="l00038"></a><a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9">00038</a> <span class="keyword">enum</span> <a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9">walkPatterns</a>
-<a name="l00039"></a>00039 {
-<a name="l00040"></a><a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a69fd27817f99643071cf624502e0f94a">00040</a>     <a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a69fd27817f99643071cf624502e0f94a">WALK_PATTERN_STRAIGHT</a> = 0,
-<a name="l00041"></a><a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a605f4c52c28aaa0d79a97f248d3f51b6">00041</a>     <a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a605f4c52c28aaa0d79a97f248d3f51b6">WALK_PATTERN_DIAGONAL</a> = 1,
-<a name="l00042"></a><a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a0621434503c6fd6a39b2df4dcb986f12">00042</a>     <a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a0621434503c6fd6a39b2df4dcb986f12">WALK_PATTERN_CIRCULAR</a> = 2
-<a name="l00043"></a>00043 };
+<a name="l00037"></a><a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9">00037</a> <span class="keyword">enum</span> <a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9">walkPatterns</a>
+<a name="l00038"></a>00038 {
+<a name="l00039"></a><a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a69fd27817f99643071cf624502e0f94a">00039</a>     <a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a69fd27817f99643071cf624502e0f94a">WALK_PATTERN_STRAIGHT</a> = 0,
+<a name="l00040"></a><a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a605f4c52c28aaa0d79a97f248d3f51b6">00040</a>     <a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a605f4c52c28aaa0d79a97f248d3f51b6">WALK_PATTERN_DIAGONAL</a> = 1,
+<a name="l00041"></a><a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a0621434503c6fd6a39b2df4dcb986f12">00041</a>     <a class="code" href="walk__parameters_8h.html#a6ad077a302f24866d5db6aafd84b24d9a0621434503c6fd6a39b2df4dcb986f12">WALK_PATTERN_CIRCULAR</a> = 2
+<a name="l00042"></a>00042 };
+<a name="l00043"></a>00043 
 <a name="l00044"></a>00044 
-<a name="l00045"></a>00045 
-<a name="l00046"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8">00046</a> <span class="keyword">enum</span> <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8">parametersNames</a>
-<a name="l00047"></a>00047 {
-<a name="l00048"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aaee4392488ea383ae707098618609985">00048</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aaee4392488ea383ae707098618609985">FEEDBACK_GAIN</a>               ,
-<a name="l00049"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8af90534f3e75656083c0a3d52bec9da3e">00049</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8af90534f3e75656083c0a3d52bec9da3e">FEEDBACK_THRESHOLD</a>          ,
-<a name="l00050"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a858595ff8db1c9d52bd0120a54bafa55">00050</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a858595ff8db1c9d52bd0120a54bafa55">MPC_ALPHA</a>                   ,
-<a name="l00051"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a9765a01fdc28a57c3f71a43fbe4ea3ba">00051</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a9765a01fdc28a57c3f71a43fbe4ea3ba">MPC_BETA</a>                    ,
-<a name="l00052"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ab8d17cbdccf82aec14e2714d355518ed">00052</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ab8d17cbdccf82aec14e2714d355518ed">MPC_GAMMA</a>                   ,
-<a name="l00053"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a2c7924bce26b43f189893be23814af5b">00053</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a2c7924bce26b43f189893be23814af5b">MPC_REGULARIZATION</a>          ,
-<a name="l00054"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a94207e344c6a62c186dedf831ef434a6">00054</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a94207e344c6a62c186dedf831ef434a6">MPC_TOLERANCE</a>               ,
-<a name="l00055"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a8feb6a8477520a4f06b731000272f48b">00055</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a8feb6a8477520a4f06b731000272f48b">IGM_MU</a>                      ,
-<a name="l00056"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a4159b63f837242238aa13b4dd20651d8">00056</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a4159b63f837242238aa13b4dd20651d8">STEP_HEIGHT</a>                 ,
-<a name="l00057"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a0598b2f4e175f260986d0e735d830561">00057</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a0598b2f4e175f260986d0e735d830561">STEP_LENGTH</a>                 ,
-<a name="l00058"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8afccfd61cbdc68505da26876323ec4610">00058</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8afccfd61cbdc68505da26876323ec4610">BEZIER_WEIGHT_1</a>             ,
-<a name="l00059"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a5824d920fc626363fd47c3b46c87befa">00059</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a5824d920fc626363fd47c3b46c87befa">BEZIER_WEIGHT_2</a>             ,
-<a name="l00060"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aebf2b34c7979f2804000d43633960b2b">00060</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aebf2b34c7979f2804000d43633960b2b">BEZIER_INCLINATION_1</a>        ,
-<a name="l00061"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aef54a16ea85992554b1fa400f16b36ae">00061</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aef54a16ea85992554b1fa400f16b36ae">BEZIER_INCLINATION_2</a>        ,
-<a name="l00062"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a5c921380a9f4515c5a9f2212dec2c656">00062</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a5c921380a9f4515c5a9f2212dec2c656">LOOP_TIME_LIMIT_MS</a>          ,
-<a name="l00063"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a6476b7934570388ada320ecd7f57c400">00063</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a6476b7934570388ada320ecd7f57c400">DCM_TIME_SHIFT_MS</a>           ,
-<a name="l00064"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad7a5c7fb565056adf3f98e681bb68798">00064</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad7a5c7fb565056adf3f98e681bb68798">PREVIEW_SAMPLING_TIME_MS</a>    ,
-<a name="l00065"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a0bd1c8ee726a2a00e734c6e3a80597d5">00065</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a0bd1c8ee726a2a00e734c6e3a80597d5">PREVIEW_WINDOW_SIZE</a>         ,
-<a name="l00066"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a081f47027cd31c17af36f32e4dbd5462">00066</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a081f47027cd31c17af36f32e4dbd5462">SS_CONTROL_LOOPS</a>            ,
-<a name="l00067"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad50ae2f4c092134b32ce760496c30112">00067</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad50ae2f4c092134b32ce760496c30112">DS_CONTROL_LOOPS</a>            ,
-<a name="l00068"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a3b5127520b719522d01dec7cadb53df2">00068</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a3b5127520b719522d01dec7cadb53df2">DS_NUMBER</a>                   ,
-<a name="l00069"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a8da5146ed2a91d99aa18ac0bf90203ed">00069</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a8da5146ed2a91d99aa18ac0bf90203ed">STEP_PAIRS_NUMBER</a>           ,
-<a name="l00070"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad57ce1f780615651eb55d95f16b8bb88">00070</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad57ce1f780615651eb55d95f16b8bb88">WALK_PATTERN</a>                ,
-<a name="l00071"></a>00071 
-<a name="l00072"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a40b3352756e581b7cafd53f3f168a86e">00072</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a40b3352756e581b7cafd53f3f168a86e">NUM_PARAMETERS</a>              
-<a name="l00073"></a>00073 };
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075 <span class="comment"></span>
-<a name="l00076"></a>00076 <span class="comment">/**</span>
-<a name="l00077"></a>00077 <span class="comment"> * @brief A container for parameters.</span>
-<a name="l00078"></a>00078 <span class="comment"> */</span>
-<a name="l00079"></a><a class="code" href="classwalkParameters.html">00079</a> <span class="keyword">class </span><a class="code" href="classwalkParameters.html" title="A container for parameters.">walkParameters</a>
-<a name="l00080"></a>00080 {
-<a name="l00081"></a>00081     <span class="keyword">public</span>:
-<a name="l00082"></a>00082         <a class="code" href="classwalkParameters.html" title="A container for parameters.">walkParameters</a>(ALPtr&lt;ALBroker&gt;);
-<a name="l00083"></a>00083         <span class="keywordtype">void</span> readParameters();
-<a name="l00084"></a>00084         <span class="keywordtype">void</span> writeParameters();
-<a name="l00085"></a>00085 
-<a name="l00086"></a>00086 
-<a name="l00087"></a><a class="code" href="classwalkParameters.html#ac057b4784424ca963c9f5e2d089f9b99">00087</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#ac057b4784424ca963c9f5e2d089f9b99">feedback_gain</a>;
-<a name="l00088"></a><a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">00088</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>;
-<a name="l00089"></a>00089 
-<a name="l00090"></a><a class="code" href="classwalkParameters.html#a8009a58593590e295969b057f47239b9">00090</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a8009a58593590e295969b057f47239b9">mpc_alpha</a>;
-<a name="l00091"></a><a class="code" href="classwalkParameters.html#aa929ee79b0998c1b805de459aa8c9ee1">00091</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#aa929ee79b0998c1b805de459aa8c9ee1">mpc_beta</a>;
-<a name="l00092"></a><a class="code" href="classwalkParameters.html#a2357f1b5fb9aeaf08aa1390f14d7ee66">00092</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a2357f1b5fb9aeaf08aa1390f14d7ee66">mpc_gamma</a>;
-<a name="l00093"></a><a class="code" href="classwalkParameters.html#a04f3c208ed903cf6a8ed01afc67230f8">00093</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a04f3c208ed903cf6a8ed01afc67230f8">mpc_regularization</a>;
-<a name="l00094"></a><a class="code" href="classwalkParameters.html#ac0e7502c49743946ab4a7cf4e39addc9">00094</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#ac0e7502c49743946ab4a7cf4e39addc9">mpc_tolerance</a>;
+<a name="l00045"></a><a class="code" href="walk__parameters_8h.html#aed40a9c7dae5b6757dc2cabb2e7815c5">00045</a> <span class="keyword">enum</span> <a class="code" href="walk__parameters_8h.html#aed40a9c7dae5b6757dc2cabb2e7815c5">solverTypes</a>
+<a name="l00046"></a>00046 {
+<a name="l00047"></a><a class="code" href="walk__parameters_8h.html#aed40a9c7dae5b6757dc2cabb2e7815c5afdbb7bb31712bce9279884f7e94f01a9">00047</a>     <a class="code" href="walk__parameters_8h.html#aed40a9c7dae5b6757dc2cabb2e7815c5afdbb7bb31712bce9279884f7e94f01a9">SOLVER_TYPE_AS</a> = 0,
+<a name="l00048"></a><a class="code" href="walk__parameters_8h.html#aed40a9c7dae5b6757dc2cabb2e7815c5aeeb837bb6f8ac459808030e5d6e4e780">00048</a>     <a class="code" href="walk__parameters_8h.html#aed40a9c7dae5b6757dc2cabb2e7815c5aeeb837bb6f8ac459808030e5d6e4e780">SOLVER_TYPE_IP</a> = 1
+<a name="l00049"></a>00049 };
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051 
+<a name="l00052"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8">00052</a> <span class="keyword">enum</span> <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8">parametersNames</a>
+<a name="l00053"></a>00053 {
+<a name="l00054"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aaee4392488ea383ae707098618609985">00054</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aaee4392488ea383ae707098618609985">FEEDBACK_GAIN</a>               ,
+<a name="l00055"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8af90534f3e75656083c0a3d52bec9da3e">00055</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8af90534f3e75656083c0a3d52bec9da3e">FEEDBACK_THRESHOLD</a>          ,
+<a name="l00056"></a>00056 
+<a name="l00057"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aa45a64709b2e87be67407579bee77fec">00057</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aa45a64709b2e87be67407579bee77fec">MPC_SOLVER_TYPE</a>             ,
+<a name="l00058"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8afab0af465be1617bffacb348ff5a570b">00058</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8afab0af465be1617bffacb348ff5a570b">MPC_GAIN_POSITION</a>           ,
+<a name="l00059"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a38190787a41906cbf15ccd362191d937">00059</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a38190787a41906cbf15ccd362191d937">MPC_GAIN_VELOCITY</a>           ,
+<a name="l00060"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a3ba61dd9fe7e4fe1907fe2e5d49e15f7">00060</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a3ba61dd9fe7e4fe1907fe2e5d49e15f7">MPC_GAIN_ACCELERATION</a>       ,
+<a name="l00061"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a248870389e239bf566b603ad303e708a">00061</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a248870389e239bf566b603ad303e708a">MPC_GAIN_JERK</a>               ,
+<a name="l00062"></a>00062 
+<a name="l00063"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a3599323a01018074878553243acd0569">00063</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a3599323a01018074878553243acd0569">MPC_AS_TOLERANCE</a>            ,
+<a name="l00064"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a54b755a88e4acba436b4e02de9aa4db9">00064</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a54b755a88e4acba436b4e02de9aa4db9">MPC_AS_MAX_ACTIVATE</a>         ,
+<a name="l00065"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a72127a4b7321340ed99b6dbbe3a573b5">00065</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a72127a4b7321340ed99b6dbbe3a573b5">MPC_AS_USE_DOWNDATE</a>         ,
+<a name="l00066"></a>00066 
+<a name="l00067"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ae7e58b3f3679987e7fe03bebc946acea">00067</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ae7e58b3f3679987e7fe03bebc946acea">MPC_IP_TOLERANCE_INT</a>        ,
+<a name="l00068"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a75975ea52bbbc05e458d55ce71105189">00068</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a75975ea52bbbc05e458d55ce71105189">MPC_IP_TOLERANCE_EXT</a>        ,
+<a name="l00069"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a869665675e5c8bfc09ec943320a339fd">00069</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a869665675e5c8bfc09ec943320a339fd">MPC_IP_T</a>                    ,
+<a name="l00070"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aaed2991a32a1e93592ea23ca7f03cd95">00070</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aaed2991a32a1e93592ea23ca7f03cd95">MPC_IP_MU</a>                   ,
+<a name="l00071"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aedc33c31124d602ccc54d57e3952fae3">00071</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aedc33c31124d602ccc54d57e3952fae3">MPC_IP_BS_ALPHA</a>             ,
+<a name="l00072"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a8e65bc8dde48c4e726a549c7cf147086">00072</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a8e65bc8dde48c4e726a549c7cf147086">MPC_IP_BS_BETA</a>              ,
+<a name="l00073"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a798d929009fe6c572af3ce0e5a1f5a5f">00073</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a798d929009fe6c572af3ce0e5a1f5a5f">MPC_IP_MAX_ITER</a>             ,
+<a name="l00074"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a9fd7a62478a524e08368d519b8195cd6">00074</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a9fd7a62478a524e08368d519b8195cd6">MPC_IP_BS_TYPE</a>              ,
+<a name="l00075"></a>00075 
+<a name="l00076"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a8feb6a8477520a4f06b731000272f48b">00076</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a8feb6a8477520a4f06b731000272f48b">IGM_MU</a>                      ,
+<a name="l00077"></a>00077 
+<a name="l00078"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a4159b63f837242238aa13b4dd20651d8">00078</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a4159b63f837242238aa13b4dd20651d8">STEP_HEIGHT</a>                 ,
+<a name="l00079"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a0598b2f4e175f260986d0e735d830561">00079</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a0598b2f4e175f260986d0e735d830561">STEP_LENGTH</a>                 ,
+<a name="l00080"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8afccfd61cbdc68505da26876323ec4610">00080</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8afccfd61cbdc68505da26876323ec4610">BEZIER_WEIGHT_1</a>             ,
+<a name="l00081"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a5824d920fc626363fd47c3b46c87befa">00081</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a5824d920fc626363fd47c3b46c87befa">BEZIER_WEIGHT_2</a>             ,
+<a name="l00082"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aebf2b34c7979f2804000d43633960b2b">00082</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aebf2b34c7979f2804000d43633960b2b">BEZIER_INCLINATION_1</a>        ,
+<a name="l00083"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aef54a16ea85992554b1fa400f16b36ae">00083</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8aef54a16ea85992554b1fa400f16b36ae">BEZIER_INCLINATION_2</a>        ,
+<a name="l00084"></a>00084 
+<a name="l00085"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a5c921380a9f4515c5a9f2212dec2c656">00085</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a5c921380a9f4515c5a9f2212dec2c656">LOOP_TIME_LIMIT_MS</a>          ,
+<a name="l00086"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a6476b7934570388ada320ecd7f57c400">00086</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a6476b7934570388ada320ecd7f57c400">DCM_TIME_SHIFT_MS</a>           ,
+<a name="l00087"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad7a5c7fb565056adf3f98e681bb68798">00087</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad7a5c7fb565056adf3f98e681bb68798">PREVIEW_SAMPLING_TIME_MS</a>    ,
+<a name="l00088"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a0bd1c8ee726a2a00e734c6e3a80597d5">00088</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a0bd1c8ee726a2a00e734c6e3a80597d5">PREVIEW_WINDOW_SIZE</a>         ,
+<a name="l00089"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a081f47027cd31c17af36f32e4dbd5462">00089</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a081f47027cd31c17af36f32e4dbd5462">SS_CONTROL_LOOPS</a>            ,
+<a name="l00090"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad50ae2f4c092134b32ce760496c30112">00090</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad50ae2f4c092134b32ce760496c30112">DS_CONTROL_LOOPS</a>            ,
+<a name="l00091"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a3b5127520b719522d01dec7cadb53df2">00091</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a3b5127520b719522d01dec7cadb53df2">DS_NUMBER</a>                   ,
+<a name="l00092"></a>00092 
+<a name="l00093"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a8da5146ed2a91d99aa18ac0bf90203ed">00093</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a8da5146ed2a91d99aa18ac0bf90203ed">STEP_PAIRS_NUMBER</a>           ,
+<a name="l00094"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad57ce1f780615651eb55d95f16b8bb88">00094</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8ad57ce1f780615651eb55d95f16b8bb88">WALK_PATTERN</a>                ,
 <a name="l00095"></a>00095 
-<a name="l00096"></a><a class="code" href="classwalkParameters.html#a17423e819d3c0520f75a05abb7c7d62b">00096</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a17423e819d3c0520f75a05abb7c7d62b">step_height</a>;
-<a name="l00097"></a><a class="code" href="classwalkParameters.html#aa34ea699962200fab8017451b6bb6083">00097</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#aa34ea699962200fab8017451b6bb6083">step_length</a>;
+<a name="l00096"></a><a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a40b3352756e581b7cafd53f3f168a86e">00096</a>     <a class="code" href="walk__parameters_8h.html#a01d82e95862babe876e15defc9d62aa8a40b3352756e581b7cafd53f3f168a86e">NUM_PARAMETERS</a>              
+<a name="l00097"></a>00097 };
 <a name="l00098"></a>00098 
-<a name="l00099"></a><a class="code" href="classwalkParameters.html#a3c1825950f42b3913f0c4175eb0a9693">00099</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a3c1825950f42b3913f0c4175eb0a9693">walk_control_thread_priority</a>;
-<a name="l00100"></a>00100 
-<a name="l00101"></a><a class="code" href="classwalkParameters.html#a8ca5fd8179285c2a33ea22e3b32a4527">00101</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a8ca5fd8179285c2a33ea22e3b32a4527">dcm_sampling_time_ms</a>;
-<a name="l00102"></a><a class="code" href="classwalkParameters.html#a6d90464caca5c0b649c887b52a15952e">00102</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a6d90464caca5c0b649c887b52a15952e">dcm_time_shift_ms</a>;
-<a name="l00103"></a><a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">00103</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">control_sampling_time_ms</a>;
-<a name="l00104"></a><a class="code" href="classwalkParameters.html#a7c844b8b556c0d7013c687e582f585b0">00104</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a7c844b8b556c0d7013c687e582f585b0">control_sampling_time_sec</a>;
-<a name="l00105"></a><a class="code" href="classwalkParameters.html#a9cc236384d49d93d96ccd91c6e1fc1a4">00105</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a9cc236384d49d93d96ccd91c6e1fc1a4">loop_time_limit_ms</a>;
-<a name="l00106"></a><a class="code" href="classwalkParameters.html#a9858b1732f8e0febeafecd008622b9c8">00106</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a9858b1732f8e0febeafecd008622b9c8">preview_sampling_time_ms</a>;
-<a name="l00107"></a><a class="code" href="classwalkParameters.html#ab2f280ce6bad40c54a62902658130844">00107</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#ab2f280ce6bad40c54a62902658130844">preview_sampling_time_sec</a>;
-<a name="l00108"></a><a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">00108</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">preview_window_size</a>;
+<a name="l00099"></a>00099 <span class="comment"></span>
+<a name="l00100"></a>00100 <span class="comment">/**</span>
+<a name="l00101"></a>00101 <span class="comment"> * @brief A container for parameters.</span>
+<a name="l00102"></a>00102 <span class="comment"> */</span>
+<a name="l00103"></a><a class="code" href="classwalkParameters.html">00103</a> <span class="keyword">class </span><a class="code" href="classwalkParameters.html" title="A container for parameters.">walkParameters</a>
+<a name="l00104"></a>00104 {
+<a name="l00105"></a>00105     <span class="keyword">public</span>:
+<a name="l00106"></a>00106         <a class="code" href="classwalkParameters.html" title="A container for parameters.">walkParameters</a>(ALPtr&lt;ALBroker&gt;);
+<a name="l00107"></a>00107         <span class="keywordtype">void</span> readParameters();
+<a name="l00108"></a>00108         <span class="keywordtype">void</span> writeParameters();
 <a name="l00109"></a>00109 
-<a name="l00110"></a><a class="code" href="classwalkParameters.html#abbc68b3f28c591314d33e2e98841eb09">00110</a>         <span class="keywordtype">bool</span> <a class="code" href="classwalkParameters.html#abbc68b3f28c591314d33e2e98841eb09">set_support_z_to_zero</a>;
-<a name="l00111"></a>00111 
-<a name="l00112"></a><a class="code" href="classwalkParameters.html#ac89636fff6aea1515ae12b754b40d56a">00112</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#ac89636fff6aea1515ae12b754b40d56a">ss_time_ms</a>;
-<a name="l00113"></a><a class="code" href="classwalkParameters.html#aa0f06319c023de8a870c0c10f5aa347b">00113</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#aa0f06319c023de8a870c0c10f5aa347b">ds_time_ms</a>;
-<a name="l00114"></a><a class="code" href="classwalkParameters.html#a81fca38505d13d61d38ed8bef431cdff">00114</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a81fca38505d13d61d38ed8bef431cdff">ds_number</a>;
-<a name="l00115"></a><a class="code" href="classwalkParameters.html#a77d5bfd993f657866d0715e4d4947775">00115</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a77d5bfd993f657866d0715e4d4947775">step_pairs_number</a>;
-<a name="l00116"></a>00116 
-<a name="l00117"></a><a class="code" href="classwalkParameters.html#a79e3bc37050f28fc534e5e7928755aab">00117</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a79e3bc37050f28fc534e5e7928755aab">walk_pattern</a>;
-<a name="l00118"></a>00118 
-<a name="l00119"></a>00119 
-<a name="l00120"></a><a class="code" href="classwalkParameters.html#a7a7001d76bcb23668366757730aa86e2">00120</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a7a7001d76bcb23668366757730aa86e2">igm_tol</a>;
-<a name="l00121"></a><a class="code" href="classwalkParameters.html#ab0f8e15ce5c216d50b6feff5b90577bd">00121</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#ab0f8e15ce5c216d50b6feff5b90577bd">igm_max_iter</a>;
-<a name="l00122"></a><a class="code" href="classwalkParameters.html#ae9b2811085099d195f79dc9ffbb063d7">00122</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#ae9b2811085099d195f79dc9ffbb063d7">igm_mu</a>;
-<a name="l00123"></a>00123 
-<a name="l00124"></a>00124 
-<a name="l00125"></a><a class="code" href="classwalkParameters.html#afd5c0ee2250473e4da020edb0b70186e">00125</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#afd5c0ee2250473e4da020edb0b70186e">bezier_weight_1</a>;
-<a name="l00126"></a><a class="code" href="classwalkParameters.html#a2859f982ccb2d67120e6fdc9c9012250">00126</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a2859f982ccb2d67120e6fdc9c9012250">bezier_weight_2</a>;
-<a name="l00127"></a><a class="code" href="classwalkParameters.html#af37549c2dbe76eae29454f0c99b9fd29">00127</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#af37549c2dbe76eae29454f0c99b9fd29">bezier_inclination_1</a>;
-<a name="l00128"></a><a class="code" href="classwalkParameters.html#afcaeda334c8c0bd0a827ce19f8a396e9">00128</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#afcaeda334c8c0bd0a827ce19f8a396e9">bezier_inclination_2</a>;
-<a name="l00129"></a>00129 
-<a name="l00130"></a>00130 
-<a name="l00131"></a><a class="code" href="classwalkParameters.html#a5c88560c0578bd62a01562139e33fc84">00131</a>         ALValue <a class="code" href="classwalkParameters.html#a5c88560c0578bd62a01562139e33fc84">param_names</a>;
-<a name="l00132"></a><a class="code" href="classwalkParameters.html#a9e35c3e261c9a5faa2fd07a835507e52">00132</a>         ALPreferencesProxy <a class="code" href="classwalkParameters.html#a9e35c3e261c9a5faa2fd07a835507e52">pref_proxy</a>;
-<a name="l00133"></a>00133 };
+<a name="l00110"></a>00110 
+<a name="l00111"></a><a class="code" href="classwalkParameters.html#ac057b4784424ca963c9f5e2d089f9b99">00111</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#ac057b4784424ca963c9f5e2d089f9b99">feedback_gain</a>;
+<a name="l00112"></a><a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">00112</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>;
+<a name="l00113"></a>00113 
+<a name="l00114"></a><a class="code" href="classwalkParameters.html#a0e3b9938e81ffc0b0c6d3fe4cb8c8c0c">00114</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a0e3b9938e81ffc0b0c6d3fe4cb8c8c0c">mpc_solver_type</a>;
+<a name="l00115"></a>00115 
+<a name="l00116"></a><a class="code" href="classwalkParameters.html#a340d7bf0cb2d4e7b0fa3e69a144e0ca6">00116</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a340d7bf0cb2d4e7b0fa3e69a144e0ca6">mpc_gain_position</a>;
+<a name="l00117"></a><a class="code" href="classwalkParameters.html#a3583d7024200f9e3d7d7af4e60d0ed3f">00117</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a3583d7024200f9e3d7d7af4e60d0ed3f">mpc_gain_velocity</a>;
+<a name="l00118"></a><a class="code" href="classwalkParameters.html#a4940d5b5e47e608cc193a2a7fb8f2b7d">00118</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a4940d5b5e47e608cc193a2a7fb8f2b7d">mpc_gain_acceleration</a>;
+<a name="l00119"></a><a class="code" href="classwalkParameters.html#a189f7fc6803fb060f72b09113fa12005">00119</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a189f7fc6803fb060f72b09113fa12005">mpc_gain_jerk</a>;
+<a name="l00120"></a>00120 
+<a name="l00121"></a><a class="code" href="classwalkParameters.html#a218b57153e98d331776800a97ca7a632">00121</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a218b57153e98d331776800a97ca7a632">mpc_as_tolerance</a>;
+<a name="l00122"></a><a class="code" href="classwalkParameters.html#a2d44cb3474f5b0a9581db87ef4c60c3b">00122</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a2d44cb3474f5b0a9581db87ef4c60c3b">mpc_as_max_activate</a>;
+<a name="l00123"></a><a class="code" href="classwalkParameters.html#a82e5d5f1f0f8d3564b4744d963eae00c">00123</a>         <span class="keywordtype">bool</span> <a class="code" href="classwalkParameters.html#a82e5d5f1f0f8d3564b4744d963eae00c">mpc_as_use_downdate</a>;
+<a name="l00124"></a>00124         
+<a name="l00125"></a><a class="code" href="classwalkParameters.html#a21fa5d26e1a796e611ff980cb0ad481c">00125</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a21fa5d26e1a796e611ff980cb0ad481c">mpc_ip_tolerance_int</a>;
+<a name="l00126"></a><a class="code" href="classwalkParameters.html#aa4fc9dad29b8983a23540dab9d779470">00126</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#aa4fc9dad29b8983a23540dab9d779470">mpc_ip_tolerance_ext</a>;
+<a name="l00127"></a><a class="code" href="classwalkParameters.html#a50912125e0173489e5f6240c1a296080">00127</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a50912125e0173489e5f6240c1a296080">mpc_ip_t</a>;
+<a name="l00128"></a><a class="code" href="classwalkParameters.html#a77cfd03c84d756ddb817f2b460888b03">00128</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a77cfd03c84d756ddb817f2b460888b03">mpc_ip_mu</a>;
+<a name="l00129"></a><a class="code" href="classwalkParameters.html#a072a6b6790ad7e2f3ad640de79b5ecc4">00129</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a072a6b6790ad7e2f3ad640de79b5ecc4">mpc_ip_bs_alpha</a>;
+<a name="l00130"></a><a class="code" href="classwalkParameters.html#aa494ba33f6759fc44272bba1b7a4daf6">00130</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#aa494ba33f6759fc44272bba1b7a4daf6">mpc_ip_bs_beta</a>;
+<a name="l00131"></a><a class="code" href="classwalkParameters.html#a4a8e2fa365e1d8af1a6931a9d5eb9cf1">00131</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a4a8e2fa365e1d8af1a6931a9d5eb9cf1">mpc_ip_max_iter</a>;
+<a name="l00132"></a><a class="code" href="classwalkParameters.html#a2a9f103169097f989cbce122fa9499fa">00132</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a2a9f103169097f989cbce122fa9499fa">mpc_ip_bs_type</a>;
+<a name="l00133"></a>00133 
 <a name="l00134"></a>00134 
-<a name="l00135"></a>00135 <span class="preprocessor">#endif  // WALK_PARAMETERS_H</span>
+<a name="l00135"></a><a class="code" href="classwalkParameters.html#a17423e819d3c0520f75a05abb7c7d62b">00135</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a17423e819d3c0520f75a05abb7c7d62b">step_height</a>;
+<a name="l00136"></a><a class="code" href="classwalkParameters.html#aa34ea699962200fab8017451b6bb6083">00136</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#aa34ea699962200fab8017451b6bb6083">step_length</a>;
+<a name="l00137"></a>00137 
+<a name="l00138"></a><a class="code" href="classwalkParameters.html#a3c1825950f42b3913f0c4175eb0a9693">00138</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a3c1825950f42b3913f0c4175eb0a9693">walk_control_thread_priority</a>;
+<a name="l00139"></a>00139 
+<a name="l00140"></a><a class="code" href="classwalkParameters.html#a8ca5fd8179285c2a33ea22e3b32a4527">00140</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a8ca5fd8179285c2a33ea22e3b32a4527">dcm_sampling_time_ms</a>;
+<a name="l00141"></a><a class="code" href="classwalkParameters.html#a6d90464caca5c0b649c887b52a15952e">00141</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a6d90464caca5c0b649c887b52a15952e">dcm_time_shift_ms</a>;
+<a name="l00142"></a><a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">00142</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">control_sampling_time_ms</a>;
+<a name="l00143"></a><a class="code" href="classwalkParameters.html#a7c844b8b556c0d7013c687e582f585b0">00143</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a7c844b8b556c0d7013c687e582f585b0">control_sampling_time_sec</a>;
+<a name="l00144"></a><a class="code" href="classwalkParameters.html#a9cc236384d49d93d96ccd91c6e1fc1a4">00144</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a9cc236384d49d93d96ccd91c6e1fc1a4">loop_time_limit_ms</a>;
+<a name="l00145"></a><a class="code" href="classwalkParameters.html#a9858b1732f8e0febeafecd008622b9c8">00145</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a9858b1732f8e0febeafecd008622b9c8">preview_sampling_time_ms</a>;
+<a name="l00146"></a><a class="code" href="classwalkParameters.html#ab2f280ce6bad40c54a62902658130844">00146</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#ab2f280ce6bad40c54a62902658130844">preview_sampling_time_sec</a>;
+<a name="l00147"></a><a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">00147</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">preview_window_size</a>;
+<a name="l00148"></a>00148 
+<a name="l00149"></a><a class="code" href="classwalkParameters.html#abbc68b3f28c591314d33e2e98841eb09">00149</a>         <span class="keywordtype">bool</span> <a class="code" href="classwalkParameters.html#abbc68b3f28c591314d33e2e98841eb09">set_support_z_to_zero</a>;
+<a name="l00150"></a>00150 
+<a name="l00151"></a><a class="code" href="classwalkParameters.html#ac89636fff6aea1515ae12b754b40d56a">00151</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#ac89636fff6aea1515ae12b754b40d56a">ss_time_ms</a>;
+<a name="l00152"></a><a class="code" href="classwalkParameters.html#aa0f06319c023de8a870c0c10f5aa347b">00152</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#aa0f06319c023de8a870c0c10f5aa347b">ds_time_ms</a>;
+<a name="l00153"></a><a class="code" href="classwalkParameters.html#a81fca38505d13d61d38ed8bef431cdff">00153</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a81fca38505d13d61d38ed8bef431cdff">ds_number</a>;
+<a name="l00154"></a><a class="code" href="classwalkParameters.html#a77d5bfd993f657866d0715e4d4947775">00154</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a77d5bfd993f657866d0715e4d4947775">step_pairs_number</a>;
+<a name="l00155"></a>00155 
+<a name="l00156"></a><a class="code" href="classwalkParameters.html#a79e3bc37050f28fc534e5e7928755aab">00156</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#a79e3bc37050f28fc534e5e7928755aab">walk_pattern</a>;
+<a name="l00157"></a>00157 
+<a name="l00158"></a>00158 
+<a name="l00159"></a><a class="code" href="classwalkParameters.html#a7a7001d76bcb23668366757730aa86e2">00159</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a7a7001d76bcb23668366757730aa86e2">igm_tol</a>;
+<a name="l00160"></a><a class="code" href="classwalkParameters.html#ab0f8e15ce5c216d50b6feff5b90577bd">00160</a>         <span class="keywordtype">int</span> <a class="code" href="classwalkParameters.html#ab0f8e15ce5c216d50b6feff5b90577bd">igm_max_iter</a>;
+<a name="l00161"></a><a class="code" href="classwalkParameters.html#ae9b2811085099d195f79dc9ffbb063d7">00161</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#ae9b2811085099d195f79dc9ffbb063d7">igm_mu</a>;
+<a name="l00162"></a>00162 
+<a name="l00163"></a>00163 
+<a name="l00164"></a><a class="code" href="classwalkParameters.html#afd5c0ee2250473e4da020edb0b70186e">00164</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#afd5c0ee2250473e4da020edb0b70186e">bezier_weight_1</a>;
+<a name="l00165"></a><a class="code" href="classwalkParameters.html#a2859f982ccb2d67120e6fdc9c9012250">00165</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#a2859f982ccb2d67120e6fdc9c9012250">bezier_weight_2</a>;
+<a name="l00166"></a><a class="code" href="classwalkParameters.html#af37549c2dbe76eae29454f0c99b9fd29">00166</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#af37549c2dbe76eae29454f0c99b9fd29">bezier_inclination_1</a>;
+<a name="l00167"></a><a class="code" href="classwalkParameters.html#afcaeda334c8c0bd0a827ce19f8a396e9">00167</a>         <span class="keywordtype">double</span> <a class="code" href="classwalkParameters.html#afcaeda334c8c0bd0a827ce19f8a396e9">bezier_inclination_2</a>;
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169 
+<a name="l00170"></a><a class="code" href="classwalkParameters.html#a5c88560c0578bd62a01562139e33fc84">00170</a>         ALValue <a class="code" href="classwalkParameters.html#a5c88560c0578bd62a01562139e33fc84">param_names</a>;
+<a name="l00171"></a><a class="code" href="classwalkParameters.html#a9e35c3e261c9a5faa2fd07a835507e52">00171</a>         ALPreferencesProxy <a class="code" href="classwalkParameters.html#a9e35c3e261c9a5faa2fd07a835507e52">pref_proxy</a>;
+<a name="l00172"></a>00172 };
+<a name="l00173"></a>00173 
+<a name="l00174"></a>00174 <span class="preprocessor">#endif  // WALK_PARAMETERS_H</span>
 </pre></div></div><!-- contents -->
 
 

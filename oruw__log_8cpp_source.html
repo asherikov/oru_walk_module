@@ -141,7 +141,37 @@
 <a name="l00083"></a>00083             r_expected[0], r_expected[1], r_expected[2],
 <a name="l00084"></a>00084             r_real[0], r_real[1], r_real[2]);
 <a name="l00085"></a>00085 }
-<a name="l00086"></a>00086 <span class="preprocessor">#endif // ORUW_LOG_ENABLE</span>
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087 
+<a name="l00088"></a><a class="code" href="classoruw__log.html#a8dd6c4a6a3d71208c17e3a1de857263f">00088</a> <span class="keywordtype">void</span> <a class="code" href="classoruw__log.html#a8dd6c4a6a3d71208c17e3a1de857263f">oruw_log::logSolverInfo</a> (smpc::solver *solver, <span class="keywordtype">int</span> mpc_solver_type)
+<a name="l00089"></a>00089 {
+<a name="l00090"></a>00090     <span class="keywordflow">if</span> (solver != NULL)
+<a name="l00091"></a>00091     {
+<a name="l00092"></a>00092         <span class="keywordflow">if</span> (mpc_solver_type == <a class="code" href="walk__parameters_8h.html#aed40a9c7dae5b6757dc2cabb2e7815c5afdbb7bb31712bce9279884f7e94f01a9">SOLVER_TYPE_AS</a>)
+<a name="l00093"></a>00093         {
+<a name="l00094"></a>00094             smpc::solver_as * solver_ptr = <span class="keyword">dynamic_cast&lt;</span>smpc::solver_as *<span class="keyword">&gt;</span>(solver);
+<a name="l00095"></a>00095             <span class="keywordflow">if</span> (solver_ptr != NULL)
+<a name="l00096"></a>00096             {
+<a name="l00097"></a>00097                 fprintf(oruw_log_instance-&gt;<a class="code" href="classoruw__log.html#a000046f9a8ca27b524ad24a1eb9973db">FMessages</a>, <span class="stringliteral">&quot;AS size = %i // Added = %i // Removed = %i\n&quot;</span>,
+<a name="l00098"></a>00098                         solver_ptr-&gt;active_set_size,
+<a name="l00099"></a>00099                         solver_ptr-&gt;added_constraints_num,
+<a name="l00100"></a>00100                         solver_ptr-&gt;removed_constraints_num);
+<a name="l00101"></a>00101             }
+<a name="l00102"></a>00102         }
+<a name="l00103"></a>00103         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (mpc_solver_type == <a class="code" href="walk__parameters_8h.html#aed40a9c7dae5b6757dc2cabb2e7815c5aeeb837bb6f8ac459808030e5d6e4e780">SOLVER_TYPE_IP</a>)
+<a name="l00104"></a>00104         {
+<a name="l00105"></a>00105             smpc::solver_ip * solver_ptr = <span class="keyword">dynamic_cast&lt;</span>smpc::solver_ip *<span class="keyword">&gt;</span>(solver);
+<a name="l00106"></a>00106             <span class="keywordflow">if</span> (solver_ptr != NULL)
+<a name="l00107"></a>00107             {
+<a name="l00108"></a>00108                 fprintf(oruw_log_instance-&gt;<a class="code" href="classoruw__log.html#a000046f9a8ca27b524ad24a1eb9973db">FMessages</a>, <span class="stringliteral">&quot;ext loops = %d // int loops = %d // bs loops = %d\n&quot;</span>,
+<a name="l00109"></a>00109                         solver_ptr-&gt;ext_loop_iterations,
+<a name="l00110"></a>00110                         solver_ptr-&gt;int_loop_iterations,
+<a name="l00111"></a>00111                         solver_ptr-&gt;bt_search_iterations);
+<a name="l00112"></a>00112             }
+<a name="l00113"></a>00113         }
+<a name="l00114"></a>00114     }
+<a name="l00115"></a>00115 }
+<a name="l00116"></a>00116 <span class="preprocessor">#endif // ORUW_LOG_ENABLE</span>
 </pre></div></div><!-- contents -->
 
 

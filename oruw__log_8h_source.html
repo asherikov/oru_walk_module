@@ -77,68 +77,75 @@
 <a name="l00019"></a>00019 <span class="preprocessor">#include &lt;qi/log.hpp&gt;</span>
 <a name="l00020"></a>00020 
 <a name="l00021"></a>00021 <span class="preprocessor">#include &quot;nao_igm.h&quot;</span>
-<a name="l00022"></a>00022 <span class="preprocessor">#include &quot;WMG.h&quot;</span>
-<a name="l00023"></a>00023 <span class="preprocessor">#include &quot;joints_sensors_id.h&quot;</span>
-<a name="l00024"></a>00024 
-<a name="l00025"></a>00025 
-<a name="l00026"></a><a class="code" href="classoruw__log.html">00026</a> <span class="keyword">class </span><a class="code" href="classoruw__log.html">oruw_log</a>
-<a name="l00027"></a>00027 {
-<a name="l00028"></a>00028     <span class="keyword">public</span>:
-<a name="l00029"></a>00029         <a class="code" href="classoruw__log.html#a56d860da9b0d8879445884cbdedba376">oruw_log</a> ();
-<a name="l00030"></a>00030         <a class="code" href="classoruw__log.html#a8731f242d90aae7149053743648d9824">~oruw_log</a> ();
-<a name="l00031"></a>00031 
-<a name="l00032"></a>00032         <span class="keywordtype">void</span> <a class="code" href="classoruw__log.html#a98bbb42d5bfc10e3116b8a1c242f7591">logJointValues</a> (<span class="keyword">const</span> jointState&amp;, <span class="keyword">const</span> jointState&amp;);
-<a name="l00033"></a>00033         <span class="keywordtype">void</span> <a class="code" href="classoruw__log.html#afe9ae1039fc6a6258faedb1fae958e00">logCoM</a> (smpc_parameters&amp;, nao_igm&amp;);
-<a name="l00034"></a>00034         <span class="keywordtype">void</span> <a class="code" href="classoruw__log.html#a2cb319e0d392d2daae6a4cacd21f138f">logFeet</a> (nao_igm&amp; nao);
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036 
-<a name="l00037"></a><a class="code" href="classoruw__log.html#aac3c712ac761157123ac6084d2e43228">00037</a>         FILE *<a class="code" href="classoruw__log.html#aac3c712ac761157123ac6084d2e43228">FJointsLog</a>;
-<a name="l00038"></a><a class="code" href="classoruw__log.html#aa30a5fde6657528d4a100f708ee62eeb">00038</a>         FILE *<a class="code" href="classoruw__log.html#aa30a5fde6657528d4a100f708ee62eeb">FCoMLog</a>;
-<a name="l00039"></a><a class="code" href="classoruw__log.html#ae198b1ccbb87de4a297b683cd15cc1aa">00039</a>         FILE *<a class="code" href="classoruw__log.html#ae198b1ccbb87de4a297b683cd15cc1aa">FFeetLog</a>;
-<a name="l00040"></a><a class="code" href="classoruw__log.html#a000046f9a8ca27b524ad24a1eb9973db">00040</a>         FILE *<a class="code" href="classoruw__log.html#a000046f9a8ca27b524ad24a1eb9973db">FMessages</a>;
-<a name="l00041"></a>00041 };
-<a name="l00042"></a>00042 
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044 <span class="keyword">extern</span> <a class="code" href="classoruw__log.html">oruw_log</a> *<a class="code" href="oruw__log_8cpp.html#aedc001350e6854eb5c98a54381861734">oruw_log_instance</a>;
+<a name="l00022"></a>00022 <span class="preprocessor">#include &quot;smpc_solver.h&quot;</span>
+<a name="l00023"></a>00023 <span class="preprocessor">#include &quot;WMG.h&quot;</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include &quot;joints_sensors_id.h&quot;</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#include &quot;<a class="code" href="walk__parameters_8h.html">walk_parameters.h</a>&quot;</span>
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027 
+<a name="l00028"></a><a class="code" href="classoruw__log.html">00028</a> <span class="keyword">class </span><a class="code" href="classoruw__log.html">oruw_log</a>
+<a name="l00029"></a>00029 {
+<a name="l00030"></a>00030     <span class="keyword">public</span>:
+<a name="l00031"></a>00031         <a class="code" href="classoruw__log.html#a56d860da9b0d8879445884cbdedba376">oruw_log</a> ();
+<a name="l00032"></a>00032         <a class="code" href="classoruw__log.html#a8731f242d90aae7149053743648d9824">~oruw_log</a> ();
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034         <span class="keywordtype">void</span> <a class="code" href="classoruw__log.html#a98bbb42d5bfc10e3116b8a1c242f7591">logJointValues</a> (<span class="keyword">const</span> jointState&amp;, <span class="keyword">const</span> jointState&amp;);
+<a name="l00035"></a>00035         <span class="keywordtype">void</span> <a class="code" href="classoruw__log.html#afe9ae1039fc6a6258faedb1fae958e00">logCoM</a> (smpc_parameters&amp;, nao_igm&amp;);
+<a name="l00036"></a>00036         <span class="keywordtype">void</span> <a class="code" href="classoruw__log.html#a2cb319e0d392d2daae6a4cacd21f138f">logFeet</a> (nao_igm&amp; nao);
+<a name="l00037"></a>00037         <span class="keywordtype">void</span> <a class="code" href="classoruw__log.html#a8dd6c4a6a3d71208c17e3a1de857263f">logSolverInfo</a> (smpc::solver *, <span class="keywordtype">int</span>);
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039 
+<a name="l00040"></a><a class="code" href="classoruw__log.html#aac3c712ac761157123ac6084d2e43228">00040</a>         FILE *<a class="code" href="classoruw__log.html#aac3c712ac761157123ac6084d2e43228">FJointsLog</a>;
+<a name="l00041"></a><a class="code" href="classoruw__log.html#aa30a5fde6657528d4a100f708ee62eeb">00041</a>         FILE *<a class="code" href="classoruw__log.html#aa30a5fde6657528d4a100f708ee62eeb">FCoMLog</a>;
+<a name="l00042"></a><a class="code" href="classoruw__log.html#ae198b1ccbb87de4a297b683cd15cc1aa">00042</a>         FILE *<a class="code" href="classoruw__log.html#ae198b1ccbb87de4a297b683cd15cc1aa">FFeetLog</a>;
+<a name="l00043"></a><a class="code" href="classoruw__log.html#a000046f9a8ca27b524ad24a1eb9973db">00043</a>         FILE *<a class="code" href="classoruw__log.html#a000046f9a8ca27b524ad24a1eb9973db">FMessages</a>;
+<a name="l00044"></a>00044 };
 <a name="l00045"></a>00045 
 <a name="l00046"></a>00046 
-<a name="l00047"></a><a class="code" href="oruw__log_8h.html#a4f62c3b3c6037784000f392ad647ee54">00047</a> <span class="preprocessor">#define ORUW_LOG_IS_OPEN    (oruw_log_instance != NULL)</span>
-<a name="l00048"></a><a class="code" href="oruw__log_8h.html#adb329d00869efd1d00ee50aabeb2e74b">00048</a> <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_OPEN       oruw_log_instance = new oruw_log();</span>
-<a name="l00049"></a>00049 <span class="preprocessor"></span>
-<a name="l00050"></a><a class="code" href="oruw__log_8h.html#af8c1190a93c8817ce02ce922c25aedac">00050</a> <span class="preprocessor">#define ORUW_LOG_CLOSE \</span>
-<a name="l00051"></a>00051 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {delete oruw_log_instance; oruw_log_instance = NULL;}</span>
+<a name="l00047"></a>00047 <span class="keyword">extern</span> <a class="code" href="classoruw__log.html">oruw_log</a> *<a class="code" href="oruw__log_8cpp.html#aedc001350e6854eb5c98a54381861734">oruw_log_instance</a>;
+<a name="l00048"></a>00048 
+<a name="l00049"></a>00049 
+<a name="l00050"></a><a class="code" href="oruw__log_8h.html#a4f62c3b3c6037784000f392ad647ee54">00050</a> <span class="preprocessor">#define ORUW_LOG_IS_OPEN    (oruw_log_instance != NULL)</span>
+<a name="l00051"></a><a class="code" href="oruw__log_8h.html#adb329d00869efd1d00ee50aabeb2e74b">00051</a> <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_OPEN       oruw_log_instance = new oruw_log();</span>
 <a name="l00052"></a>00052 <span class="preprocessor"></span>
-<a name="l00053"></a><a class="code" href="oruw__log_8h.html#adbd0e5056c70ca25b1c142b93b94a7f8">00053</a> <span class="preprocessor">#define ORUW_LOG_JOINTS(sensors,actuators) \</span>
-<a name="l00054"></a>00054 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {oruw_log_instance-&gt;logJointValues(sensors,actuators);}</span>
+<a name="l00053"></a><a class="code" href="oruw__log_8h.html#af8c1190a93c8817ce02ce922c25aedac">00053</a> <span class="preprocessor">#define ORUW_LOG_CLOSE \</span>
+<a name="l00054"></a>00054 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {delete oruw_log_instance; oruw_log_instance = NULL;}</span>
 <a name="l00055"></a>00055 <span class="preprocessor"></span>
-<a name="l00056"></a><a class="code" href="oruw__log_8h.html#a9b5510f98b766bece18434d9f60f0aa0">00056</a> <span class="preprocessor">#define ORUW_LOG_COM(mpc,nao) \</span>
-<a name="l00057"></a>00057 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {oruw_log_instance-&gt;logCoM(mpc,nao);}</span>
+<a name="l00056"></a><a class="code" href="oruw__log_8h.html#adbd0e5056c70ca25b1c142b93b94a7f8">00056</a> <span class="preprocessor">#define ORUW_LOG_JOINTS(sensors,actuators) \</span>
+<a name="l00057"></a>00057 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {oruw_log_instance-&gt;logJointValues(sensors,actuators);}</span>
 <a name="l00058"></a>00058 <span class="preprocessor"></span>
-<a name="l00059"></a><a class="code" href="oruw__log_8h.html#a71e6bab30f4943c9605e1d8ea556729c">00059</a> <span class="preprocessor">#define ORUW_LOG_FEET(nao) \</span>
-<a name="l00060"></a>00060 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {oruw_log_instance-&gt;logFeet(nao);}</span>
+<a name="l00059"></a><a class="code" href="oruw__log_8h.html#a9b5510f98b766bece18434d9f60f0aa0">00059</a> <span class="preprocessor">#define ORUW_LOG_COM(mpc,nao) \</span>
+<a name="l00060"></a>00060 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {oruw_log_instance-&gt;logCoM(mpc,nao);}</span>
 <a name="l00061"></a>00061 <span class="preprocessor"></span>
-<a name="l00062"></a><a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">00062</a> <span class="preprocessor">#define ORUW_LOG_MESSAGE(...) \</span>
-<a name="l00063"></a>00063 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {fprintf(oruw_log_instance-&gt;FMessages, __VA_ARGS__);}</span>
+<a name="l00062"></a><a class="code" href="oruw__log_8h.html#a71e6bab30f4943c9605e1d8ea556729c">00062</a> <span class="preprocessor">#define ORUW_LOG_FEET(nao) \</span>
+<a name="l00063"></a>00063 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {oruw_log_instance-&gt;logFeet(nao);}</span>
 <a name="l00064"></a>00064 <span class="preprocessor"></span>
-<a name="l00065"></a><a class="code" href="oruw__log_8h.html#a3bd715a39e2550aabd8ca098b9c15f45">00065</a> <span class="preprocessor">#define ORUW_LOG_STEPS(wmg) \</span>
-<a name="l00066"></a>00066 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {wmg.FS2file(&quot;oru_steps_m.log&quot;, false);}</span>
+<a name="l00065"></a><a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">00065</a> <span class="preprocessor">#define ORUW_LOG_MESSAGE(...) \</span>
+<a name="l00066"></a>00066 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {fprintf(oruw_log_instance-&gt;FMessages, __VA_ARGS__);}</span>
 <a name="l00067"></a>00067 <span class="preprocessor"></span>
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069 <span class="preprocessor">#else // ORUW_LOG_ENABLE</span>
+<a name="l00068"></a><a class="code" href="oruw__log_8h.html#a155149e44f3d8e231f506a2b826784c7">00068</a> <span class="preprocessor">#define ORUW_LOG_SOLVER_INFO \</span>
+<a name="l00069"></a>00069 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {oruw_log_instance-&gt;logSolverInfo(solver, wp.mpc_solver_type);}</span>
 <a name="l00070"></a>00070 <span class="preprocessor"></span>
-<a name="l00071"></a>00071 
-<a name="l00072"></a>00072 <span class="preprocessor">#define ORUW_LOG_OPEN </span>
-<a name="l00073"></a>00073 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_CLOSE </span>
-<a name="l00074"></a>00074 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_JOINTS(sensors,actuators)</span>
-<a name="l00075"></a>00075 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_COM(mpc,nao)</span>
-<a name="l00076"></a>00076 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_FEET(nao)</span>
-<a name="l00077"></a>00077 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_MESSAGE(...)</span>
-<a name="l00078"></a>00078 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_STEPS(wmg)</span>
-<a name="l00079"></a>00079 <span class="preprocessor"></span>
-<a name="l00080"></a>00080 
-<a name="l00081"></a>00081 <span class="preprocessor">#endif // ORUW_LOG_ENABLE</span>
-<a name="l00082"></a>00082 <span class="preprocessor"></span>
-<a name="l00083"></a>00083 <span class="preprocessor">#endif // ORUW_LOG_H</span>
+<a name="l00071"></a><a class="code" href="oruw__log_8h.html#a3bd715a39e2550aabd8ca098b9c15f45">00071</a> <span class="preprocessor">#define ORUW_LOG_STEPS(wmg) \</span>
+<a name="l00072"></a>00072 <span class="preprocessor">    if ORUW_LOG_IS_OPEN {wmg.FS2file(&quot;oru_steps_m.log&quot;, false);}</span>
+<a name="l00073"></a>00073 <span class="preprocessor"></span>
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075 <span class="preprocessor">#else // ORUW_LOG_ENABLE</span>
+<a name="l00076"></a>00076 <span class="preprocessor"></span>
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078 <span class="preprocessor">#define ORUW_LOG_OPEN </span>
+<a name="l00079"></a>00079 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_CLOSE </span>
+<a name="l00080"></a>00080 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_JOINTS(sensors,actuators)</span>
+<a name="l00081"></a>00081 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_COM(mpc,nao)</span>
+<a name="l00082"></a>00082 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_FEET(nao)</span>
+<a name="l00083"></a>00083 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_MESSAGE(...)</span>
+<a name="l00084"></a>00084 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_STEPS(wmg)</span>
+<a name="l00085"></a>00085 <span class="preprocessor"></span><span class="preprocessor">#define ORUW_LOG_SOLVER_INFO</span>
+<a name="l00086"></a>00086 <span class="preprocessor"></span>
+<a name="l00087"></a>00087 
+<a name="l00088"></a>00088 <span class="preprocessor">#endif // ORUW_LOG_ENABLE</span>
+<a name="l00089"></a>00089 <span class="preprocessor"></span>
+<a name="l00090"></a>00090 <span class="preprocessor">#endif // ORUW_LOG_H</span>
 </pre></div></div><!-- contents -->
 
 

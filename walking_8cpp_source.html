@@ -177,304 +177,343 @@
 <a name="l00119"></a>00119     wmg.changeNextSSPosition (swing_foot_posture.data(), <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#abbc68b3f28c591314d33e2e98841eb09">set_support_z_to_zero</a>);
 <a name="l00120"></a>00120 }
 <a name="l00121"></a>00121 
-<a name="l00122"></a>00122 
-<a name="l00123"></a>00123 <span class="comment"></span>
-<a name="l00124"></a>00124 <span class="comment">/**</span>
-<a name="l00125"></a>00125 <span class="comment"> * @brief A control loop, that is executed in separate thread.</span>
-<a name="l00126"></a>00126 <span class="comment"> * @attention REAL-TIME!</span>
-<a name="l00127"></a>00127 <span class="comment"> */</span>
-<a name="l00128"></a><a class="code" href="classoru__walk.html#aa370c07844050df9aadd2e7b606b33a6">00128</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#aa370c07844050df9aadd2e7b606b33a6" title="A control loop, that is executed in separate thread.">oru_walk::walkControl</a>()
-<a name="l00129"></a>00129 {
-<a name="l00130"></a>00130     <a class="code" href="classoruw__timer.html" title="Log time of existance on destruction. Throw an error, if the given upper limit is not satisfied...">oruw_timer</a> timer(__FUNCTION__, <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a9cc236384d49d93d96ccd91c6e1fc1a4">loop_time_limit_ms</a>);
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132 
-<a name="l00133"></a>00133     smpc::solver solver(
-<a name="l00134"></a>00134             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">preview_window_size</a>,
-<a name="l00135"></a>00135             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a8009a58593590e295969b057f47239b9">mpc_alpha</a>,
-<a name="l00136"></a>00136             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#aa929ee79b0998c1b805de459aa8c9ee1">mpc_beta</a>,
-<a name="l00137"></a>00137             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a2357f1b5fb9aeaf08aa1390f14d7ee66">mpc_gamma</a>,
-<a name="l00138"></a>00138             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a04f3c208ed903cf6a8ed01afc67230f8">mpc_regularization</a>,
-<a name="l00139"></a>00139             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac0e7502c49743946ab4a7cf4e39addc9">mpc_tolerance</a>);
-<a name="l00140"></a>00140 <span class="comment">//    solver.enable_fexceptions();</span>
-<a name="l00141"></a>00141 
-<a name="l00142"></a>00142 
-<a name="l00143"></a>00143     WMG wmg(<a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">preview_window_size</a>,
-<a name="l00144"></a>00144             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a9858b1732f8e0febeafecd008622b9c8">preview_sampling_time_ms</a>,
-<a name="l00145"></a>00145             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a17423e819d3c0520f75a05abb7c7d62b">step_height</a>,
-<a name="l00146"></a>00146             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#afd5c0ee2250473e4da020edb0b70186e">bezier_weight_1</a>,
-<a name="l00147"></a>00147             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a2859f982ccb2d67120e6fdc9c9012250">bezier_weight_2</a>,
-<a name="l00148"></a>00148             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#af37549c2dbe76eae29454f0c99b9fd29">bezier_inclination_1</a>,
-<a name="l00149"></a>00149             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#afcaeda334c8c0bd0a827ce19f8a396e9">bezier_inclination_2</a>);
-<a name="l00150"></a>00150     wmg.T_ms[0] = <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">control_sampling_time_ms</a>;
-<a name="l00151"></a>00151     wmg.T_ms[1] = <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">control_sampling_time_ms</a>;
-<a name="l00152"></a>00152 
-<a name="l00153"></a>00153     <span class="keywordflow">try</span>
-<a name="l00154"></a>00154     {
-<a name="l00155"></a>00155         <span class="comment">// steps</span>
-<a name="l00156"></a>00156         <a class="code" href="classoru__walk.html#a7eb5ad6b41ecfe01c1fdcff4049d237f" title="Initialize selected walk pattern.">initWalkPattern</a>(wmg);
-<a name="l00157"></a>00157         <span class="comment">// error in position of the swing foot</span>
-<a name="l00158"></a>00158         <a class="code" href="classoru__walk.html#ad06c4eb9791ad60e35a11d6de4a91c9f" title="The position of the next support foot may change from the targeted, this function moves it to the rig...">correctNextSupportPosition</a>(wmg);
-<a name="l00159"></a>00159     }
-<a name="l00160"></a>00160     <span class="keywordflow">catch</span> (...)
-<a name="l00161"></a>00161     {
-<a name="l00162"></a>00162         <span class="keywordflow">return</span>;
+<a name="l00122"></a>00122 <span class="comment"></span>
+<a name="l00123"></a>00123 <span class="comment">/**</span>
+<a name="l00124"></a>00124 <span class="comment"> * @brief Initialize solver</span>
+<a name="l00125"></a>00125 <span class="comment"> */</span>
+<a name="l00126"></a><a class="code" href="classoru__walk.html#a30fa0b5be98f94218a90612b137853e5">00126</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#a30fa0b5be98f94218a90612b137853e5" title="Initialize solver.">oru_walk::initSolver</a>()
+<a name="l00127"></a>00127 {
+<a name="l00128"></a>00128     <span class="keywordflow">if</span> (<a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a> != NULL)
+<a name="l00129"></a>00129     {
+<a name="l00130"></a>00130         <span class="keyword">delete</span> <a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a>;
+<a name="l00131"></a>00131         <a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a> = NULL;
+<a name="l00132"></a>00132     }
+<a name="l00133"></a>00133     <span class="keywordflow">if</span> (<a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a0e3b9938e81ffc0b0c6d3fe4cb8c8c0c">mpc_solver_type</a> == <a class="code" href="walk__parameters_8h.html#aed40a9c7dae5b6757dc2cabb2e7815c5afdbb7bb31712bce9279884f7e94f01a9">SOLVER_TYPE_AS</a>)
+<a name="l00134"></a>00134     {
+<a name="l00135"></a>00135         <a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a> = <span class="keyword">new</span> smpc::solver_as (
+<a name="l00136"></a>00136                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">preview_window_size</a>,
+<a name="l00137"></a>00137                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a340d7bf0cb2d4e7b0fa3e69a144e0ca6">mpc_gain_position</a>,
+<a name="l00138"></a>00138                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a3583d7024200f9e3d7d7af4e60d0ed3f">mpc_gain_velocity</a>,
+<a name="l00139"></a>00139                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a4940d5b5e47e608cc193a2a7fb8f2b7d">mpc_gain_acceleration</a>,
+<a name="l00140"></a>00140                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a189f7fc6803fb060f72b09113fa12005">mpc_gain_jerk</a>,
+<a name="l00141"></a>00141                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a218b57153e98d331776800a97ca7a632">mpc_as_tolerance</a>,
+<a name="l00142"></a>00142                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a2d44cb3474f5b0a9581db87ef4c60c3b">mpc_as_max_activate</a>,
+<a name="l00143"></a>00143                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a82e5d5f1f0f8d3564b4744d963eae00c">mpc_as_use_downdate</a>,
+<a name="l00144"></a>00144                 <span class="keyword">false</span>); <span class="comment">// objective</span>
+<a name="l00145"></a>00145     }
+<a name="l00146"></a>00146     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a0e3b9938e81ffc0b0c6d3fe4cb8c8c0c">mpc_solver_type</a> == <a class="code" href="walk__parameters_8h.html#aed40a9c7dae5b6757dc2cabb2e7815c5aeeb837bb6f8ac459808030e5d6e4e780">SOLVER_TYPE_IP</a>)
+<a name="l00147"></a>00147     {
+<a name="l00148"></a>00148         <a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a> = <span class="keyword">new</span> smpc::solver_ip (
+<a name="l00149"></a>00149                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">preview_window_size</a>,
+<a name="l00150"></a>00150                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a340d7bf0cb2d4e7b0fa3e69a144e0ca6">mpc_gain_position</a>,
+<a name="l00151"></a>00151                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a3583d7024200f9e3d7d7af4e60d0ed3f">mpc_gain_velocity</a>,
+<a name="l00152"></a>00152                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a4940d5b5e47e608cc193a2a7fb8f2b7d">mpc_gain_acceleration</a>,
+<a name="l00153"></a>00153                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a189f7fc6803fb060f72b09113fa12005">mpc_gain_jerk</a>,
+<a name="l00154"></a>00154                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a21fa5d26e1a796e611ff980cb0ad481c">mpc_ip_tolerance_int</a>,
+<a name="l00155"></a>00155                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#aa4fc9dad29b8983a23540dab9d779470">mpc_ip_tolerance_ext</a>,
+<a name="l00156"></a>00156                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a50912125e0173489e5f6240c1a296080">mpc_ip_t</a>,
+<a name="l00157"></a>00157                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a77cfd03c84d756ddb817f2b460888b03">mpc_ip_mu</a>,
+<a name="l00158"></a>00158                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a072a6b6790ad7e2f3ad640de79b5ecc4">mpc_ip_bs_alpha</a>,
+<a name="l00159"></a>00159                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#aa494ba33f6759fc44272bba1b7a4daf6">mpc_ip_bs_beta</a>,
+<a name="l00160"></a>00160                 <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a4a8e2fa365e1d8af1a6931a9d5eb9cf1">mpc_ip_max_iter</a>,
+<a name="l00161"></a>00161                 (smpc::backtrackingSearchType) <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a2a9f103169097f989cbce122fa9499fa">mpc_ip_bs_type</a>,
+<a name="l00162"></a>00162                 <span class="keyword">false</span>); <span class="comment">// objective</span>
 <a name="l00163"></a>00163     }
-<a name="l00164"></a>00164 
-<a name="l00165"></a>00165 
-<a name="l00166"></a>00166     <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.getCoM (<a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_sensor, <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position);
-<a name="l00167"></a>00167     smpc_parameters mpc(<a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">preview_window_size</a>, <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position[2]);
-<a name="l00168"></a>00168     mpc.init_state.set (<a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position[0], <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position[1]);
-<a name="l00169"></a>00169 
-<a name="l00170"></a>00170 
-<a name="l00171"></a>00171     jointState target_joint_state = <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_model;
-<a name="l00172"></a>00172     <span class="keywordflow">for</span> (;;)
-<a name="l00173"></a>00173     {
-<a name="l00174"></a>00174         boost::unique_lock&lt;boost::mutex&gt; lock(<a class="code" href="classoru__walk.html#a4a00faf3f52eec26527edf30b45fd83e">walk_control_mutex</a>);
-<a name="l00175"></a>00175         <a class="code" href="classoru__walk.html#a250c6550716024e02a83e65e978bb630">walk_control_condition</a>.wait(lock);
-<a name="l00176"></a>00176         lock.unlock();
+<a name="l00164"></a>00164 <span class="comment">//    smpc::enable_fexceptions();</span>
+<a name="l00165"></a>00165 }
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167 
+<a name="l00168"></a>00168 <span class="comment"></span>
+<a name="l00169"></a>00169 <span class="comment">/**</span>
+<a name="l00170"></a>00170 <span class="comment"> * @brief A control loop, that is executed in separate thread.</span>
+<a name="l00171"></a>00171 <span class="comment"> * @attention REAL-TIME!</span>
+<a name="l00172"></a>00172 <span class="comment"> */</span>
+<a name="l00173"></a><a class="code" href="classoru__walk.html#aa370c07844050df9aadd2e7b606b33a6">00173</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#aa370c07844050df9aadd2e7b606b33a6" title="A control loop, that is executed in separate thread.">oru_walk::walkControl</a>()
+<a name="l00174"></a>00174 {
+<a name="l00175"></a>00175     <a class="code" href="classoruw__timer.html" title="Log time of existance on destruction. Throw an error, if the given upper limit is not satisfied...">oruw_timer</a> timer(__FUNCTION__, <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a9cc236384d49d93d96ccd91c6e1fc1a4">loop_time_limit_ms</a>);
+<a name="l00176"></a>00176 
 <a name="l00177"></a>00177 
-<a name="l00178"></a>00178 
-<a name="l00179"></a>00179         timer.<a class="code" href="classoruw__timer.html#a69336948d4372d842de1b498d104dd7d" title="Reset timer to the current time.">reset</a>();
+<a name="l00178"></a>00178     <a class="code" href="classoru__walk.html#a30fa0b5be98f94218a90612b137853e5" title="Initialize solver.">initSolver</a>();
+<a name="l00179"></a>00179 
 <a name="l00180"></a>00180 
-<a name="l00181"></a>00181 
-<a name="l00182"></a>00182         <a class="code" href="oruw__log_8h.html#adbd0e5056c70ca25b1c142b93b94a7f8">ORUW_LOG_JOINTS</a>(<a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_sensor, target_joint_state);
-<a name="l00183"></a>00183         <a class="code" href="oruw__log_8h.html#a9b5510f98b766bece18434d9f60f0aa0">ORUW_LOG_COM</a>(mpc, <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>);
-<a name="l00184"></a>00184         <a class="code" href="oruw__log_8h.html#a71e6bab30f4943c9605e1d8ea556729c">ORUW_LOG_FEET</a>(<a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>);
-<a name="l00185"></a>00185 
-<a name="l00186"></a>00186 
-<a name="l00187"></a>00187         <span class="keywordflow">try</span>
-<a name="l00188"></a>00188         {
-<a name="l00189"></a>00189             <a class="code" href="classoru__walk.html#aa08aba0a7768ac19db63c84da9e1687c" title="Correct state and the model based on the sensor data.">feedbackError</a> (mpc.init_state);
+<a name="l00181"></a>00181     WMG wmg(<a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">preview_window_size</a>,
+<a name="l00182"></a>00182             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a9858b1732f8e0febeafecd008622b9c8">preview_sampling_time_ms</a>,
+<a name="l00183"></a>00183             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a17423e819d3c0520f75a05abb7c7d62b">step_height</a>,
+<a name="l00184"></a>00184             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#afd5c0ee2250473e4da020edb0b70186e">bezier_weight_1</a>,
+<a name="l00185"></a>00185             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a2859f982ccb2d67120e6fdc9c9012250">bezier_weight_2</a>,
+<a name="l00186"></a>00186             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#af37549c2dbe76eae29454f0c99b9fd29">bezier_inclination_1</a>,
+<a name="l00187"></a>00187             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#afcaeda334c8c0bd0a827ce19f8a396e9">bezier_inclination_2</a>);
+<a name="l00188"></a>00188     wmg.T_ms[0] = <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">control_sampling_time_ms</a>;
+<a name="l00189"></a>00189     wmg.T_ms[1] = <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">control_sampling_time_ms</a>;
 <a name="l00190"></a>00190 
-<a name="l00191"></a>00191             <span class="keywordflow">if</span> (<a class="code" href="classoru__walk.html#ab2ee4b25d3e99f1340c172ddbe7b93ba" title="Solve the MPC problem.">solveMPCProblem</a> (wmg, mpc, solver))  <span class="comment">// solve MPC</span>
-<a name="l00192"></a>00192             {
-<a name="l00193"></a>00193                 <span class="keywordflow">if</span> (wmg.isSupportSwitchNeeded())
-<a name="l00194"></a>00194                 {
-<a name="l00195"></a>00195                     <a class="code" href="classoru__walk.html#ad06c4eb9791ad60e35a11d6de4a91c9f" title="The position of the next support foot may change from the targeted, this function moves it to the rig...">correctNextSupportPosition</a>(wmg);
-<a name="l00196"></a>00196                     <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.switchSupportFoot();
-<a name="l00197"></a>00197                 }
-<a name="l00198"></a>00198 
-<a name="l00199"></a>00199                 <span class="comment">// the old solution from is an initial guess;</span>
-<a name="l00200"></a>00200                 <a class="code" href="classoru__walk.html#acb9a3c508a36b07499dca821c37f4ee5" title="Solve inverse kinematics and send commands to the controllers.">solveIKsendCommands</a> (mpc, solver, 1, wmg);
-<a name="l00201"></a>00201                 target_joint_state = <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_model;
-<a name="l00202"></a>00202                 <a class="code" href="classoru__walk.html#acb9a3c508a36b07499dca821c37f4ee5" title="Solve inverse kinematics and send commands to the controllers.">solveIKsendCommands</a> (mpc, solver, 2, wmg);
-<a name="l00203"></a>00203             }
-<a name="l00204"></a>00204             <span class="keywordflow">else</span>
-<a name="l00205"></a>00205             {
-<a name="l00206"></a>00206                 <span class="keywordflow">break</span>;
-<a name="l00207"></a>00207             }
-<a name="l00208"></a>00208 
-<a name="l00209"></a>00209             <span class="keywordflow">if</span> (!timer.<a class="code" href="classoruw__timer.html#a81b95ba187210d706389461556b28d69" title="Checks if the limit is satisfied, logs a message.">check</a>()) 
-<a name="l00210"></a>00210             {
-<a name="l00211"></a>00211                 <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">halt</a>(<span class="stringliteral">&quot;Time limit is violated!\n&quot;</span>, __FUNCTION__);
-<a name="l00212"></a>00212             }
-<a name="l00213"></a>00213         }
-<a name="l00214"></a>00214         <span class="keywordflow">catch</span> (...)
-<a name="l00215"></a>00215         {
-<a name="l00216"></a>00216             <span class="keywordflow">break</span>;
-<a name="l00217"></a>00217         }
-<a name="l00218"></a>00218     }
+<a name="l00191"></a>00191 
+<a name="l00192"></a>00192     smpc::state_com CoM;
+<a name="l00193"></a>00193 
+<a name="l00194"></a>00194 
+<a name="l00195"></a>00195     <span class="keywordflow">try</span>
+<a name="l00196"></a>00196     {
+<a name="l00197"></a>00197         <span class="comment">// steps</span>
+<a name="l00198"></a>00198         <a class="code" href="classoru__walk.html#a7eb5ad6b41ecfe01c1fdcff4049d237f" title="Initialize selected walk pattern.">initWalkPattern</a>(wmg);
+<a name="l00199"></a>00199         <span class="comment">// error in position of the swing foot</span>
+<a name="l00200"></a>00200         <a class="code" href="classoru__walk.html#ad06c4eb9791ad60e35a11d6de4a91c9f" title="The position of the next support foot may change from the targeted, this function moves it to the rig...">correctNextSupportPosition</a>(wmg);
+<a name="l00201"></a>00201     }
+<a name="l00202"></a>00202     <span class="keywordflow">catch</span> (...)
+<a name="l00203"></a>00203     {
+<a name="l00204"></a>00204         <span class="keywordflow">return</span>;
+<a name="l00205"></a>00205     }
+<a name="l00206"></a>00206 
+<a name="l00207"></a>00207 
+<a name="l00208"></a>00208     <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.getCoM (<a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_sensor, <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position);
+<a name="l00209"></a>00209     smpc_parameters mpc(<a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a4660bec7dc4a99aa7aee6d2a0543caaf">preview_window_size</a>, <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position[2]);
+<a name="l00210"></a>00210     mpc.init_state.set (<a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position[0], <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position[1]);
+<a name="l00211"></a>00211 
+<a name="l00212"></a>00212 
+<a name="l00213"></a>00213     jointState target_joint_state = <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_model;
+<a name="l00214"></a>00214     <span class="keywordflow">for</span> (;;)
+<a name="l00215"></a>00215     {
+<a name="l00216"></a>00216         boost::unique_lock&lt;boost::mutex&gt; lock(<a class="code" href="classoru__walk.html#a4a00faf3f52eec26527edf30b45fd83e">walk_control_mutex</a>);
+<a name="l00217"></a>00217         <a class="code" href="classoru__walk.html#a250c6550716024e02a83e65e978bb630">walk_control_condition</a>.wait(lock);
+<a name="l00218"></a>00218         lock.unlock();
 <a name="l00219"></a>00219 
-<a name="l00220"></a>00220     <a class="code" href="oruw__log_8h.html#a3bd715a39e2550aabd8ca098b9c15f45">ORUW_LOG_STEPS</a>(wmg);
-<a name="l00221"></a>00221     <a class="code" href="oruw__log_8h.html#af8c1190a93c8817ce02ce922c25aedac">ORUW_LOG_CLOSE</a>;
-<a name="l00222"></a>00222 }
+<a name="l00220"></a>00220 
+<a name="l00221"></a>00221         timer.<a class="code" href="classoruw__timer.html#a69336948d4372d842de1b498d104dd7d" title="Reset timer to the current time.">reset</a>();
+<a name="l00222"></a>00222 
 <a name="l00223"></a>00223 
-<a name="l00224"></a>00224 
-<a name="l00225"></a>00225 <span class="comment"></span>
-<a name="l00226"></a>00226 <span class="comment">/**</span>
-<a name="l00227"></a>00227 <span class="comment"> * @brief Solve inverse kinematics and send commands to the controllers.</span>
-<a name="l00228"></a>00228 <span class="comment"> *</span>
-<a name="l00229"></a>00229 <span class="comment"> * @param[in] mpc MPC parameters</span>
-<a name="l00230"></a>00230 <span class="comment"> * @param[in] solver MPC solver</span>
-<a name="l00231"></a>00231 <span class="comment"> * @param[in] control_loop_num number of control loops in future (&gt;= 1).</span>
-<a name="l00232"></a>00232 <span class="comment"> * @param[in,out] wmg WMG</span>
-<a name="l00233"></a>00233 <span class="comment"> */</span>
-<a name="l00234"></a><a class="code" href="classoru__walk.html#acb9a3c508a36b07499dca821c37f4ee5">00234</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#acb9a3c508a36b07499dca821c37f4ee5" title="Solve inverse kinematics and send commands to the controllers.">oru_walk::solveIKsendCommands</a> (
-<a name="l00235"></a>00235         <span class="keyword">const</span> smpc_parameters &amp;mpc,
-<a name="l00236"></a>00236         <span class="keyword">const</span> smpc::solver &amp;solver,
-<a name="l00237"></a>00237         <span class="keyword">const</span> <span class="keywordtype">int</span> control_loop_num,
-<a name="l00238"></a>00238         WMG &amp;wmg)
-<a name="l00239"></a>00239 {
-<a name="l00240"></a>00240     smpc::state_orig CoM;
-<a name="l00241"></a>00241     CoM.get_state(solver, control_loop_num-1);
-<a name="l00242"></a>00242 
-<a name="l00243"></a>00243     <span class="comment">// hCoM is constant!</span>
-<a name="l00244"></a>00244     <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.setCoM(CoM.x(), CoM.y(), mpc.hCoM);
-<a name="l00245"></a>00245 
-<a name="l00246"></a>00246 
-<a name="l00247"></a>00247     <span class="comment">// support foot and swing foot position/orientation</span>
-<a name="l00248"></a>00248     wmg.getFeetPositions (
-<a name="l00249"></a>00249             control_loop_num * <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">control_sampling_time_ms</a>, 
-<a name="l00250"></a>00250             <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.left_foot_posture.data(), 
-<a name="l00251"></a>00251             <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.right_foot_posture.data());
+<a name="l00224"></a>00224         <a class="code" href="oruw__log_8h.html#adbd0e5056c70ca25b1c142b93b94a7f8">ORUW_LOG_JOINTS</a>(<a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_sensor, target_joint_state);
+<a name="l00225"></a>00225         <a class="code" href="oruw__log_8h.html#a9b5510f98b766bece18434d9f60f0aa0">ORUW_LOG_COM</a>(mpc, <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>);
+<a name="l00226"></a>00226         <a class="code" href="oruw__log_8h.html#a71e6bab30f4943c9605e1d8ea556729c">ORUW_LOG_FEET</a>(<a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>);
+<a name="l00227"></a>00227 
+<a name="l00228"></a>00228 
+<a name="l00229"></a>00229         <span class="keywordflow">try</span>
+<a name="l00230"></a>00230         {
+<a name="l00231"></a>00231             <a class="code" href="classoru__walk.html#a79d03f26fa837b4e5459979bfb391d0f" title="Correct state and the model based on the sensor data.">feedbackError</a> (mpc.init_state);
+<a name="l00232"></a>00232 
+<a name="l00233"></a>00233             <span class="keywordflow">if</span> (<a class="code" href="classoru__walk.html#a8524b7c0f542cc76a18ae7fedcb7481d" title="Solve the MPC problem.">solveMPCProblem</a> (wmg, mpc))  <span class="comment">// solve MPC</span>
+<a name="l00234"></a>00234             {
+<a name="l00235"></a>00235                 <span class="keywordflow">if</span> (wmg.isSupportSwitchNeeded())
+<a name="l00236"></a>00236                 {
+<a name="l00237"></a>00237                     <a class="code" href="classoru__walk.html#ad06c4eb9791ad60e35a11d6de4a91c9f" title="The position of the next support foot may change from the targeted, this function moves it to the rig...">correctNextSupportPosition</a>(wmg);
+<a name="l00238"></a>00238                     <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.switchSupportFoot();
+<a name="l00239"></a>00239                 }
+<a name="l00240"></a>00240 
+<a name="l00241"></a>00241                 <span class="comment">// the old solution from is an initial guess;</span>
+<a name="l00242"></a>00242                 <a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a>-&gt;get_state(CoM, 0);
+<a name="l00243"></a>00243                 <a class="code" href="classoru__walk.html#a98c4b02a2bcb51b59dc763b4c2e0a49e" title="Solve inverse kinematics and send commands to the controllers.">solveIKsendCommands</a> (mpc, CoM, 1, wmg);
+<a name="l00244"></a>00244                 target_joint_state = <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_model;
+<a name="l00245"></a>00245                 <a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a>-&gt;get_state(CoM, 1);
+<a name="l00246"></a>00246                 <a class="code" href="classoru__walk.html#a98c4b02a2bcb51b59dc763b4c2e0a49e" title="Solve inverse kinematics and send commands to the controllers.">solveIKsendCommands</a> (mpc, CoM, 2, wmg);
+<a name="l00247"></a>00247             }
+<a name="l00248"></a>00248             <span class="keywordflow">else</span>
+<a name="l00249"></a>00249             {
+<a name="l00250"></a>00250                 <span class="keywordflow">break</span>;
+<a name="l00251"></a>00251             }
 <a name="l00252"></a>00252 
-<a name="l00253"></a>00253 
-<a name="l00254"></a>00254     <span class="comment">// inverse kinematics</span>
-<a name="l00255"></a>00255     <span class="keywordtype">int</span> iter_num = <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.igm (
-<a name="l00256"></a>00256             <a class="code" href="classoru__walk.html#a757914463ded0b70cd2a7dde0c3dafcc">ref_joint_angles</a>, 
-<a name="l00257"></a>00257             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ae9b2811085099d195f79dc9ffbb063d7">igm_mu</a>, 
-<a name="l00258"></a>00258             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a7a7001d76bcb23668366757730aa86e2">igm_tol</a>, 
-<a name="l00259"></a>00259             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ab0f8e15ce5c216d50b6feff5b90577bd">igm_max_iter</a>);
-<a name="l00260"></a>00260     <a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">ORUW_LOG_MESSAGE</a>(<span class="stringliteral">&quot;IGM iterations num: %d\n&quot;</span>, iter_num);
-<a name="l00261"></a>00261     <span class="keywordflow">if</span> (iter_num &lt; 0)
-<a name="l00262"></a>00262     {
-<a name="l00263"></a>00263         <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">halt</a>(<span class="stringliteral">&quot;IK does not converge.\n&quot;</span>, __FUNCTION__);
-<a name="l00264"></a>00264     }
-<a name="l00265"></a>00265     <span class="keywordtype">int</span> failed_joint = <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_model.checkJointBounds();
-<a name="l00266"></a>00266     <span class="keywordflow">if</span> (failed_joint &gt;= 0)
-<a name="l00267"></a>00267     {
-<a name="l00268"></a>00268         <a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">ORUW_LOG_MESSAGE</a>(<span class="stringliteral">&quot;Failed joint: %d\n&quot;</span>, failed_joint);
-<a name="l00269"></a>00269         <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">halt</a>(<span class="stringliteral">&quot;Joint bounds are violated.\n&quot;</span>, __FUNCTION__);
-<a name="l00270"></a>00270     }
-<a name="l00271"></a>00271 
-<a name="l00272"></a>00272 
-<a name="l00273"></a>00273     <span class="comment">// Set commands</span>
-<a name="l00274"></a>00274     <span class="keywordflow">try</span>
-<a name="l00275"></a>00275     {
-<a name="l00276"></a>00276         <a class="code" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">joint_commands</a>[4][0] = <a class="code" href="classoru__walk.html#a6cae6d81db7a7714cdabf9373d8a736e">last_dcm_time_ms</a> + control_loop_num * <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">control_sampling_time_ms</a>;
-<a name="l00277"></a>00277         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; LOWER_JOINTS_NUM; i++)
-<a name="l00278"></a>00278         {
-<a name="l00279"></a>00279             <a class="code" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">joint_commands</a>[5][i][0] = <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_model.q[i];
-<a name="l00280"></a>00280         }
-<a name="l00281"></a>00281         <a class="code" href="classoru__walk.html#ab59def3cd9b951e127ffb68dc16fd54f">dcm_proxy</a>-&gt;setAlias(<a class="code" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">joint_commands</a>);
-<a name="l00282"></a>00282     }
-<a name="l00283"></a>00283     <span class="keywordflow">catch</span> (<span class="keyword">const</span> AL::ALError &amp;e)
-<a name="l00284"></a>00284     {
-<a name="l00285"></a>00285         <a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">ORUW_LOG_MESSAGE</a>(<span class="stringliteral">&quot;Cannot set joint angles: %s&quot;</span>, e.what());
-<a name="l00286"></a>00286         <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">halt</a>(<span class="stringliteral">&quot;Cannot set joint angles!&quot;</span>, __FUNCTION__);
-<a name="l00287"></a>00287     }
-<a name="l00288"></a>00288 }
-<a name="l00289"></a>00289 
-<a name="l00290"></a>00290 
-<a name="l00291"></a>00291 <span class="comment"></span>
-<a name="l00292"></a>00292 <span class="comment">/**</span>
-<a name="l00293"></a>00293 <span class="comment"> * @brief Correct state and the model based on the sensor data.</span>
-<a name="l00294"></a>00294 <span class="comment"> *</span>
-<a name="l00295"></a>00295 <span class="comment"> * @param[in,out] init_state expected state</span>
-<a name="l00296"></a>00296 <span class="comment"> */</span>
-<a name="l00297"></a><a class="code" href="classoru__walk.html#aa08aba0a7768ac19db63c84da9e1687c">00297</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#aa08aba0a7768ac19db63c84da9e1687c" title="Correct state and the model based on the sensor data.">oru_walk::feedbackError</a> (smpc::state_orig &amp;init_state)
-<a name="l00298"></a>00298 {
-<a name="l00299"></a>00299     <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.getCoM (<a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_sensor, <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position);
-<a name="l00300"></a>00300 
-<a name="l00301"></a>00301 
-<a name="l00302"></a>00302     smpc::state_orig state_error;
-<a name="l00303"></a>00303     state_error.set (
-<a name="l00304"></a>00304             init_state.x() - <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position[0],
-<a name="l00305"></a>00305             init_state.y() - <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position[1]);
-<a name="l00306"></a>00306 
-<a name="l00307"></a>00307     <span class="keywordflow">if</span> (state_error.x() &gt; <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>)
+<a name="l00253"></a>00253             <span class="keywordflow">if</span> (!timer.<a class="code" href="classoruw__timer.html#a81b95ba187210d706389461556b28d69" title="Checks if the limit is satisfied, logs a message.">check</a>()) 
+<a name="l00254"></a>00254             {
+<a name="l00255"></a>00255                 <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">halt</a>(<span class="stringliteral">&quot;Time limit is violated!\n&quot;</span>, __FUNCTION__);
+<a name="l00256"></a>00256             }
+<a name="l00257"></a>00257         }
+<a name="l00258"></a>00258         <span class="keywordflow">catch</span> (...)
+<a name="l00259"></a>00259         {
+<a name="l00260"></a>00260             <span class="keywordflow">break</span>;
+<a name="l00261"></a>00261         }
+<a name="l00262"></a>00262     }
+<a name="l00263"></a>00263 
+<a name="l00264"></a>00264     <a class="code" href="oruw__log_8h.html#a3bd715a39e2550aabd8ca098b9c15f45">ORUW_LOG_STEPS</a>(wmg);
+<a name="l00265"></a>00265     <a class="code" href="oruw__log_8h.html#af8c1190a93c8817ce02ce922c25aedac">ORUW_LOG_CLOSE</a>;
+<a name="l00266"></a>00266 }
+<a name="l00267"></a>00267 
+<a name="l00268"></a>00268 
+<a name="l00269"></a>00269 <span class="comment"></span>
+<a name="l00270"></a>00270 <span class="comment">/**</span>
+<a name="l00271"></a>00271 <span class="comment"> * @brief Solve inverse kinematics and send commands to the controllers.</span>
+<a name="l00272"></a>00272 <span class="comment"> *</span>
+<a name="l00273"></a>00273 <span class="comment"> * @param[in] mpc MPC parameters</span>
+<a name="l00274"></a>00274 <span class="comment"> * @param[in] CoM  CoM position</span>
+<a name="l00275"></a>00275 <span class="comment"> * @param[in] control_loop_num number of control loops in future (&gt;= 1).</span>
+<a name="l00276"></a>00276 <span class="comment"> * @param[in,out] wmg WMG</span>
+<a name="l00277"></a>00277 <span class="comment"> */</span>
+<a name="l00278"></a><a class="code" href="classoru__walk.html#a98c4b02a2bcb51b59dc763b4c2e0a49e">00278</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#a98c4b02a2bcb51b59dc763b4c2e0a49e" title="Solve inverse kinematics and send commands to the controllers.">oru_walk::solveIKsendCommands</a> (
+<a name="l00279"></a>00279         <span class="keyword">const</span> smpc_parameters &amp;mpc,
+<a name="l00280"></a>00280         <span class="keyword">const</span> smpc::state_com &amp;CoM,
+<a name="l00281"></a>00281         <span class="keyword">const</span> <span class="keywordtype">int</span> control_loop_num,
+<a name="l00282"></a>00282         WMG &amp;wmg)
+<a name="l00283"></a>00283 {
+<a name="l00284"></a>00284     <span class="comment">// hCoM is constant!</span>
+<a name="l00285"></a>00285     <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.setCoM(CoM.x(), CoM.y(), mpc.hCoM);
+<a name="l00286"></a>00286 
+<a name="l00287"></a>00287 
+<a name="l00288"></a>00288     <span class="comment">// support foot and swing foot position/orientation</span>
+<a name="l00289"></a>00289     wmg.getFeetPositions (
+<a name="l00290"></a>00290             control_loop_num * <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">control_sampling_time_ms</a>, 
+<a name="l00291"></a>00291             <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.left_foot_posture.data(), 
+<a name="l00292"></a>00292             <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.right_foot_posture.data());
+<a name="l00293"></a>00293 
+<a name="l00294"></a>00294 
+<a name="l00295"></a>00295     <span class="comment">// inverse kinematics</span>
+<a name="l00296"></a>00296     <span class="keywordtype">int</span> iter_num = <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.igm (
+<a name="l00297"></a>00297             <a class="code" href="classoru__walk.html#a757914463ded0b70cd2a7dde0c3dafcc">ref_joint_angles</a>, 
+<a name="l00298"></a>00298             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ae9b2811085099d195f79dc9ffbb063d7">igm_mu</a>, 
+<a name="l00299"></a>00299             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a7a7001d76bcb23668366757730aa86e2">igm_tol</a>, 
+<a name="l00300"></a>00300             <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ab0f8e15ce5c216d50b6feff5b90577bd">igm_max_iter</a>);
+<a name="l00301"></a>00301     <a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">ORUW_LOG_MESSAGE</a>(<span class="stringliteral">&quot;IGM iterations num: %d\n&quot;</span>, iter_num);
+<a name="l00302"></a>00302     <span class="keywordflow">if</span> (iter_num &lt; 0)
+<a name="l00303"></a>00303     {
+<a name="l00304"></a>00304         <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">halt</a>(<span class="stringliteral">&quot;IK does not converge.\n&quot;</span>, __FUNCTION__);
+<a name="l00305"></a>00305     }
+<a name="l00306"></a>00306     <span class="keywordtype">int</span> failed_joint = <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_model.checkJointBounds();
+<a name="l00307"></a>00307     <span class="keywordflow">if</span> (failed_joint &gt;= 0)
 <a name="l00308"></a>00308     {
-<a name="l00309"></a>00309         state_error.x() -= <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>;
-<a name="l00310"></a>00310     }
-<a name="l00311"></a>00311     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (state_error.x() &lt; -<a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>)
-<a name="l00312"></a>00312     {
-<a name="l00313"></a>00313         state_error.x() += <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>;
-<a name="l00314"></a>00314     }
-<a name="l00315"></a>00315     <span class="keywordflow">else</span>
+<a name="l00309"></a>00309         <a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">ORUW_LOG_MESSAGE</a>(<span class="stringliteral">&quot;Failed joint: %d\n&quot;</span>, failed_joint);
+<a name="l00310"></a>00310         <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">halt</a>(<span class="stringliteral">&quot;Joint bounds are violated.\n&quot;</span>, __FUNCTION__);
+<a name="l00311"></a>00311     }
+<a name="l00312"></a>00312 
+<a name="l00313"></a>00313 
+<a name="l00314"></a>00314     <span class="comment">// Set commands</span>
+<a name="l00315"></a>00315     <span class="keywordflow">try</span>
 <a name="l00316"></a>00316     {
-<a name="l00317"></a>00317         state_error.x() = 0.0;
-<a name="l00318"></a>00318     }
-<a name="l00319"></a>00319 
-<a name="l00320"></a>00320     <span class="keywordflow">if</span> (state_error.y() &gt; <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>)
-<a name="l00321"></a>00321     {
-<a name="l00322"></a>00322         state_error.y() -= <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>;
+<a name="l00317"></a>00317         <a class="code" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">joint_commands</a>[4][0] = <a class="code" href="classoru__walk.html#a6cae6d81db7a7714cdabf9373d8a736e">last_dcm_time_ms</a> + control_loop_num * <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a0d5814f4b4e74197d7b6ace0d7489164">control_sampling_time_ms</a>;
+<a name="l00318"></a>00318         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; LOWER_JOINTS_NUM; i++)
+<a name="l00319"></a>00319         {
+<a name="l00320"></a>00320             <a class="code" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">joint_commands</a>[5][i][0] = <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_model.q[i];
+<a name="l00321"></a>00321         }
+<a name="l00322"></a>00322         <a class="code" href="classoru__walk.html#ab59def3cd9b951e127ffb68dc16fd54f">dcm_proxy</a>-&gt;setAlias(<a class="code" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">joint_commands</a>);
 <a name="l00323"></a>00323     }
-<a name="l00324"></a>00324     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (state_error.y() &lt; -<a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>)
+<a name="l00324"></a>00324     <span class="keywordflow">catch</span> (<span class="keyword">const</span> AL::ALError &amp;e)
 <a name="l00325"></a>00325     {
-<a name="l00326"></a>00326         state_error.y() += <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>;
-<a name="l00327"></a>00327     }
-<a name="l00328"></a>00328     <span class="keywordflow">else</span>
-<a name="l00329"></a>00329     {
-<a name="l00330"></a>00330         state_error.y() = 0.0;
-<a name="l00331"></a>00331     }
-<a name="l00332"></a>00332 
-<a name="l00333"></a>00333     init_state.x() -= <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac057b4784424ca963c9f5e2d089f9b99">feedback_gain</a> * state_error.x();
-<a name="l00334"></a>00334     init_state.y() -= <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac057b4784424ca963c9f5e2d089f9b99">feedback_gain</a> * state_error.y();
-<a name="l00335"></a>00335 }
-<a name="l00336"></a>00336 
-<a name="l00337"></a>00337 
-<a name="l00338"></a>00338 <span class="comment"></span>
-<a name="l00339"></a>00339 <span class="comment">/**</span>
-<a name="l00340"></a>00340 <span class="comment"> * @brief Solve the MPC problem.</span>
-<a name="l00341"></a>00341 <span class="comment"> *</span>
-<a name="l00342"></a>00342 <span class="comment"> * @param[in,out] wmg WMG</span>
-<a name="l00343"></a>00343 <span class="comment"> * @param[in,out] mpc MPC parameters</span>
-<a name="l00344"></a>00344 <span class="comment"> * @param[in,out] solver MPC solver</span>
-<a name="l00345"></a>00345 <span class="comment"> *</span>
-<a name="l00346"></a>00346 <span class="comment"> * @return false if there is not enough steps, true otherwise.</span>
-<a name="l00347"></a>00347 <span class="comment"> */</span>
-<a name="l00348"></a><a class="code" href="classoru__walk.html#ab2ee4b25d3e99f1340c172ddbe7b93ba">00348</a> <span class="keywordtype">bool</span> <a class="code" href="classoru__walk.html#ab2ee4b25d3e99f1340c172ddbe7b93ba" title="Solve the MPC problem.">oru_walk::solveMPCProblem</a> (
-<a name="l00349"></a>00349         WMG &amp;wmg,
-<a name="l00350"></a>00350         smpc_parameters &amp;mpc,
-<a name="l00351"></a>00351         smpc::solver &amp;solver)
-<a name="l00352"></a>00352 {
-<a name="l00353"></a>00353     <a class="code" href="classoruw__timer.html" title="Log time of existance on destruction. Throw an error, if the given upper limit is not satisfied...">oruw_timer</a> timer(__FUNCTION__, <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a9cc236384d49d93d96ccd91c6e1fc1a4">loop_time_limit_ms</a>);
-<a name="l00354"></a>00354 
-<a name="l00355"></a>00355     <span class="keywordflow">if</span> (wmg.formPreviewWindow(mpc) == WMG_HALT)
-<a name="l00356"></a>00356     {
-<a name="l00357"></a>00357         <a class="code" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d" title="Unregister callback and log a message.">stopWalking</a>(<span class="stringliteral">&quot;Not enough steps to form preview window. Stopping.&quot;</span>);
-<a name="l00358"></a>00358         <span class="keywordflow">return</span> (<span class="keyword">false</span>);
+<a name="l00326"></a>00326         <a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">ORUW_LOG_MESSAGE</a>(<span class="stringliteral">&quot;Cannot set joint angles: %s&quot;</span>, e.what());
+<a name="l00327"></a>00327         <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">halt</a>(<span class="stringliteral">&quot;Cannot set joint angles!&quot;</span>, __FUNCTION__);
+<a name="l00328"></a>00328     }
+<a name="l00329"></a>00329 }
+<a name="l00330"></a>00330 
+<a name="l00331"></a>00331 
+<a name="l00332"></a>00332 <span class="comment"></span>
+<a name="l00333"></a>00333 <span class="comment">/**</span>
+<a name="l00334"></a>00334 <span class="comment"> * @brief Correct state and the model based on the sensor data.</span>
+<a name="l00335"></a>00335 <span class="comment"> *</span>
+<a name="l00336"></a>00336 <span class="comment"> * @param[in,out] init_state expected state</span>
+<a name="l00337"></a>00337 <span class="comment"> */</span>
+<a name="l00338"></a><a class="code" href="classoru__walk.html#a79d03f26fa837b4e5459979bfb391d0f">00338</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#a79d03f26fa837b4e5459979bfb391d0f" title="Correct state and the model based on the sensor data.">oru_walk::feedbackError</a> (smpc::state_com &amp;init_state)
+<a name="l00339"></a>00339 {
+<a name="l00340"></a>00340     <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.getCoM (<a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.state_sensor, <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position);
+<a name="l00341"></a>00341 
+<a name="l00342"></a>00342 
+<a name="l00343"></a>00343     smpc::state_com state_error;
+<a name="l00344"></a>00344     state_error.set (
+<a name="l00345"></a>00345             init_state.x() - <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position[0],
+<a name="l00346"></a>00346             init_state.y() - <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>.CoM_position[1]);
+<a name="l00347"></a>00347 
+<a name="l00348"></a>00348     <span class="keywordflow">if</span> (state_error.x() &gt; <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>)
+<a name="l00349"></a>00349     {
+<a name="l00350"></a>00350         state_error.x() -= <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>;
+<a name="l00351"></a>00351     }
+<a name="l00352"></a>00352     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (state_error.x() &lt; -<a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>)
+<a name="l00353"></a>00353     {
+<a name="l00354"></a>00354         state_error.x() += <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>;
+<a name="l00355"></a>00355     }
+<a name="l00356"></a>00356     <span class="keywordflow">else</span>
+<a name="l00357"></a>00357     {
+<a name="l00358"></a>00358         state_error.x() = 0.0;
 <a name="l00359"></a>00359     }
 <a name="l00360"></a>00360 
-<a name="l00361"></a>00361 
-<a name="l00362"></a>00362     <span class="comment">//------------------------------------------------------</span>
-<a name="l00363"></a>00363     solver.set_parameters (mpc.T, mpc.h, mpc.h[0], mpc.angle, mpc.zref_x, mpc.zref_y, mpc.lb, mpc.ub);
-<a name="l00364"></a>00364     solver.form_init_fp (mpc.fp_x, mpc.fp_y, mpc.init_state, mpc.X);
-<a name="l00365"></a>00365     <span class="keywordtype">int</span> num_iq_constr = solver.solve();
-<a name="l00366"></a>00366     mpc.init_state.get_next_state(solver);
-<a name="l00367"></a>00367     <span class="comment">//------------------------------------------------------</span>
-<a name="l00368"></a>00368 
-<a name="l00369"></a>00369 
-<a name="l00370"></a>00370     <a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">ORUW_LOG_MESSAGE</a>(<span class="stringliteral">&quot;Num of active constraints: %d\n&quot;</span>, num_iq_constr);
-<a name="l00371"></a>00371     <span class="keywordflow">if</span> (!timer.<a class="code" href="classoruw__timer.html#a81b95ba187210d706389461556b28d69" title="Checks if the limit is satisfied, logs a message.">check</a>()) 
-<a name="l00372"></a>00372     {
-<a name="l00373"></a>00373         <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">halt</a>(<span class="stringliteral">&quot;Time limit is violated!\n&quot;</span>, __FUNCTION__);
-<a name="l00374"></a>00374     }
-<a name="l00375"></a>00375     <span class="keywordflow">return</span> (<span class="keyword">true</span>);
+<a name="l00361"></a>00361     <span class="keywordflow">if</span> (state_error.y() &gt; <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>)
+<a name="l00362"></a>00362     {
+<a name="l00363"></a>00363         state_error.y() -= <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>;
+<a name="l00364"></a>00364     }
+<a name="l00365"></a>00365     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (state_error.y() &lt; -<a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>)
+<a name="l00366"></a>00366     {
+<a name="l00367"></a>00367         state_error.y() += <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">feedback_threshold</a>;
+<a name="l00368"></a>00368     }
+<a name="l00369"></a>00369     <span class="keywordflow">else</span>
+<a name="l00370"></a>00370     {
+<a name="l00371"></a>00371         state_error.y() = 0.0;
+<a name="l00372"></a>00372     }
+<a name="l00373"></a>00373 
+<a name="l00374"></a>00374     init_state.x() -= <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac057b4784424ca963c9f5e2d089f9b99">feedback_gain</a> * state_error.x();
+<a name="l00375"></a>00375     init_state.y() -= <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#ac057b4784424ca963c9f5e2d089f9b99">feedback_gain</a> * state_error.y();
 <a name="l00376"></a>00376 }
 <a name="l00377"></a>00377 
 <a name="l00378"></a>00378 
-<a name="l00379"></a>00379 <span class="comment">// ==============================================================================</span>
-<a name="l00380"></a>00380 
-<a name="l00381"></a>00381 <span class="comment"></span>
-<a name="l00382"></a>00382 <span class="comment">/**</span>
-<a name="l00383"></a>00383 <span class="comment"> * @brief Unregister callback and log a message.</span>
-<a name="l00384"></a>00384 <span class="comment"> *</span>
-<a name="l00385"></a>00385 <span class="comment"> * @param[in] message a message</span>
-<a name="l00386"></a>00386 <span class="comment"> */</span>
-<a name="l00387"></a><a class="code" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d">00387</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d" title="Unregister callback and log a message.">oru_walk::stopWalking</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* message)
-<a name="l00388"></a>00388 {
-<a name="l00389"></a>00389     <a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">ORUW_LOG_MESSAGE</a>(<span class="stringliteral">&quot;%s&quot;</span>, message);
-<a name="l00390"></a>00390     qiLogInfo (<span class="stringliteral">&quot;module.oru_walk&quot;</span>) &lt;&lt; message;
-<a name="l00391"></a>00391     <a class="code" href="classoru__walk.html#a9335dafa3d02a62d92aa21764e2e29d3">dcm_callback_connection</a>.disconnect();
-<a name="l00392"></a>00392 }
+<a name="l00379"></a>00379 <span class="comment"></span>
+<a name="l00380"></a>00380 <span class="comment">/**</span>
+<a name="l00381"></a>00381 <span class="comment"> * @brief Solve the MPC problem.</span>
+<a name="l00382"></a>00382 <span class="comment"> *</span>
+<a name="l00383"></a>00383 <span class="comment"> * @param[in,out] wmg WMG</span>
+<a name="l00384"></a>00384 <span class="comment"> * @param[in,out] mpc MPC parameters</span>
+<a name="l00385"></a>00385 <span class="comment"> *</span>
+<a name="l00386"></a>00386 <span class="comment"> * @return false if there is not enough steps, true otherwise.</span>
+<a name="l00387"></a>00387 <span class="comment"> */</span>
+<a name="l00388"></a><a class="code" href="classoru__walk.html#a8524b7c0f542cc76a18ae7fedcb7481d">00388</a> <span class="keywordtype">bool</span> <a class="code" href="classoru__walk.html#a8524b7c0f542cc76a18ae7fedcb7481d" title="Solve the MPC problem.">oru_walk::solveMPCProblem</a> (
+<a name="l00389"></a>00389         WMG &amp;wmg,
+<a name="l00390"></a>00390         smpc_parameters &amp;mpc)
+<a name="l00391"></a>00391 {
+<a name="l00392"></a>00392     <a class="code" href="classoruw__timer.html" title="Log time of existance on destruction. Throw an error, if the given upper limit is not satisfied...">oruw_timer</a> timer(__FUNCTION__, <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>.<a class="code" href="classwalkParameters.html#a9cc236384d49d93d96ccd91c6e1fc1a4">loop_time_limit_ms</a>);
 <a name="l00393"></a>00393 
-<a name="l00394"></a>00394 
-<a name="l00395"></a>00395 <span class="comment"></span>
-<a name="l00396"></a>00396 <span class="comment">/**</span>
-<a name="l00397"></a>00397 <span class="comment"> * @brief Log a message, remove stiffness and die.</span>
-<a name="l00398"></a>00398 <span class="comment"> *</span>
-<a name="l00399"></a>00399 <span class="comment"> * @param[in] message a message</span>
-<a name="l00400"></a>00400 <span class="comment"> * @param[in] function name of the calling function.</span>
-<a name="l00401"></a>00401 <span class="comment"> */</span>
-<a name="l00402"></a><a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca">00402</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">oru_walk::halt</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *message, <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">function</span>)
-<a name="l00403"></a>00403 {
-<a name="l00404"></a>00404     <a class="code" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d" title="Unregister callback and log a message.">stopWalking</a>(message);
-<a name="l00405"></a>00405     <a class="code" href="classoru__walk.html#a827dcbc2e0987e5d6308be3364314fdf" title="Set stiffness of joints.">setStiffness</a>(0.0);
-<a name="l00406"></a>00406     <span class="keywordflow">throw</span> ALERROR(getName(), <span class="keyword">function</span>, message);
-<a name="l00407"></a>00407 }
-<a name="l00408"></a>00408 
-<a name="l00409"></a>00409 
-<a name="l00410"></a>00410 <span class="comment"></span>
-<a name="l00411"></a>00411 <span class="comment">/**</span>
-<a name="l00412"></a>00412 <span class="comment"> * @brief An interface function that is called remotely to stop</span>
-<a name="l00413"></a>00413 <span class="comment"> * the execution.</span>
-<a name="l00414"></a>00414 <span class="comment"> */</span>
-<a name="l00415"></a><a class="code" href="classoru__walk.html#a888e856404651d0484904c97b1408c2a">00415</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#a888e856404651d0484904c97b1408c2a" title="An interface function that is called remotely to stop the execution.">oru_walk::stopWalkingRemote</a>()
-<a name="l00416"></a>00416 {
-<a name="l00417"></a>00417     <a class="code" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d" title="Unregister callback and log a message.">stopWalking</a> (<span class="stringliteral">&quot;Stopped by user&#39;s request.\n&quot;</span>);
-<a name="l00418"></a>00418     <a class="code" href="oruw__log_8h.html#af8c1190a93c8817ce02ce922c25aedac">ORUW_LOG_CLOSE</a>;
-<a name="l00419"></a>00419 }
+<a name="l00394"></a>00394     <span class="keywordflow">if</span> (wmg.formPreviewWindow(mpc) == WMG_HALT)
+<a name="l00395"></a>00395     {
+<a name="l00396"></a>00396         <a class="code" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d" title="Unregister callback and log a message.">stopWalking</a>(<span class="stringliteral">&quot;Not enough steps to form preview window. Stopping.&quot;</span>);
+<a name="l00397"></a>00397         <span class="keywordflow">return</span> (<span class="keyword">false</span>);
+<a name="l00398"></a>00398     }
+<a name="l00399"></a>00399 
+<a name="l00400"></a>00400     <span class="comment">//------------------------------------------------------</span>
+<a name="l00401"></a>00401     <a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a>-&gt;set_parameters (mpc.T, mpc.h, mpc.h[0], mpc.angle, mpc.zref_x, mpc.zref_y, mpc.lb, mpc.ub);
+<a name="l00402"></a>00402     <a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a>-&gt;form_init_fp (mpc.fp_x, mpc.fp_y, mpc.init_state, mpc.X);
+<a name="l00403"></a>00403     <a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a>-&gt;solve();
+<a name="l00404"></a>00404     <a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a>-&gt;get_next_state(mpc.init_state);
+<a name="l00405"></a>00405     <span class="comment">//------------------------------------------------------</span>
+<a name="l00406"></a>00406 
+<a name="l00407"></a>00407 
+<a name="l00408"></a>00408     <a class="code" href="oruw__log_8h.html#a155149e44f3d8e231f506a2b826784c7">ORUW_LOG_SOLVER_INFO</a>;
+<a name="l00409"></a>00409     <span class="keywordflow">if</span> (!timer.<a class="code" href="classoruw__timer.html#a81b95ba187210d706389461556b28d69" title="Checks if the limit is satisfied, logs a message.">check</a>()) 
+<a name="l00410"></a>00410     {
+<a name="l00411"></a>00411         <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">halt</a>(<span class="stringliteral">&quot;Time limit is violated!\n&quot;</span>, __FUNCTION__);
+<a name="l00412"></a>00412     }
+<a name="l00413"></a>00413 
+<a name="l00414"></a>00414     <span class="keywordflow">return</span> (<span class="keyword">true</span>);
+<a name="l00415"></a>00415 }
+<a name="l00416"></a>00416 
+<a name="l00417"></a>00417 
+<a name="l00418"></a>00418 <span class="comment">// ==============================================================================</span>
+<a name="l00419"></a>00419 
+<a name="l00420"></a>00420 <span class="comment"></span>
+<a name="l00421"></a>00421 <span class="comment">/**</span>
+<a name="l00422"></a>00422 <span class="comment"> * @brief Unregister callback and log a message.</span>
+<a name="l00423"></a>00423 <span class="comment"> *</span>
+<a name="l00424"></a>00424 <span class="comment"> * @param[in] message a message</span>
+<a name="l00425"></a>00425 <span class="comment"> */</span>
+<a name="l00426"></a><a class="code" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d">00426</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d" title="Unregister callback and log a message.">oru_walk::stopWalking</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* message)
+<a name="l00427"></a>00427 {
+<a name="l00428"></a>00428     <a class="code" href="oruw__log_8h.html#acec7a007b9493649fba8c0e706fd6a0b">ORUW_LOG_MESSAGE</a>(<span class="stringliteral">&quot;%s&quot;</span>, message);
+<a name="l00429"></a>00429     qiLogInfo (<span class="stringliteral">&quot;module.oru_walk&quot;</span>) &lt;&lt; message;
+<a name="l00430"></a>00430     <a class="code" href="classoru__walk.html#a9335dafa3d02a62d92aa21764e2e29d3">dcm_callback_connection</a>.disconnect();
+<a name="l00431"></a>00431 }
+<a name="l00432"></a>00432 
+<a name="l00433"></a>00433 
+<a name="l00434"></a>00434 <span class="comment"></span>
+<a name="l00435"></a>00435 <span class="comment">/**</span>
+<a name="l00436"></a>00436 <span class="comment"> * @brief Log a message, remove stiffness and die.</span>
+<a name="l00437"></a>00437 <span class="comment"> *</span>
+<a name="l00438"></a>00438 <span class="comment"> * @param[in] message a message</span>
+<a name="l00439"></a>00439 <span class="comment"> * @param[in] function name of the calling function.</span>
+<a name="l00440"></a>00440 <span class="comment"> */</span>
+<a name="l00441"></a><a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca">00441</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#a0fa623ad2f6ce35096997058bee67cca" title="Log a message, remove stiffness and die.">oru_walk::halt</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *message, <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">function</span>)
+<a name="l00442"></a>00442 {
+<a name="l00443"></a>00443     <a class="code" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d" title="Unregister callback and log a message.">stopWalking</a>(message);
+<a name="l00444"></a>00444     <a class="code" href="classoru__walk.html#a827dcbc2e0987e5d6308be3364314fdf" title="Set stiffness of joints.">setStiffness</a>(0.0);
+<a name="l00445"></a>00445     <span class="keywordflow">throw</span> ALERROR(getName(), <span class="keyword">function</span>, message);
+<a name="l00446"></a>00446 }
+<a name="l00447"></a>00447 
+<a name="l00448"></a>00448 
+<a name="l00449"></a>00449 <span class="comment"></span>
+<a name="l00450"></a>00450 <span class="comment">/**</span>
+<a name="l00451"></a>00451 <span class="comment"> * @brief An interface function that is called remotely to stop</span>
+<a name="l00452"></a>00452 <span class="comment"> * the execution.</span>
+<a name="l00453"></a>00453 <span class="comment"> */</span>
+<a name="l00454"></a><a class="code" href="classoru__walk.html#a888e856404651d0484904c97b1408c2a">00454</a> <span class="keywordtype">void</span> <a class="code" href="classoru__walk.html#a888e856404651d0484904c97b1408c2a" title="An interface function that is called remotely to stop the execution.">oru_walk::stopWalkingRemote</a>()
+<a name="l00455"></a>00455 {
+<a name="l00456"></a>00456     <a class="code" href="classoru__walk.html#a677d87b33f028a7afefa033e9226fb8d" title="Unregister callback and log a message.">stopWalking</a> (<span class="stringliteral">&quot;Stopped by user&#39;s request.\n&quot;</span>);
+<a name="l00457"></a>00457     <a class="code" href="oruw__log_8h.html#af8c1190a93c8817ce02ce922c25aedac">ORUW_LOG_CLOSE</a>;
+<a name="l00458"></a>00458 }
 </pre></div></div><!-- contents -->
 
 

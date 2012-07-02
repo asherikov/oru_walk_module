@@ -159,51 +159,53 @@
 <a name="l00101"></a>00101     <span class="keywordtype">void</span> initWalkPattern_Straight(WMG &amp;);
 <a name="l00102"></a>00102     <span class="keywordtype">void</span> initWalkPattern_Diagonal(WMG &amp;);
 <a name="l00103"></a>00103     <span class="keywordtype">void</span> initWalkPattern_Circular(WMG &amp;);
-<a name="l00104"></a>00104 
+<a name="l00104"></a>00104     <span class="keywordtype">void</span> initSolver();
 <a name="l00105"></a>00105 
-<a name="l00106"></a>00106     <span class="comment">// walking</span>
-<a name="l00107"></a>00107     <span class="keywordtype">void</span> readSensors (jointState&amp;);
-<a name="l00108"></a>00108     <span class="keywordtype">bool</span> solveMPCProblem (WMG&amp;, smpc_parameters&amp;, smpc::solver &amp;);
-<a name="l00109"></a>00109     <span class="keywordtype">void</span> solveIKsendCommands (<span class="keyword">const</span> smpc_parameters&amp;, <span class="keyword">const</span> smpc::solver &amp;, <span class="keyword">const</span> <span class="keywordtype">int</span>, WMG&amp;);
-<a name="l00110"></a>00110 
-<a name="l00111"></a>00111     <span class="keywordtype">void</span> correctNextSupportPosition(WMG &amp;);
-<a name="l00112"></a>00112     <span class="keywordtype">void</span> feedbackError (smpc::state_orig &amp;);
-<a name="l00113"></a>00113 
-<a name="l00114"></a>00114     <span class="keywordtype">void</span> halt(<span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span> *);
-<a name="l00115"></a>00115     <span class="keywordtype">void</span> stopWalking(<span class="keyword">const</span> <span class="keywordtype">char</span>*);
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117     <span class="keywordtype">void</span> walkControl();
-<a name="l00118"></a>00118     <span class="comment">// periodically called callback function</span>
-<a name="l00119"></a>00119     <span class="keywordtype">void</span> dcmCallback();
-<a name="l00120"></a>00120 
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107     <span class="comment">// walking</span>
+<a name="l00108"></a>00108     <span class="keywordtype">void</span> readSensors (jointState&amp;);
+<a name="l00109"></a>00109     <span class="keywordtype">bool</span> solveMPCProblem (WMG&amp;, smpc_parameters&amp;);
+<a name="l00110"></a>00110     <span class="keywordtype">void</span> solveIKsendCommands (<span class="keyword">const</span> smpc_parameters&amp;, <span class="keyword">const</span> smpc::state_com &amp;, <span class="keyword">const</span> <span class="keywordtype">int</span>, WMG&amp;);
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112     <span class="keywordtype">void</span> correctNextSupportPosition(WMG &amp;);
+<a name="l00113"></a>00113     <span class="keywordtype">void</span> feedbackError (smpc::state_com &amp;);
+<a name="l00114"></a>00114 
+<a name="l00115"></a>00115     <span class="keywordtype">void</span> halt(<span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span> *);
+<a name="l00116"></a>00116     <span class="keywordtype">void</span> stopWalking(<span class="keyword">const</span> <span class="keywordtype">char</span>*);
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118     <span class="keywordtype">void</span> walkControl();
+<a name="l00119"></a>00119     <span class="comment">// periodically called callback function</span>
+<a name="l00120"></a>00120     <span class="keywordtype">void</span> dcmCallback();
 <a name="l00121"></a>00121 
-<a name="l00122"></a>00122 <span class="comment">// private variables</span>
-<a name="l00123"></a><a class="code" href="classoru__walk.html#a9335dafa3d02a62d92aa21764e2e29d3">00123</a>     ProcessSignalConnection <a class="code" href="classoru__walk.html#a9335dafa3d02a62d92aa21764e2e29d3">dcm_callback_connection</a>;
-<a name="l00124"></a>00124 
-<a name="l00125"></a>00125     <span class="comment">// Used for fast memory access</span>
-<a name="l00126"></a><a class="code" href="classoru__walk.html#a21d1294bff42ab21ecc135ae47123382">00126</a>     ALPtr&lt;ALMemoryFastAccess&gt; <a class="code" href="classoru__walk.html#a21d1294bff42ab21ecc135ae47123382">access_sensor_values</a>;
-<a name="l00127"></a><a class="code" href="classoru__walk.html#a72187d1210d0230f9279e231ffa4f51f">00127</a>     <span class="keywordtype">int</span>* <a class="code" href="classoru__walk.html#a72187d1210d0230f9279e231ffa4f51f">last_dcm_time_ms_ptr</a>;
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129     <span class="comment">// Used to store command to send</span>
-<a name="l00130"></a><a class="code" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">00130</a>     ALValue <a class="code" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">joint_commands</a>;
-<a name="l00131"></a>00131 
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123 <span class="comment">// private variables</span>
+<a name="l00124"></a><a class="code" href="classoru__walk.html#a9335dafa3d02a62d92aa21764e2e29d3">00124</a>     ProcessSignalConnection <a class="code" href="classoru__walk.html#a9335dafa3d02a62d92aa21764e2e29d3">dcm_callback_connection</a>;
+<a name="l00125"></a>00125 
+<a name="l00126"></a>00126     <span class="comment">// Used for fast memory access</span>
+<a name="l00127"></a><a class="code" href="classoru__walk.html#a21d1294bff42ab21ecc135ae47123382">00127</a>     ALPtr&lt;ALMemoryFastAccess&gt; <a class="code" href="classoru__walk.html#a21d1294bff42ab21ecc135ae47123382">access_sensor_values</a>;
+<a name="l00128"></a><a class="code" href="classoru__walk.html#a72187d1210d0230f9279e231ffa4f51f">00128</a>     <span class="keywordtype">int</span>* <a class="code" href="classoru__walk.html#a72187d1210d0230f9279e231ffa4f51f">last_dcm_time_ms_ptr</a>;
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130     <span class="comment">// Used to store command to send</span>
+<a name="l00131"></a><a class="code" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">00131</a>     ALValue <a class="code" href="classoru__walk.html#a71c2e6bf2a49d998d541e2700f4249e1">joint_commands</a>;
 <a name="l00132"></a>00132 
-<a name="l00133"></a><a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">00133</a>     nao_igm <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>;
-<a name="l00134"></a><a class="code" href="classoru__walk.html#a757914463ded0b70cd2a7dde0c3dafcc">00134</a>     <span class="keywordtype">double</span> ref_joint_angles[LOWER_JOINTS_NUM];
-<a name="l00135"></a>00135 
-<a name="l00136"></a><a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">00136</a>     <a class="code" href="classwalkParameters.html" title="A container for parameters.">walkParameters</a> <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>;
-<a name="l00137"></a>00137 
-<a name="l00138"></a><a class="code" href="classoru__walk.html#ada602960e24f4538b7699ab01adc602b">00138</a>     <span class="keywordtype">int</span> <a class="code" href="classoru__walk.html#ada602960e24f4538b7699ab01adc602b">dcm_loop_counter</a>;
-<a name="l00139"></a><a class="code" href="classoru__walk.html#a6cae6d81db7a7714cdabf9373d8a736e">00139</a>     <span class="keywordtype">int</span> <a class="code" href="classoru__walk.html#a6cae6d81db7a7714cdabf9373d8a736e">last_dcm_time_ms</a>;
-<a name="l00140"></a>00140 
-<a name="l00141"></a><a class="code" href="classoru__walk.html#ab59def3cd9b951e127ffb68dc16fd54f">00141</a>     ALPtr&lt;DCMProxy&gt; <a class="code" href="classoru__walk.html#ab59def3cd9b951e127ffb68dc16fd54f">dcm_proxy</a>;
-<a name="l00142"></a><a class="code" href="classoru__walk.html#aebad5e20e4bebefae8f26ce8ac47705e">00142</a>     ALPtr&lt;ALMemoryProxy&gt; <a class="code" href="classoru__walk.html#aebad5e20e4bebefae8f26ce8ac47705e">memory_proxy</a>;
-<a name="l00143"></a>00143 
-<a name="l00144"></a><a class="code" href="classoru__walk.html#a250c6550716024e02a83e65e978bb630">00144</a>     boost::condition_variable <a class="code" href="classoru__walk.html#a250c6550716024e02a83e65e978bb630">walk_control_condition</a>;
-<a name="l00145"></a><a class="code" href="classoru__walk.html#a4a00faf3f52eec26527edf30b45fd83e">00145</a>     boost::mutex <a class="code" href="classoru__walk.html#a4a00faf3f52eec26527edf30b45fd83e">walk_control_mutex</a>;
-<a name="l00146"></a>00146 };
-<a name="l00147"></a>00147 
-<a name="l00148"></a>00148 <span class="preprocessor">#endif  // ORU_WALK_H</span>
+<a name="l00133"></a>00133 
+<a name="l00134"></a><a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">00134</a>     nao_igm <a class="code" href="classoru__walk.html#a9b9fed9cc9d4bbd222e0143edd844d66">nao</a>;
+<a name="l00135"></a><a class="code" href="classoru__walk.html#a757914463ded0b70cd2a7dde0c3dafcc">00135</a>     <span class="keywordtype">double</span> ref_joint_angles[LOWER_JOINTS_NUM];
+<a name="l00136"></a>00136 
+<a name="l00137"></a><a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">00137</a>     <a class="code" href="classwalkParameters.html" title="A container for parameters.">walkParameters</a> <a class="code" href="classoru__walk.html#a504dd203b278a955da412277d76aa91b">wp</a>;
+<a name="l00138"></a><a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">00138</a>     smpc::solver *<a class="code" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">solver</a>;
+<a name="l00139"></a>00139 
+<a name="l00140"></a><a class="code" href="classoru__walk.html#ada602960e24f4538b7699ab01adc602b">00140</a>     <span class="keywordtype">int</span> <a class="code" href="classoru__walk.html#ada602960e24f4538b7699ab01adc602b">dcm_loop_counter</a>;
+<a name="l00141"></a><a class="code" href="classoru__walk.html#a6cae6d81db7a7714cdabf9373d8a736e">00141</a>     <span class="keywordtype">int</span> <a class="code" href="classoru__walk.html#a6cae6d81db7a7714cdabf9373d8a736e">last_dcm_time_ms</a>;
+<a name="l00142"></a>00142 
+<a name="l00143"></a><a class="code" href="classoru__walk.html#ab59def3cd9b951e127ffb68dc16fd54f">00143</a>     ALPtr&lt;DCMProxy&gt; <a class="code" href="classoru__walk.html#ab59def3cd9b951e127ffb68dc16fd54f">dcm_proxy</a>;
+<a name="l00144"></a><a class="code" href="classoru__walk.html#aebad5e20e4bebefae8f26ce8ac47705e">00144</a>     ALPtr&lt;ALMemoryProxy&gt; <a class="code" href="classoru__walk.html#aebad5e20e4bebefae8f26ce8ac47705e">memory_proxy</a>;
+<a name="l00145"></a>00145 
+<a name="l00146"></a><a class="code" href="classoru__walk.html#a250c6550716024e02a83e65e978bb630">00146</a>     boost::condition_variable <a class="code" href="classoru__walk.html#a250c6550716024e02a83e65e978bb630">walk_control_condition</a>;
+<a name="l00147"></a><a class="code" href="classoru__walk.html#a4a00faf3f52eec26527edf30b45fd83e">00147</a>     boost::mutex <a class="code" href="classoru__walk.html#a4a00faf3f52eec26527edf30b45fd83e">walk_control_mutex</a>;
+<a name="l00148"></a>00148 };
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150 <span class="preprocessor">#endif  // ORU_WALK_H</span>
 </pre></div></div><!-- contents -->
 
 

@@ -168,7 +168,7 @@
 : <a class="el" href="classwalkParameters.html#ac7eba3a461b6b48fc721a5f6f58c470e">walkParameters</a>
 </li>
 <li>feedbackError()
-: <a class="el" href="classoru__walk.html#aa08aba0a7768ac19db63c84da9e1687c">oru_walk</a>
+: <a class="el" href="classoru__walk.html#a79d03f26fa837b4e5459979bfb391d0f">oru_walk</a>
 </li>
 <li>FFeetLog
 : <a class="el" href="classoruw__log.html#ae198b1ccbb87de4a297b683cd15cc1aa">oruw_log</a>
@@ -217,6 +217,9 @@
 <li>initPosition()
 : <a class="el" href="classoru__walk.html#a4f8daa94c4dfd3558badeb2689d99c05">oru_walk</a>
 </li>
+<li>initSolver()
+: <a class="el" href="classoru__walk.html#a30fa0b5be98f94218a90612b137853e5">oru_walk</a>
+</li>
 <li>initWalkCommands()
 : <a class="el" href="classoru__walk.html#afc761b781ac7245477d9848887cfa796">oru_walk</a>
 </li>
@@ -261,6 +264,9 @@
 <li>logJointValues()
 : <a class="el" href="classoruw__log.html#a98bbb42d5bfc10e3116b8a1c242f7591">oruw_log</a>
 </li>
+<li>logSolverInfo()
+: <a class="el" href="classoruw__log.html#a8dd6c4a6a3d71208c17e3a1de857263f">oruw_log</a>
+</li>
 <li>loop_time_limit_ms
 : <a class="el" href="classwalkParameters.html#a9cc236384d49d93d96ccd91c6e1fc1a4">walkParameters</a>
 </li>
@@ -271,20 +277,53 @@
 <li>memory_proxy
 : <a class="el" href="classoru__walk.html#aebad5e20e4bebefae8f26ce8ac47705e">oru_walk</a>
 </li>
-<li>mpc_alpha
-: <a class="el" href="classwalkParameters.html#a8009a58593590e295969b057f47239b9">walkParameters</a>
+<li>mpc_as_max_activate
+: <a class="el" href="classwalkParameters.html#a2d44cb3474f5b0a9581db87ef4c60c3b">walkParameters</a>
 </li>
-<li>mpc_beta
-: <a class="el" href="classwalkParameters.html#aa929ee79b0998c1b805de459aa8c9ee1">walkParameters</a>
+<li>mpc_as_tolerance
+: <a class="el" href="classwalkParameters.html#a218b57153e98d331776800a97ca7a632">walkParameters</a>
 </li>
-<li>mpc_gamma
-: <a class="el" href="classwalkParameters.html#a2357f1b5fb9aeaf08aa1390f14d7ee66">walkParameters</a>
+<li>mpc_as_use_downdate
+: <a class="el" href="classwalkParameters.html#a82e5d5f1f0f8d3564b4744d963eae00c">walkParameters</a>
 </li>
-<li>mpc_regularization
-: <a class="el" href="classwalkParameters.html#a04f3c208ed903cf6a8ed01afc67230f8">walkParameters</a>
+<li>mpc_gain_acceleration
+: <a class="el" href="classwalkParameters.html#a4940d5b5e47e608cc193a2a7fb8f2b7d">walkParameters</a>
 </li>
-<li>mpc_tolerance
-: <a class="el" href="classwalkParameters.html#ac0e7502c49743946ab4a7cf4e39addc9">walkParameters</a>
+<li>mpc_gain_jerk
+: <a class="el" href="classwalkParameters.html#a189f7fc6803fb060f72b09113fa12005">walkParameters</a>
+</li>
+<li>mpc_gain_position
+: <a class="el" href="classwalkParameters.html#a340d7bf0cb2d4e7b0fa3e69a144e0ca6">walkParameters</a>
+</li>
+<li>mpc_gain_velocity
+: <a class="el" href="classwalkParameters.html#a3583d7024200f9e3d7d7af4e60d0ed3f">walkParameters</a>
+</li>
+<li>mpc_ip_bs_alpha
+: <a class="el" href="classwalkParameters.html#a072a6b6790ad7e2f3ad640de79b5ecc4">walkParameters</a>
+</li>
+<li>mpc_ip_bs_beta
+: <a class="el" href="classwalkParameters.html#aa494ba33f6759fc44272bba1b7a4daf6">walkParameters</a>
+</li>
+<li>mpc_ip_bs_type
+: <a class="el" href="classwalkParameters.html#a2a9f103169097f989cbce122fa9499fa">walkParameters</a>
+</li>
+<li>mpc_ip_max_iter
+: <a class="el" href="classwalkParameters.html#a4a8e2fa365e1d8af1a6931a9d5eb9cf1">walkParameters</a>
+</li>
+<li>mpc_ip_mu
+: <a class="el" href="classwalkParameters.html#a77cfd03c84d756ddb817f2b460888b03">walkParameters</a>
+</li>
+<li>mpc_ip_t
+: <a class="el" href="classwalkParameters.html#a50912125e0173489e5f6240c1a296080">walkParameters</a>
+</li>
+<li>mpc_ip_tolerance_ext
+: <a class="el" href="classwalkParameters.html#aa4fc9dad29b8983a23540dab9d779470">walkParameters</a>
+</li>
+<li>mpc_ip_tolerance_int
+: <a class="el" href="classwalkParameters.html#a21fa5d26e1a796e611ff980cb0ad481c">walkParameters</a>
+</li>
+<li>mpc_solver_type
+: <a class="el" href="classwalkParameters.html#a0e3b9938e81ffc0b0c6d3fe4cb8c8c0c">walkParameters</a>
 </li>
 </ul>
 
@@ -352,10 +391,13 @@
 : <a class="el" href="classoru__walk.html#a827dcbc2e0987e5d6308be3364314fdf">oru_walk</a>
 </li>
 <li>solveIKsendCommands()
-: <a class="el" href="classoru__walk.html#acb9a3c508a36b07499dca821c37f4ee5">oru_walk</a>
+: <a class="el" href="classoru__walk.html#a98c4b02a2bcb51b59dc763b4c2e0a49e">oru_walk</a>
 </li>
 <li>solveMPCProblem()
-: <a class="el" href="classoru__walk.html#ab2ee4b25d3e99f1340c172ddbe7b93ba">oru_walk</a>
+: <a class="el" href="classoru__walk.html#a8524b7c0f542cc76a18ae7fedcb7481d">oru_walk</a>
+</li>
+<li>solver
+: <a class="el" href="classoru__walk.html#ac1c7fa98028cd1603403b2079853adf5">oru_walk</a>
 </li>
 <li>ss_time_ms
 : <a class="el" href="classwalkParameters.html#ac89636fff6aea1515ae12b754b40d56a">walkParameters</a>

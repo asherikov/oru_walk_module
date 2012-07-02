@@ -71,6 +71,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a98bbb42d5bfc10e3116b8a1c242f7591"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a98bbb42d5bfc10e3116b8a1c242f7591">logJointValues</a> (const jointState &amp;, const jointState &amp;)</td></tr>
 <tr class="memitem:afe9ae1039fc6a6258faedb1fae958e00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#afe9ae1039fc6a6258faedb1fae958e00">logCoM</a> (smpc_parameters &amp;, nao_igm &amp;)</td></tr>
 <tr class="memitem:a2cb319e0d392d2daae6a4cacd21f138f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a2cb319e0d392d2daae6a4cacd21f138f">logFeet</a> (nao_igm &amp;nao)</td></tr>
+<tr class="memitem:a8dd6c4a6a3d71208c17e3a1de857263f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#a8dd6c4a6a3d71208c17e3a1de857263f">logSolverInfo</a> (smpc::solver *, int)</td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aac3c712ac761157123ac6084d2e43228"><td class="memItemLeft" align="right" valign="top">FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classoruw__log.html#aac3c712ac761157123ac6084d2e43228">FJointsLog</a></td></tr>
@@ -80,7 +81,7 @@ Public Attributes</h2></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock">
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00026">26</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00028">28</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a56d860da9b0d8879445884cbdedba376"></a>
 <div class="memitem">
@@ -196,6 +197,35 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a8dd6c4a6a3d71208c17e3a1de857263f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classoruw__log.html#a8dd6c4a6a3d71208c17e3a1de857263f">oruw_log::logSolverInfo</a> </td>
+          <td>(</td>
+          <td class="paramtype">smpc::solver *&#160;</td>
+          <td class="paramname"><em>solver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mpc_solver_type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="oruw__log_8cpp_source.html#l00088">88</a> of file <a class="el" href="oruw__log_8cpp_source.html">oruw_log.cpp</a>.</p>
+
+</div>
+</div>
 <hr/><h2>Member Data Documentation</h2>
 <a class="anchor" id="aa30a5fde6657528d4a100f708ee62eeb"></a>
 <div class="memitem">
@@ -208,7 +238,7 @@ Public Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00038">38</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00041">41</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -223,7 +253,7 @@ Public Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00039">39</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00042">42</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -238,7 +268,7 @@ Public Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00037">37</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00040">40</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>
@@ -253,7 +283,7 @@ Public Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00040">40</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
+<p>Definition at line <a class="el" href="oruw__log_8h_source.html#l00043">43</a> of file <a class="el" href="oruw__log_8h_source.html">oruw_log.h</a>.</p>
 
 </div>
 </div>

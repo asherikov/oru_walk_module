@@ -23,9 +23,9 @@
  * - @ref pNotes
  * 
  * @par
- * - Homepage of the project: http://asherikov.github.com/Projects/naowalk.html
+ * - Homepage of the project: http://asherikov.github.io/Projects/naowalk.html
  * - Sources: http://github.com/asherikov/oru_walk_module
- * - Documentation: http://asherikov.github.com/oru_walk_module/index.html
+ * - Documentation: http://asherikov.github.io/oru_walk_module/index.html
  * \n
  *
  *

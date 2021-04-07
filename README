@@ -8,7 +8,7 @@ to control the robot.
 The module depends on two libraries: nao_igm and smpc_solver. All sources
 are published on http://github.com/asherikov. The detailed description of 
 the logic of the module is given in the MS thesis, which is available on 
-    http://asherikov.github.com/Projects/naowalk.html
+    http://asherikov.github.io/Projects/naowalk.html
 
 Note, that if you want to build the module you need SDK or crosscompilation
 toolkit provided by Aldebaran Robotics.
